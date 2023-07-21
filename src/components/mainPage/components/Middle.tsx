@@ -36,27 +36,28 @@ const Middle = () => {
     },
   ];
 
-  
   const dummySubItems = [
     {
       id: 1,
       imgSrc: "/img/main/middle/s1.png",
       name: "[소식] 김성훈 스쿼트 140 3트에 모두 실패해.....",
-      content: "김효성과 하체운동을 하는도중 스쿼트 기록 갱신에 도전했지만 3번 모두 실패하는 모습을 보여.....",
+      content:
+        "김효성과 하체운동을 하는도중 스쿼트 기록 갱신에 도전했지만 3번 모두 실패하는 모습을 보여",
       date: "2023. 06. 23.",
     },
     {
       id: 2,
       imgSrc: "/img/main/middle/s2.png",
       name: "[소식] 김동균 벤치 90도 못들어....충격...",
-      content: "김효성과의 가슴운동중 벤치 90에 깔리는 참사가 발생에 중상자 1명발생 (김효성 배꼽이 빠져 응급실로 이송)'",
+      content:
+        "김효성과의 가슴운동중 벤치 90에 깔리는 참사가 발생에 중상자 1명발생 (김효성 배꼽이 빠져 응급실로 이송)'",
       date: "2023. 6. 16.",
     },
     {
       id: 3,
       imgSrc: "/img/main/middle/s3.png",
-      name: "[소식] 김효성 스쿼트 1RM 25KG으로 밝혀져 세간의 주목을 받고 있다고...",
-      content:"대퇴사두 보다 대흉근이 강하다고 알려져 충격",
+      name: "[소식] 김효성 스쿼트 25KG으로 밝혀져 세간의 주목을 받고 있다고...",
+      content: "스쿼트 1RM이 벤치 1RM 보다 가볍다고 알려져 충격",
       date: "2023. 6. 10.",
     },
     {
@@ -103,12 +104,7 @@ const Middle = () => {
         {dummySubItems.map((subItem) => (
           <SubItemBox key={subItem.id}>
             <SubItemImg>
-              <Image
-                src={subItem.imgSrc}
-                alt=""
-                width={90}
-                height={90}
-              />
+              <Image src={subItem.imgSrc} alt="" width={90} height={90} />
             </SubItemImg>
             <SubItemSpan>
               <SubItemName>{subItem.name}</SubItemName>
@@ -226,19 +222,14 @@ const SubItemName = styled.div`
 `;
 
 const SubItemContent = styled.div`
-  width : 193px;
+  width: 193px;
   height: 48px;
-  font-size : 12px;
+  font-size: 12px;
   font-family: "Dotum";
-  color : rgb(37, 37, 37);
+  color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* 텍스트 줄 수 제한 */
-  -webkit-box-orient: vertical;
-  
-
-`
+`;
 
 const SubItemDate = styled.div`
   width: 193px;
@@ -246,5 +237,5 @@ const SubItemDate = styled.div`
   padding-top: 4px;
   font-size: 11px;
   font-family: "Dotum";
-  color : rgb(146, 146, 146)
+  color: rgb(146, 146, 146);
 `;

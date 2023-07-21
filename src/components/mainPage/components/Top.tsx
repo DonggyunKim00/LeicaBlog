@@ -10,12 +10,6 @@ import clipboard from "../../../../public/img/main/clipboard.png";
 import microscope from "../../../../public/img/main/microscope.png";
 import topPicture from "../../../../public/img/main/topPicture.png";
 const Top: React.FC = () => {
-    const [selectedScopeMenu, setSelectedScopeMenu] = useState<string | null>(null);
-
-  const handleScopeMenuHover = (menu: string) => {
-    setSelectedScopeMenu(menu);
-  };
-
   return (
     <div>
       <LeicaTypo>
@@ -57,72 +51,26 @@ const Top: React.FC = () => {
         <Image width={917} height={500} alt={""} src={topPicture} />
       </ContentWrapper>
       <ScopeMenuWrapper>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "광학 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("광학 현미경")}
-        >
-          광학 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "공초점레이저 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("공초점레이저 현미경")}
-        >
-          공초점레이저 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "디지털 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("디지털 현미경")}
-        >
-          디지털 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "현미경 카메라"}
-          onMouseEnter={() => handleScopeMenuHover("현미경 카메라")}
-        >
-          현미경 카메라
-        </ScopeMenuBox>
-        <ScopeMenuBox2
-          isActive={selectedScopeMenu === "수술용 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("수술용 현미경")}
-        >
-          수술용 현미경
-        </ScopeMenuBox2>
+        <ScopeMenuBox>광학 현미경</ScopeMenuBox>
+        <ScopeMenuBox>공초점레이저 현미경</ScopeMenuBox>
+        <ScopeMenuBox>디지털 현미경</ScopeMenuBox>
+        <ScopeMenuBox>현미경 카메라</ScopeMenuBox>
+        <ScopeMenuBox2>수술용 현미경</ScopeMenuBox2>
       </ScopeMenuWrapper>
 
       <ScopeMenuWrapper2>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "수퍼해상도 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("수퍼해상도 현미경")}
-        >
-          수퍼해상도 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "실체현미경\n마크로 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("실체현미경\n마크로 현미경")}
-        >
+        <ScopeMenuBox>수퍼해상도 현미경</ScopeMenuBox>
+        <ScopeMenuBox>
           실체현미경
           <br />
           마크로 현미경
         </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "현미경 소프트웨어"}
-          onMouseEnter={() => handleScopeMenuHover("현미경 소프트웨어")}
-        >
-          현미경 소프트웨어
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          isActive={selectedScopeMenu === "전자현미경\n시료전처리"}
-          onMouseEnter={() => handleScopeMenuHover("전자현미경\n시료전처리")}
-        >
+        <ScopeMenuBox>현미경 소프트웨어</ScopeMenuBox>
+        <ScopeMenuBox>
           전자현미경 <br />
           시료전처리
         </ScopeMenuBox>
-        <ScopeMenuBox2
-          isActive={selectedScopeMenu === "교육용 현미경"}
-          onMouseEnter={() => handleScopeMenuHover("교육용 현미경")}
-        >
-          교육용 현미경
-        </ScopeMenuBox2>
+        <ScopeMenuBox2>교육용 현미경</ScopeMenuBox2>
       </ScopeMenuWrapper2>
     </div>
   );
@@ -240,7 +188,7 @@ const ScopeMenuWrapper2 = styled.div`
   margin-bottom: 57px;
 `;
 
-const ScopeMenuBox = styled.div<{ isActive: boolean }>`
+const ScopeMenuBox = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -273,7 +221,7 @@ const ScopeMenuBox = styled.div<{ isActive: boolean }>`
   }
 `;
 
-const ScopeMenuBox2 = styled.div<{ isActive: boolean }>`
+const ScopeMenuBox2 = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
