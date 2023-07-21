@@ -98,7 +98,7 @@ const Middle = () => {
         ))}
       </MainItemWrapper>
       <Line />
-      <SubItemTitle>- 라이카 뉴스</SubItemTitle>
+      <SubItemTitle>- 라이카 news</SubItemTitle>
 
       <SubItemWrapper>
         {dummySubItems.map((subItem) => (
