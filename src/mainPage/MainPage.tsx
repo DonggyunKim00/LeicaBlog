@@ -1,9 +1,8 @@
 import React from 'react';
 import Top from './components/Top';
+import Search from './components/Search';
 import Middle from './components/Middle';
-import Search from './components/Search'
-import Footer from './components/Footer'
-
+import Footer from './components/Footer';
 const MainPage = () => {
     return (
         <div>
