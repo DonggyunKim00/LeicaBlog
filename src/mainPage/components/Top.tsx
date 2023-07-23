@@ -1,14 +1,14 @@
 import React from "react";
-import { useState } from "react";
+
 import styled from "styled-components";
-import leicaTypo from "../../../../public/img/main/leicaTypo.jpg";
+import leicaTypo from "../../../public/img/main/leicaTypo.jpg";
 import Image from "next/image";
-import globe from "../../../../public/img/main/globe.png";
-import monitor from "../../../../public/img/main/monitor.png";
-import copy from "../../../../public/img/main/copy.png";
-import clipboard from "../../../../public/img/main/clipboard.png";
-import microscope from "../../../../public/img/main/microscope.png";
-import topPicture from "../../../../public/img/main/topPicture.png";
+import globe from "../../../public/img/main/globe.png";
+import monitor from "../../../public/img/main/monitor.png";
+import copy from "../../../public/img/main/copy.png";
+import clipboard from "../../../public/img/main/clipboard.png";
+import microscope from "../../../public/img/main/microscope.png";
+import topPicture from "../../../public/img/main/topPicture.png";
 const Top: React.FC = () => {
   return (
     <div>

@@ -124,7 +124,7 @@ const Wrapper = styled.div`
   width: 936px;
   height: 527.2px;
   margin: auto;
-  border: 2px solid rgb(199, 199, 199);
+  border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   padding: 15px;
 `;
@@ -170,7 +170,7 @@ const Line = styled.div`
     top: 10px;
     left: 0;
     width: 936px;
-    height: 1.5px;
+    height: 2px;
     background-color: rgb(199, 199, 199);
   }
 `;
