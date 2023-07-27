@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
-const Middle = () => {
+const Contents = () => {
   const dummyData = [
     {
       id: 1,
@@ -118,7 +118,7 @@ const Middle = () => {
   );
 };
 
-export default Middle;
+export default Contents;
 
 const Wrapper = styled.div`
   width: 936px;
@@ -151,11 +151,20 @@ const MainItemName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Dotum";
+  cursor : pointer;
+   &:hover {
+    text-decoration: underline;
+    
+  }
 `;
 const MainItemDate = styled.div`
   width: 180px;
   height: 16.8px;
   font-size: 11px;
+  font-family: "Dotum";
+  color: rgb(146, 146, 146);
+
 `;
 
 const Line = styled.div`
@@ -182,6 +191,7 @@ const SubItemTitle = styled.div`
   font-size: 13px;
   font-family: "Dotum";
   font-weight: 600;
+
 `;
 
 const SubItemWrapper = styled.div`
@@ -219,6 +229,12 @@ const SubItemName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Dotum";
+  cursor : pointer;
+  &:hover {
+    text-decoration: underline;
+   
+  }
 `;
 
 const SubItemContent = styled.div`
@@ -229,6 +245,11 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor : pointer;
+  &:hover {
+    text-decoration: underline;
+    
+  }
 `;
 
 const SubItemDate = styled.div`
