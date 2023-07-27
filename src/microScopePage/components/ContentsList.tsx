@@ -45,7 +45,7 @@ const ContentsList: React.FC = () => {
     <ListWrapper expanded={showList}>
       <ListTitleBox onClick={toggleList}>
         <ListTitle>광학 현미경</ListTitle>
-        <ListAmount>5개의 카테고리</ListAmount>
+        <ListAmount>{dummyData.length}개의 카테고리</ListAmount>
         <ListToggleBtn>{showList ? "목록닫기" : "목록열기"}</ListToggleBtn>
       </ListTitleBox>
       {showList && (
@@ -69,7 +69,7 @@ const ContentsList: React.FC = () => {
 export default ContentsList;
 
 const ListWrapper = styled.div<ListWrapperProps>`
-  width: 936px;
+  width: 966px;
   margin: auto;
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
