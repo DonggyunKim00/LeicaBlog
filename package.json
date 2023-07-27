@@ -9,6 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tiptap/extension-color": "^2.0.4",
+    "@tiptap/extension-font-family": "^2.0.4",
+    "@tiptap/extension-heading": "^2.0.4",
+    "@tiptap/extension-image": "^2.0.3",
+    "@tiptap/extension-placeholder": "^2.0.3",
+    "@tiptap/extension-strike": "^2.0.4",
+    "@tiptap/extension-text-align": "^2.0.4",
+    "@tiptap/extension-text-style": "^2.0.4",
+    "@tiptap/extension-underline": "^2.0.4",
+    "@tiptap/pm": "^2.0.4",
+    "@tiptap/react": "^2.0.4",
+    "@tiptap/starter-kit": "^2.0.4",
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
@@ -21,6 +33,7 @@
     "react-icons": "^4.10.1",
     "recoil": "^0.7.7",
     "styled-components": "^6.0.2",
+    "tiptap-extension-font-size": "^1.2.0",
     "typescript": "5.1.6"
   },
   "devDependencies": {
