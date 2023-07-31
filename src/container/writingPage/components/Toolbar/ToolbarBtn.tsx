@@ -10,7 +10,7 @@ const ToolbarBtn = ({ onClick, isActive, children }: ToolBarBtnProps) => {
     <Container
       type="button"
       onClick={onClick}
-      isactive={isActive ? "true" : "false"} // Pass isActive as a custom attribute
+      active={isActive ? "true" : "false"} // Pass isActive as a custom attribute
     >
       {children}
     </Container>
@@ -19,14 +19,14 @@ const ToolbarBtn = ({ onClick, isActive, children }: ToolBarBtnProps) => {
 
 export default ToolbarBtn;
 
-const Container = styled.button<{ isactive: string }>`
+const Container = styled.button<{ active: string }>`
   height: 30px;
   margin: 0px 5px;
   padding: 0px 5px;
   border-radius: 10px;
   border: 1px solid #99999a;
   background-color: ${(props) =>
-    props.isactive === "true" ? "#05af1e" : "transparent"};
+    props.active === "true" ? "#05af1e" : "transparent"};
   &:hover {
     cursor: pointer;
     border: 1px solid #0000001a;

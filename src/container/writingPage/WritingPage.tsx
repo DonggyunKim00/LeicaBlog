@@ -1,3 +1,7 @@
+import React from "react";
+import styled from "styled-components";
+import { useEditor } from "@tiptap/react";
+import Editor from "./components/Editor";
 import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -6,15 +10,12 @@ import Text from "@tiptap/extension-text";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import FontFamily from "@tiptap/extension-font-family";
+import Strike from "@tiptap/extension-strike";
+import Image from "@tiptap/extension-image";
 import { Color } from "@tiptap/extension-color";
-import { useEditor } from "@tiptap/react";
 import FontSize from "tiptap-extension-font-size";
 import Underline from "@tiptap/extension-underline";
-import React from "react";
-import Strike from "@tiptap/extension-strike";
-import { styled, css } from "styled-components";
 import Placeholder from "@tiptap/extension-placeholder";
-import Editor from "./components/Editor";
 
 const WritingPage = () => {
   const editor = useEditor({
@@ -38,6 +39,7 @@ const WritingPage = () => {
       FontSize,
       Underline,
       Strike,
+      Image,
     ],
     content: "",
   });
