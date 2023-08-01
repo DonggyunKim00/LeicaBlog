@@ -121,7 +121,7 @@ const Contents = () => {
 export default Contents;
 
 const Wrapper = styled.div`
-  width: 936px;
+  width: 966px;
   height: 527.2px;
   margin: auto;
   border: 3px solid rgb(199, 199, 199);
