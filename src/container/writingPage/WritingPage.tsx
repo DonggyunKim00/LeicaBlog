@@ -16,6 +16,7 @@ import { Color } from "@tiptap/extension-color";
 import FontSize from "tiptap-extension-font-size";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
+import Youtube from "@tiptap/extension-youtube";
 import {
   CustomHorizontalRule1,
   CustomHorizontalRule2,
@@ -31,7 +32,7 @@ import {
   CustomBlockQuote6,
   CustomBlockQuote7,
 } from "./components/customExtension/blockquote";
-import ImageResizeComponent from "./components/ImageResizeComponent";
+// import ImageResizeComponent from "./components/ImageResizeComponent";
 
 const WritingPage = () => {
   const editor = useEditor({
@@ -56,6 +57,7 @@ const WritingPage = () => {
       Underline,
       Strike,
       Image,
+      Youtube,
       CustomHorizontalRule1,
       CustomHorizontalRule2,
       CustomHorizontalRule3,

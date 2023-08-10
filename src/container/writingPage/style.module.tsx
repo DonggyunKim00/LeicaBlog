@@ -49,6 +49,17 @@ export const Container = styled.div`
     pointer-events: none;
   }
 
+  iframe {
+    border: 8px solid #000;
+    border-radius: 4px;
+    display: block;
+    margin: auto;
+    height: 350px;
+  }
+  div[data-youtube-video] > iframe {
+    cursor: move;
+  }
+
   /* HorizontalRule style */
   .ProseMirror div.hrDiv {
     border-top: 1px solid #ddd;
