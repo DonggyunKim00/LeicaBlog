@@ -15,6 +15,7 @@ import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
 import { ToolBarDivider } from "./ToolbarDivider";
 import { FieldValues } from "react-hook-form";
+import ToolbarSelectors from "./ToolbarSelectors";
 
 export interface ToolBarProps {
   editor?: Editor | null;
@@ -49,17 +50,63 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         >
           order list
         </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-          isActive={editor?.isActive("blockquote")}
-        >
-          blockquote
-        </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().setHorizontalRule().run()}
-        >
-          horizontal rule
-        </ToolbarBtn>
+        <ToolBarDivider />
+        <ToolbarSelectors
+          optionArr={[
+            { command: () => {}, label: "인용구 선택" },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote6().run(),
+              label: "진한 인용구",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote7().run(),
+              label: "연한 인용구",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote2().run(),
+              label: "진한 따옴표",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote1().run(),
+              label: "연한 따옴표",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote3().run(),
+              label: "모서리 박스",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote4().run(),
+              label: "종이 박스",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote5().run(),
+              label: "말풍선",
+            },
+          ]}
+        />
+        <ToolBarDivider />
+        <ToolbarSelectors
+          optionArr={[
+            { command: () => {}, label: "구분선 선택" },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule1().run(),
+              label: "기본 구분선",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule4().run(),
+              label: "짧은 기본 구분선",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule2().run(),
+              label: "네모 구분선1",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule3().run(),
+              label: "네모 구분선2",
+            },
+          ]}
+        />
+        <ToolBarDivider />
         <ToolbarBtn
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 1 }).run()
@@ -115,7 +162,20 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         {/* 텍스트 스타일 버튼 */}
         <ToolbarSelector
           optionArr={[
-            { value: "16", label: "fontSize" },
+            { value: "", label: "폰트 설정" },
+            { value: "Inter" },
+            { value: "Comic Sans" },
+            { value: "serif" },
+            { value: "monospace" },
+            { value: "cursive" },
+          ]}
+          command={(value) =>
+            editor?.chain().focus().setFontFamily(value).run()
+          }
+        />
+        <ToolbarSelector
+          optionArr={[
+            { value: "16px", label: "글자 크기" },
             { value: "13px" },
             { value: "16px" },
             { value: "19px" },
@@ -126,9 +186,6 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
             { value: "34px" },
           ]}
           command={(value) => editor?.chain().focus().setFontSize(value).run()}
-          isActive={(value) =>
-            editor?.isActive("textStyle", { fontSize: value })
-          }
         />
         <ToolBarDivider />
         <ToolbarBtn
@@ -155,33 +212,28 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         >
           <BsTypeStrikethrough size="20" />
         </ToolbarBtn>
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
-            { value: "", label: "text color" },
-            { value: "#999999", label: "Gray" },
-            { value: "#ff0010", label: "Red" },
+            { value: "", label: "텍스트 컬러" },
+            { value: "#999999", label: "회색" },
+            { value: "#ff0010", label: "빨간색" },
+            { value: "#2a55ff", label: "파란색" },
+            { value: "#0078cb", label: "하늘색" },
+            { value: "#00756a", label: "풀색" },
+            { value: "#004e6a", label: "청록색" },
+          ]}
+          command={(value) => editor?.chain().focus().setColor(value).run()}
+        />
+        <ToolbarSelector
+          optionArr={[
+            { value: "", label: "텍스트 하이라이트" },
+            { value: "#ffe8e2", label: "연빨강" },
+            { value: "#f7f7f7", label: "연회색" },
             { value: "#2a55ff", label: "Blue" },
             { value: "#004e6a", label: "DarkBlue" },
           ]}
           command={(value) => editor?.chain().focus().setColor(value).run()}
-          isActive={(value) => editor?.isActive("textStyle", { color: value })}
-        />
-        <ToolBarDivider />
-        <ToolbarSelector
-          optionArr={[
-            { value: "", label: "font family" },
-            { value: "Inter" },
-            { value: "Comic Sans" },
-            { value: "serif" },
-            { value: "monospace" },
-            { value: "cursive" },
-          ]}
-          command={(value) =>
-            editor?.chain().focus().setFontFamily(value).run()
-          }
-          isActive={(value) =>
-            editor?.isActive("textStyle", { fontFamily: value })
-          }
         />
         <ToolBarDivider />
         {/* alignment 버튼 */}
@@ -204,7 +256,6 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
           <BiAlignRight size="20" />
         </ToolbarBtn>
         <ToolBarDivider />
-        {/* 되돌리기 버튼 */}
         <ToolbarBtn onClick={() => editor?.chain().focus().undo().run()}>
           <BsArrowReturnLeft size="20" />
         </ToolbarBtn>
