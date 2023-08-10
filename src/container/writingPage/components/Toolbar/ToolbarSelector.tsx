@@ -9,18 +9,13 @@ interface OptionListSet {
 interface ToolbarSelectorProps {
   optionArr: Array<OptionListSet>;
   command: (value: string) => boolean | undefined;
-  isActive: (value: string) => boolean | undefined;
 }
 
 /**
  * optionArr : option에 들어갈 요소들을 [{value:?? , label:??}] 형식으로 받음, label이 없으면 value값이 option에 보여짐
- * command : tiptap의 command를 받음 ex)editor?.chain().focus().toggleUnderline().run()
+ * command : tiptap의 command를 받음 ex) editor?.chain().focus().toggleUnderline().run()
  */
-const ToolbarSelector = ({
-  optionArr,
-  command,
-  isActive,
-}: ToolbarSelectorProps) => {
+const ToolbarSelector = ({ optionArr, command }: ToolbarSelectorProps) => {
   const [selectedOption, setSelectedOption] = useState<string>("");
 
   const handleChange = (value: string) => {
@@ -36,11 +31,7 @@ const ToolbarSelector = ({
       }
     >
       {optionArr.map((option, idx) => (
-        <option
-          key={idx}
-          value={option.value}
-          className={isActive(option.value) ? "is-active" : ""}
-        >
+        <option key={idx} value={option.value}>
           {option.label ? option.label : option.value}
         </option>
       ))}
