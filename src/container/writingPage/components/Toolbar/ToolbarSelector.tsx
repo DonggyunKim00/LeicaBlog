@@ -12,8 +12,11 @@ interface ToolbarSelectorProps {
 }
 
 /**
- * optionArr : option에 들어갈 요소들을 [{value:?? , label:??}] 형식으로 받음, label이 없으면 value값이 option에 보여짐
- * command : tiptap의 command를 받음 ex) editor?.chain().focus().toggleUnderline().run()
+ * 컴포넌트 설명
+ *    command에 인자로 value가 들어가야 하는것들 ex) text-color, font-size, font-family
+ * props 설명
+ *    optionArr : option에 들어갈 요소들을 [{value:?? , label:??}] 형식으로 받음, label이 없으면 value값이 option에 보여짐
+ *    command : tiptap의 command를 받음 ex) editor?.chain().focus().toggleUnderline().run()
  */
 const ToolbarSelector = ({ optionArr, command }: ToolbarSelectorProps) => {
   const [selectedOption, setSelectedOption] = useState<string>("");
