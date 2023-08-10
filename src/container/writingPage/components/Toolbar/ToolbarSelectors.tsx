@@ -10,8 +10,11 @@ interface ToolbarSelectorProps {
   optionArr: Array<OptionListSet>;
 }
 /**
- * optionArr : option에 들어갈 요소들을 [{command:?? , label:??}, {...} ] 형식으로 받음, label은 사용자에게 보여지는 옵션, command는 사용되는 함수
- *                                        => command : tiptap의 command를 받음 ex) editor?.chain().focus().toggleUnderline().run()
+ * 컴포넌트 설명
+ *    command의 함수 이름자체가 다른데(class로 스타일을 적용하는) 종류가 비슷한것들=> horizontalRule, blockquote
+ * props 설명
+ *    optionArr : option에 들어갈 요소들을 [{command:?? , label:??}, {...} ] 형식으로 받음, label은 사용자에게 보여지는 옵션, command는 사용되는 함수
+ *                                            => command : tiptap의 command를 받음 ex) editor?.chain().focus().toggleUnderline().run()
  */
 const ToolbarSelectors = ({ optionArr }: ToolbarSelectorProps) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
