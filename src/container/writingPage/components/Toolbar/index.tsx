@@ -27,6 +27,19 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
     console.log(data);
     console.log(editor?.getJSON());
   };
+  if (!editor) {
+    return null;
+  }
+
+  const addYoutubeVideo = () => {
+    const url = prompt("유튜브 URL을 입력하세요.");
+
+    if (url) {
+      editor.commands.setYoutubeVideo({
+        src: url,
+      });
+    }
+  };
   return (
     <Container>
       <SubmitLine>
@@ -157,6 +170,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         >
           <BsImage size="20" />
         </ToolbarBtn>
+        <ToolbarBtn onClick={addYoutubeVideo}>유튜브 동영상 추가</ToolbarBtn>
       </ExtraLine>
       <TextLine>
         {/* 텍스트 스타일 버튼 */}
