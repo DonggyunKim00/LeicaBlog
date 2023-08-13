@@ -28,7 +28,7 @@ export const CustomHorizontalRule2 = Node.create<HorizontalRuleOptions>({
   group: "block",
 
   parseHTML() {
-    return [{ tag: "div" }];
+    return [{ tag: "hr" }];
   },
 
   renderHTML({ HTMLAttributes }) {
