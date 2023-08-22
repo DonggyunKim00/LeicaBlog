@@ -34,6 +34,18 @@ const Contents = () => {
       name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
       date: "2023. 6. 26.",
     },
+    {
+      id: 5,
+      imgSrc: "/img/main/middle/5.png",
+      name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
+      date: "2023. 6. 26.",
+    },
+    {
+      id: 5,
+      imgSrc: "/img/main/middle/5.png",
+      name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
+      date: "2023. 6. 26.",
+    },
   ];
 
   const dummySubItems = [
@@ -72,7 +84,7 @@ const Contents = () => {
       imgSrc: "/img/main/middle/s5.png",
       name: "[소식] 대한미세수술학회...",
       content:
-        "대한미세수술학회 대한수부외과학회 대한말초신경수술학회 2023 합동 심포지...",
+        "대한미세수술학회 대한수부외과학회 대한말초신경수술학회 2023 합동 심포지",
       date: "2023. 5. 22.",
     },
     {
@@ -83,11 +95,31 @@ const Contents = () => {
         "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
       date: "2023. 5. 19.",
     },
+    {
+      id: 6,
+      imgSrc: "/img/main/middle/s6.png",
+      name: "[소식] 대한성형외과학회에...",
+      content:
+        "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
+      date: "2023. 5. 19.",
+    },
+    {
+      id: 6,
+      imgSrc: "/img/main/middle/s6.png",
+      name: "[소식] 대한성형외과학회에...",
+      content:
+        "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
+      date: "2023. 5. 19.",
+    },
   ];
+
+  const recentMainItems = dummyData.slice(0, 5);
+  const recentSubItems = dummySubItems.slice(0, 6);
+
   return (
     <Wrapper>
       <MainItemWrapper>
-        {dummyData.map((item) => (
+        {recentMainItems.map((item) => (
           <MainItemBox key={item.id}>
             <MainItemImg>
               <Image src={item.imgSrc} alt="" width={180} height={185} />
@@ -101,7 +133,7 @@ const Contents = () => {
       <SubItemTitle>- 라이카 news</SubItemTitle>
 
       <SubItemWrapper>
-        {dummySubItems.map((subItem) => (
+        {recentSubItems.map((subItem) => (
           <SubItemBox key={subItem.id}>
             <SubItemImg>
               <Image src={subItem.imgSrc} alt="" width={90} height={90} />
@@ -152,10 +184,9 @@ const MainItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  cursor : pointer;
-   &:hover {
+  cursor: pointer;
+  &:hover {
     text-decoration: underline;
-    
   }
 `;
 const MainItemDate = styled.div`
@@ -164,7 +195,6 @@ const MainItemDate = styled.div`
   font-size: 11px;
   font-family: "Dotum";
   color: rgb(146, 146, 146);
-
 `;
 
 const Line = styled.div`
@@ -191,7 +221,6 @@ const SubItemTitle = styled.div`
   font-size: 13px;
   font-family: "Dotum";
   font-weight: 600;
-
 `;
 
 const SubItemWrapper = styled.div`
@@ -230,10 +259,9 @@ const SubItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  cursor : pointer;
+  cursor: pointer;
   &:hover {
     text-decoration: underline;
-   
   }
 `;
 
@@ -245,10 +273,9 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor : pointer;
+  cursor: pointer;
   &:hover {
     text-decoration: underline;
-    
   }
 `;
 
