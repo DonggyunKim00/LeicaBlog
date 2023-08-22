@@ -1,160 +1,132 @@
-import React from "react";
-
+import React, { useState } from "react";
 import styled from "styled-components";
 import leicaTypo from "../../../public/img/main/leicaTypo.jpg";
 import Image from "next/image";
-import globe from "../../../public/img/main/globe.png";
-import monitor from "../../../public/img/main/monitor.png";
-import copy from "../../../public/img/main/copy.png";
-import clipboard from "../../../public/img/main/clipboard.png";
-import microscope from "../../../public/img/main/microscope.png";
 import topPicture from "../../../public/img/main/topPicture.png";
+import microScope from "../../../public/img/main/microScope.png";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
+
 const Top: React.FC = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleCategoryClick = (categoryName: string) => {
+    Router.push({
+      pathname: pathName.MICROSCOPE,
+      query: { category: categoryName },
+    });
+  };
   return (
     <div>
-      <LeicaTypo>
-        <Image width={160} height={100} alt={""} src={leicaTypo} />
-      </LeicaTypo>
-      <MenuWrapper>
-        <MenuBox>
-          <MenuIcon>
-            <Image width={23} height={23} alt={""} src={globe} />
-          </MenuIcon>
-          <MenuName2>About Leica Microsystems</MenuName2>
-        </MenuBox>
-        <MenuBox>
-          <MenuIcon>
-            <Image width={22} height={22} alt={""} src={clipboard} />
-          </MenuIcon>
-          <MenuName>소식 및 프로모션</MenuName>
-        </MenuBox>
-        <MenuBox>
-          <MenuIcon>
-            <Image width={22} height={20} alt={""} src={monitor} />
-          </MenuIcon>
-          <MenuName>기술자료</MenuName>
-        </MenuBox>
-        <MenuBox>
-          <MenuIcon>
-            <Image width={20} height={20} alt={""} src={copy} />
-          </MenuIcon>
-          <MenuName>견적 및 서비스 문의</MenuName>
-        </MenuBox>
-        <MenuBox>
-          <MenuIcon>
-            <Image width={20} height={20} alt={""} src={microscope} />
-          </MenuIcon>
-          <MenuName>공식 홈페이지</MenuName>
-        </MenuBox>
-      </MenuWrapper>
-      <ContentWrapper>
-        <Image width={917} height={500} alt={""} src={topPicture} />
-      </ContentWrapper>
-      <ScopeMenuWrapper>
-        <ScopeMenuBox>광학 현미경</ScopeMenuBox>
-        <ScopeMenuBox>공초점레이저 현미경</ScopeMenuBox>
-        <ScopeMenuBox>디지털 현미경</ScopeMenuBox>
-        <ScopeMenuBox>현미경 카메라</ScopeMenuBox>
-        <ScopeMenuBox2>수술용 현미경</ScopeMenuBox2>
-      </ScopeMenuWrapper>
-
-      <ScopeMenuWrapper2>
-        <ScopeMenuBox>수퍼해상도 현미경</ScopeMenuBox>
-        <ScopeMenuBox>
-          실체현미경
-          <br />
-          마크로 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox>현미경 소프트웨어</ScopeMenuBox>
-        <ScopeMenuBox>
-          전자현미경 <br />
-          시료전처리
-        </ScopeMenuBox>
-        <ScopeMenuBox2>교육용 현미경</ScopeMenuBox2>
-      </ScopeMenuWrapper2>
+      <Wrapper>
+        <LeicaTypoBox>
+          <LeicaTypo
+            onClick={() => {
+              Router.push(pathName.MAIN);
+            }}
+          >
+            <Image width={160} height={100} alt={""} src={leicaTypo} />
+          </LeicaTypo>
+        </LeicaTypoBox>
+        <ContentWrapper>
+          <Image width={917} height={500} alt={""} src={topPicture} />
+        </ContentWrapper>
+        <EstimateBox
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          isHovered={isHovered}
+          onClick={() => {
+            Router.push(pathName.ESTIMATE);
+          }}
+        >
+          <EstimateImage>
+            <Image width={30} height={30} alt={""} src={microScope} />
+          </EstimateImage>
+          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
+          {isHovered && (
+            <EstimateMessage>
+              문의 사항이 있으신가요?
+              <br />
+              클릭해주세요!
+            </EstimateMessage>
+          )}
+        </EstimateBox>
+        <ScopeMenuWrapper>
+          <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
+            광학 현미경
+          </ScopeMenuBox>
+          <ScopeMenuBox
+            onClick={() => handleCategoryClick("공초점레이저 현미경")}
+          >
+            공초점레이저 현미경
+          </ScopeMenuBox>
+          <ScopeMenuBox onClick={() => handleCategoryClick("디지털 현미경")}>
+            디지털 현미경
+          </ScopeMenuBox>
+          <ScopeMenuBox onClick={() => handleCategoryClick("현미경 카메라")}>
+            현미경 카메라
+          </ScopeMenuBox>
+          <ScopeMenuBox2 onClick={() => handleCategoryClick("수술용 현미경")}>
+            수술용 현미경
+          </ScopeMenuBox2>
+        </ScopeMenuWrapper>
+        <ScopeMenuWrapper2>
+          <ScopeMenuBox
+            onClick={() => handleCategoryClick("수퍼해상도 현미경")}
+          >
+            수퍼해상도 현미경
+          </ScopeMenuBox>
+          <ScopeMenuBox
+            onClick={() => handleCategoryClick("실체 현미경, 마크로 현미경")}
+          >
+            실체현미경
+            <br />
+            마크로 현미경
+          </ScopeMenuBox>
+          <ScopeMenuBox
+            onClick={() => handleCategoryClick("현미경 소프트웨어")}
+          >
+            현미경 소프트웨어
+          </ScopeMenuBox>
+          <ScopeMenuBox
+            onClick={() => handleCategoryClick("전자현미경, 시료전처리")}
+          >
+            전자현미경 <br />
+            시료전처리
+          </ScopeMenuBox>
+          <ScopeMenuBox2 onClick={() => handleCategoryClick("교육용 현미경")}>
+            교육용 현미경
+          </ScopeMenuBox2>
+        </ScopeMenuWrapper2>
+      </Wrapper>
     </div>
   );
 };
 
 export default Top;
 
-const MenuBox = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 170px;
-  height: 80px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #eeeeee;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background-color: rgb(127, 145, 157);
-  }
+const Wrapper = styled.div`
+  display: flexbox;
 `;
-
-const MenuIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
-  margin-bottom: 5px;
-`;
-
-const MenuName = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15x;
-  font-weight: 550;
-  white-space: nowrap;
-  color: #686868;
-`;
-const MenuName2 = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 10x;
-  font-weight: 600;
-  white-space: nowrap;
-  letter-spacing: -1.4px;
-  color: #686868;
-`;
-const LeicaTypo = styled.div`
+const LeicaTypoBox = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
 `;
-
-const MenuWrapper = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  width: 914px;
-  margin: 0 auto;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: rgb(127, 145, 157);
+const LeicaTypo = styled.div`
+  width: 160px;
+   &:hover {
+    cursor: pointer;
   }
 `;
-
 const ContentWrapper = styled.div`
   width: 920px;
   height: 500px;
@@ -165,7 +137,8 @@ const ContentWrapper = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
   position: relative;
-  right: 2px;
+  border-radius: 15px;
+  overflow: hidden;
 `;
 
 const ScopeMenuWrapper = styled.div`
@@ -243,8 +216,50 @@ const ScopeMenuBox2 = styled.div`
   }
 `;
 
-const MenuOption = styled.div`
-  width: 500px;
-  height: 100px;
-  background-color: gray;
+const EstimateBox = styled.div<{ isHovered: boolean }>`
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 200px;
+  height: ${(props) => (props.isHovered ? "140px" : "100px")};
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  background-color: white;
+  z-index: 1;
+  display: flexbox;
+  align-items: center;
+  flex-direction: row;
+  transition: height 0.3s;
+
+  &:hover {
+    height: 140px;
+    cursor: pointer;
+  }
+`;
+const EstimateImage = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0px 10px 0px;
+`;
+
+const EstimateSpan = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10x;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -1.4px;
+  color: #686868;
+  margin-top: 10px;
+`;
+
+const EstimateMessage = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 14px;
+  color: #686868;
+  display: flex;
+  justify-content: center;
 `;
