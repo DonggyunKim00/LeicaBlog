@@ -9,22 +9,33 @@ import {
   BsTypeStrikethrough,
   BsArrowReturnLeft,
   BsArrowReturnRight,
+  BsImage,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
 import { ToolBarDivider } from "./ToolbarDivider";
+import { FieldValues } from "react-hook-form";
+import ToolbarSelectors from "./ToolbarSelectors";
 
 export interface ToolBarProps {
   editor?: Editor | null;
+  handleSubmit: any;
 }
 
-const index = ({ editor }: ToolBarProps) => {
+const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
+  const submit = (data: FieldValues) => {
+    console.log(data);
+    console.log(editor?.getJSON());
+  };
   return (
     <Container>
       <SubmitLine>
-        <button type="button" onClick={() => console.log(editor?.getJSON())}>
+        <SubmitBtn
+          // type="submit"
+          onClick={handleSubmit(submit)}
+        >
           발행하기
-        </button>
+        </SubmitBtn>
       </SubmitLine>
       <ExtraLine>
         <ToolbarBtn
@@ -39,17 +50,63 @@ const index = ({ editor }: ToolBarProps) => {
         >
           order list
         </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-          isActive={editor?.isActive("blockquote")}
-        >
-          blockquote
-        </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().setHorizontalRule().run()}
-        >
-          horizontal rule
-        </ToolbarBtn>
+        <ToolBarDivider />
+        <ToolbarSelectors
+          optionArr={[
+            { command: () => {}, label: "인용구 선택" },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote6().run(),
+              label: "진한 인용구",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote7().run(),
+              label: "연한 인용구",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote2().run(),
+              label: "진한 따옴표",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote1().run(),
+              label: "연한 따옴표",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote3().run(),
+              label: "모서리 박스",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote4().run(),
+              label: "종이 박스",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBlockquote5().run(),
+              label: "말풍선",
+            },
+          ]}
+        />
+        <ToolBarDivider />
+        <ToolbarSelectors
+          optionArr={[
+            { command: () => {}, label: "구분선 선택" },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule1().run(),
+              label: "기본 구분선",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule4().run(),
+              label: "짧은 기본 구분선",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule2().run(),
+              label: "네모 구분선1",
+            },
+            {
+              command: () => editor?.chain().focus().setHorizontalRule3().run(),
+              label: "네모 구분선2",
+            },
+          ]}
+        />
+        <ToolBarDivider />
         <ToolbarBtn
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 1 }).run()
@@ -74,12 +131,51 @@ const index = ({ editor }: ToolBarProps) => {
         >
           h3
         </ToolbarBtn>
+        <ToolbarBtn
+          onClick={() => {
+            const input = document.createElement("input");
+
+            input.type = "file";
+            input.multiple = true;
+            input.onchange = (_) => {
+              if (!input.files) {
+                return;
+              }
+
+              // const files = Array.from(input.files);
+
+              // files.forEach(async (file) => {
+              //   const url = await uploadImage({
+              //     image: file,
+              //   });
+              //   editor?.chain().focus().setImage({ src: url }).run();
+              // });
+              console.log(input.files);
+            };
+            input.click();
+          }}
+        >
+          <BsImage size="20" />
+        </ToolbarBtn>
       </ExtraLine>
       <TextLine>
         {/* 텍스트 스타일 버튼 */}
         <ToolbarSelector
           optionArr={[
-            { value: "", label: "fontSize" },
+            { value: "", label: "폰트 설정" },
+            { value: "Inter" },
+            { value: "Comic Sans" },
+            { value: "serif" },
+            { value: "monospace" },
+            { value: "cursive" },
+          ]}
+          command={(value) =>
+            editor?.chain().focus().setFontFamily(value).run()
+          }
+        />
+        <ToolbarSelector
+          optionArr={[
+            { value: "16px", label: "글자 크기" },
             { value: "13px" },
             { value: "16px" },
             { value: "19px" },
@@ -90,9 +186,6 @@ const index = ({ editor }: ToolBarProps) => {
             { value: "34px" },
           ]}
           command={(value) => editor?.chain().focus().setFontSize(value).run()}
-          isActive={(value) =>
-            editor?.isActive("textStyle", { fontSize: value })
-          }
         />
         <ToolBarDivider />
         <ToolbarBtn
@@ -119,16 +212,28 @@ const index = ({ editor }: ToolBarProps) => {
         >
           <BsTypeStrikethrough size="20" />
         </ToolbarBtn>
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
-            { value: "", label: "text color" },
-            { value: "#999999", label: "Gray" },
-            { value: "#ff0010", label: "Red" },
+            { value: "", label: "텍스트 컬러" },
+            { value: "#999999", label: "회색" },
+            { value: "#ff0010", label: "빨간색" },
+            { value: "#2a55ff", label: "파란색" },
+            { value: "#0078cb", label: "하늘색" },
+            { value: "#00756a", label: "풀색" },
+            { value: "#004e6a", label: "청록색" },
+          ]}
+          command={(value) => editor?.chain().focus().setColor(value).run()}
+        />
+        <ToolbarSelector
+          optionArr={[
+            { value: "", label: "텍스트 하이라이트" },
+            { value: "#ffe8e2", label: "연빨강" },
+            { value: "#f7f7f7", label: "연회색" },
             { value: "#2a55ff", label: "Blue" },
             { value: "#004e6a", label: "DarkBlue" },
           ]}
           command={(value) => editor?.chain().focus().setColor(value).run()}
-          isActive={(value) => editor?.isActive("textStyle", { color: value })}
         />
         <ToolBarDivider />
         {/* alignment 버튼 */}
@@ -151,7 +256,6 @@ const index = ({ editor }: ToolBarProps) => {
           <BiAlignRight size="20" />
         </ToolbarBtn>
         <ToolBarDivider />
-        {/* 되돌리기 버튼 */}
         <ToolbarBtn onClick={() => editor?.chain().focus().undo().run()}>
           <BsArrowReturnLeft size="20" />
         </ToolbarBtn>
@@ -159,24 +263,11 @@ const index = ({ editor }: ToolBarProps) => {
           <BsArrowReturnRight size="20" />
         </ToolbarBtn>
       </TextLine>
-
-      {/* <div>
-        
-      </div>
-      
-        ordered list
-      </ToolbarBtn>
-      <ToolbarBtn
-        onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
-        isActive={editor?.isActive("codeBlock")}
-      >
-        code block
-      </ToolbarBtn>*/}
     </Container>
   );
 };
 
-export default index;
+export default Toolbar;
 
 const Container = styled.div`
   position: sticky;
@@ -204,4 +295,17 @@ const ExtraLine = styled.div`
 `;
 const TextLine = styled.div`
   ${line}
+`;
+const SubmitBtn = styled.button`
+  margin-right: 30px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid #99999a;
+  background-color: green;
+  font-size: 20px;
+  color: white;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #0000001a;
+  }
 `;
