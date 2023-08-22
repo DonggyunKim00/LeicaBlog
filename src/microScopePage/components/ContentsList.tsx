@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
 
@@ -16,6 +17,9 @@ const ContentsList: React.FC = () => {
   const toggleList = () => {
     setShowList((prevState) => !prevState);
   };
+
+  const router = useRouter();
+  const { category } = router.query;
 
   const dummyData: Category[] = [
     {
@@ -39,14 +43,25 @@ const ContentsList: React.FC = () => {
         { id: 6, title: "글 제목3-2" },
       ],
     },
+    {
+      name: "대박 화질 개지리는 현미경",
+      posts: [
+        { id: 5, title: "글 제목3-1" },
+        { id: 6, title: "글 제목3-2" },
+      ],
+    },
+  
   ];
 
   return (
     <ListWrapper expanded={showList}>
-      <ListTitleBox onClick={toggleList}>
-        <ListTitle>광학 현미경</ListTitle>
+      <ListTitleBox>
+        <ListTitle>{category}</ListTitle>
         <ListAmount>{dummyData.length}개의 카테고리</ListAmount>
-        <ListToggleBtn>{showList ? "목록닫기" : "목록열기"}</ListToggleBtn>
+
+        <ListToggleBtn onClick={toggleList}>
+          {showList ? "목록닫기" : "목록열기"}
+        </ListToggleBtn>
       </ListTitleBox>
       {showList && (
         <ListContents>
@@ -154,4 +169,3 @@ const CategoryAmount = styled.div`
   font-size: 12px;
   color: rgb(146, 146, 146);
 `;
-
