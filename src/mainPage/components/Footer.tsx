@@ -31,14 +31,7 @@ const Footer = () => {
           height={248}
         />
       </Youtube>
-      {/* <FaceBook>
-        <Image
-          src="/img/main/footer/facebook.png"
-          alt=""
-          width={170}
-          height={36}
-        />
-      </FaceBook> */}
+  
       <BusinesssInfoBox>
         <BusinessInfo>
           <InfoTitleBox>
@@ -87,7 +80,7 @@ const Footer = () => {
 export default Footer;
 
 const Wrapper = styled.div`
-  width: 966px;
+  width: 980px;
   height: 391.8px;
   padding-bottom: 10px;
   margin: 16px auto 0;
@@ -135,21 +128,14 @@ const Youtube = styled.div`
   border-color: rgb(233, 233, 233);
 `;
 
-const FaceBook = styled.div`
-  width: 170px;
-  height: 62px;
-  margin-left: 16px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`;
+
 
 const BusinesssInfoBox = styled.div`
   width: 171px;
   height: 212px;
-  margin-left: 16px;
   border: 1px solid;
   border-color: rgb(211, 211, 211);
+  margin-left : 205px;
 `;
 
 const BusinessInfo = styled.div`
