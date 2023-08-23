@@ -32,7 +32,7 @@ import {
   CustomBlockQuote6,
   CustomBlockQuote7,
 } from "./components/customExtension/blockquote";
-// import ImageResizeComponent from "./components/ImageResizeComponent";
+import ImageResize from "./components/customExtension/imageAlignment";
 
 const WritingPage = () => {
   const editor = useEditor({
@@ -69,6 +69,7 @@ const WritingPage = () => {
       CustomBlockQuote5,
       CustomBlockQuote6,
       CustomBlockQuote7,
+      ImageResize,
     ],
     content: "",
   });

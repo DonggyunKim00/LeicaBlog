@@ -7,10 +7,10 @@ export interface IUploadImage {
 export async function uploadImage({ image }: IUploadImage) {
   const formData = new FormData();
 
-  formData.append("image", image);
+  formData.append("file", image);
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/board/image`,
+    `http://krleicablog.shop:8080/admin/upload`,
     formData,
     {
       headers: {

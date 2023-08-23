@@ -16,6 +16,7 @@ import ToolbarSelector from "./ToolbarSelector";
 import { ToolBarDivider } from "./ToolbarDivider";
 import { FieldValues } from "react-hook-form";
 import ToolbarSelectors from "./ToolbarSelectors";
+import { uploadImage } from "../../../../../pages/api/board";
 
 export interface ToolBarProps {
   editor?: Editor | null;
@@ -27,15 +28,11 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
     console.log(data);
     console.log(editor?.getJSON());
   };
-  if (!editor) {
-    return null;
-  }
 
   const addYoutubeVideo = () => {
     const url = prompt("유튜브 URL을 입력하세요.");
-
     if (url) {
-      editor.commands.setYoutubeVideo({
+      editor?.commands.setYoutubeVideo({
         src: url,
       });
     }
@@ -155,15 +152,14 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
                 return;
               }
 
-              // const files = Array.from(input.files);
+              const files = Array.from(input.files);
 
-              // files.forEach(async (file) => {
-              //   const url = await uploadImage({
-              //     image: file,
-              //   });
-              //   editor?.chain().focus().setImage({ src: url }).run();
-              // });
-              console.log(input.files);
+              files.forEach(async (file) => {
+                const url = await uploadImage({
+                  image: file,
+                });
+                editor?.chain().focus().setImage({ src: url.toString() }).run();
+              });
             };
             input.click();
           }}

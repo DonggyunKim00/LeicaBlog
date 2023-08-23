@@ -48,7 +48,16 @@ export const Container = styled.div`
     height: 0;
     pointer-events: none;
   }
-
+  .image-resizer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .resize-trigger {
+      position: relative;
+      top: 8px;
+      margin-left: -13px;
+    }
+  }
   iframe {
     border: 8px solid #000;
     border-radius: 4px;
