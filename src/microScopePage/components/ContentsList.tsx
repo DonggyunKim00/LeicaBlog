@@ -42,14 +42,7 @@ const ContentsList: React.FC = () => {
         { id: 5, title: "글 제목3-1" },
         { id: 6, title: "글 제목3-2" },
       ],
-    },
-    {
-      name: "대박 화질 개지리는 현미경",
-      posts: [
-        { id: 5, title: "글 제목3-1" },
-        { id: 6, title: "글 제목3-2" },
-      ],
-    },
+    }
   
   ];
 
