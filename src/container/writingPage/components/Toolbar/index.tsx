@@ -48,18 +48,27 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         </SubmitBtn>
       </SubmitLine>
       <ExtraLine>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().toggleBulletList().run()}
-          isActive={editor?.isActive("bulletList")}
-        >
-          bullet list
-        </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-          isActive={editor?.isActive("orderedList")}
-        >
-          order list
-        </ToolbarBtn>
+        <ToolbarSelectors
+          optionArr={[
+            { command: () => {}, label: "리스트 선택" },
+            {
+              command: () => editor?.chain().focus().toggleBulletList1().run(),
+              label: "• 리스트",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBulletList2().run(),
+              label: "♦ 리스트",
+            },
+            {
+              command: () => editor?.chain().focus().toggleBulletList3().run(),
+              label: "✔ 리스트",
+            },
+            {
+              command: () => editor?.chain().focus().toggleOrderedList().run(),
+              label: "숫자 리스트",
+            },
+          ]}
+        />
         <ToolBarDivider />
         <ToolbarSelectors
           optionArr={[
@@ -243,7 +252,9 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
             { value: "#2a55ff", label: "Blue" },
             { value: "#004e6a", label: "DarkBlue" },
           ]}
-          command={(value) => editor?.chain().focus().setColor(value).run()}
+          command={(value) =>
+            editor?.chain().focus().toggleHighlight({ color: value }).run()
+          }
         />
         <ToolBarDivider />
         {/* alignment 버튼 */}
