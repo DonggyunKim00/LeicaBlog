@@ -13,9 +13,11 @@ import FontFamily from "@tiptap/extension-font-family";
 import Strike from "@tiptap/extension-strike";
 import Image from "@tiptap/extension-image";
 import { Color } from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
 import FontSize from "tiptap-extension-font-size";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
+import Youtube from "@tiptap/extension-youtube";
 import {
   CustomHorizontalRule1,
   CustomHorizontalRule2,
@@ -31,7 +33,12 @@ import {
   CustomBlockQuote6,
   CustomBlockQuote7,
 } from "./components/customExtension/blockquote";
-import ImageResizeComponent from "./components/ImageResizeComponent";
+import {
+  CustomBulletList1,
+  CustomBulletList2,
+  CustomBulletList3,
+} from "./components/customExtension/list";
+import ImageResize from "./components/customExtension/imageAlignment";
 
 const WritingPage = () => {
   const editor = useEditor({
@@ -52,10 +59,12 @@ const WritingPage = () => {
       TextStyle,
       FontFamily,
       Color,
+      Highlight.configure({ multicolor: true }),
       FontSize,
       Underline,
       Strike,
       Image,
+      Youtube,
       CustomHorizontalRule1,
       CustomHorizontalRule2,
       CustomHorizontalRule3,
@@ -67,6 +76,10 @@ const WritingPage = () => {
       CustomBlockQuote5,
       CustomBlockQuote6,
       CustomBlockQuote7,
+      CustomBulletList1,
+      CustomBulletList2,
+      CustomBulletList3,
+      ImageResize,
     ],
     content: "",
   });
