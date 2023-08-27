@@ -8,14 +8,14 @@ import Router from "next/router";
 import { pathName } from "@/config/pathName";
 
 const Top: React.FC = () => {
-  const [ishovered, setIshovered] = useState(false);
+  const [hovered, sethovered] = useState(false);
 
   const handleMouseEnter = () => {
-    setIshovered(true);
+    sethovered(true);
   };
 
   const handleMouseLeave = () => {
-    setIshovered(false);
+    sethovered(false);
   };
 
   const handleCategoryClick = (categoryName: string) => {
@@ -42,7 +42,7 @@ const Top: React.FC = () => {
         <EstimateBox
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          ishovered={ishovered}
+          $hovered={hovered}
           onClick={() => {
             Router.push(pathName.ESTIMATE);
           }}
@@ -51,7 +51,7 @@ const Top: React.FC = () => {
             <Image width={30} height={30} alt={""} src={microScope} />
           </EstimateImage>
           <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-          {ishovered && (
+          {hovered && (
             <EstimateMessage>
               문의 사항이 있으신가요?
               <br />
@@ -216,12 +216,12 @@ const ScopeMenuBox2 = styled.div`
   }
 `;
 
-const EstimateBox = styled.div<{ ishovered: boolean }>`
+const EstimateBox = styled.div<{ $hovered: boolean }>`
   position: fixed;
   top: 100px;
   right: 20px;
   width: 200px;
-  height: ${(props) => (props.ishovered ? "140px" : "100px")};
+  height: ${props => props.$hovered ? "140px" : "100px"};
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   background-color: white;
