@@ -10,6 +10,36 @@ interface Category {
 const CreateContent: React.FC = () => {
   const router = useRouter();
   const { category } = router.query;
+  const [subcategoryName, setSubcategoryName] = useState<string>("");
+
+  const handleCreate = async () => {
+    if (subcategoryName) {
+      try {
+        const response = await fetch("http://52.79.95.216:8080/api/category/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            parentName: {category},
+            name: subcategoryName,
+          }),
+        });
+
+        // Handle the response as needed
+        if (response.ok) {
+          // Handle successful creation
+          console.log("Subcategory created successfully");
+          // You might want to navigate to a different page or perform other actions here
+        } else {
+          // Handle error
+          console.error("Failed to create subcategory");
+        }
+      } catch (error) {
+        console.error("Error creating subcategory:", error);
+      }
+    }
+  };
 
   return (
     <ListWrapper>
@@ -22,8 +52,12 @@ const CreateContent: React.FC = () => {
           <ContentInputLabel>카테고리 제목 입력</ContentInputLabel>
         </ContentsTitleBox>
         <InputBox>
-        <CreateInput />
-        <InputBtn> 만들기 </InputBtn>
+        <CreateInput 
+            value={subcategoryName}
+            onChange={(e : any) => setSubcategoryName(e.target.value)}
+            placeholder="세부 카테고리 이름 입력"
+          /> 
+        <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
         </InputBox>
       </ListContents>
     </ListWrapper>
