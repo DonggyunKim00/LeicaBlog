@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface PageButtonProps {
-  isactive : boolean;
+  $isactive : boolean;
 }
 
 const MicroContents = () => {
@@ -161,7 +161,7 @@ const MicroContents = () => {
             {Array.from({ length: totalPages }, (_, index) => (
               <PageButton
                 key={index + 1}
-                isactive={currentPage === index + 1}
+                $isactive={currentPage === index + 1}
                 onClick={() => handlePageChange(index + 1)}
               >
                 {index + 1}
@@ -270,9 +270,9 @@ const PageButton = styled.button<PageButtonProps>`
   justify-content: center;
   margin: 0 5px;
   background-color: white;
-  color: ${(props) => (props.isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.isactive ? "600" : "400")};
+  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
+  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
+  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
   cursor: pointer;
   outline: none;
   &:hover {
