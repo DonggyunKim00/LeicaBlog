@@ -1,8 +1,13 @@
-import React from "react";
+import React , {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
 const Contents = () => {
+
+  const [mainItems, setMainItems] = useState([]);
+  const [subItems, setSubItems] = useState([]);
+
+
   const dummyData = [
     {
       id: 1,
@@ -10,42 +15,9 @@ const Contents = () => {
       name: "검사 효율성을 최적화하기 위한 방법",
       date: "2023. 7. 6.",
     },
-    {
-      id: 2,
-      imgSrc: "/img/main/middle/2.png",
-      name: "안구 천공(Ocular 어쩌고 어쩌고)",
-      date: "2023. 7. 5.",
-    },
-    {
-      id: 3,
-      imgSrc: "/img/main/middle/3.png",
-      name: "[소식] 이제 새로운 메이플이 시작된다",
-      date: "2023. 6. 29.",
-    },
-    {
-      id: 4,
-      imgSrc: "/img/main/middle/4.png",
-      name: "단일 Depletion lasputin lol",
-      date: "2023. 6. 29.",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/5.png",
-      name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
-      date: "2023. 6. 26.",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/5.png",
-      name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
-      date: "2023. 6. 26.",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/5.png",
-      name: "망막하 유전자 치료 너무나 비싼것으로 밝혀져",
-      date: "2023. 6. 26.",
-    },
+ 
+
+   
   ];
 
   const dummySubItems = [
@@ -79,42 +51,34 @@ const Contents = () => {
       content: "엄청난 근육과 함께 엄청난 식사량을 자랑 ",
       date: "2023. 5. 30.",
     },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/s5.png",
-      name: "[소식] 대한미세수술학회...",
-      content:
-        "대한미세수술학회 대한수부외과학회 대한말초신경수술학회 2023 합동 심포지",
-      date: "2023. 5. 22.",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/main/middle/s6.png",
-      name: "[소식] 대한성형외과학회에...",
-      content:
-        "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
-      date: "2023. 5. 19.",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/main/middle/s6.png",
-      name: "[소식] 대한성형외과학회에...",
-      content:
-        "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
-      date: "2023. 5. 19.",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/main/middle/s6.png",
-      name: "[소식] 대한성형외과학회에...",
-      content:
-        "제 13회 대한성형외과학회 기초재건성형 학술대회 전시 참가 지난 5월12...",
-      date: "2023. 5. 19.",
-    },
   ];
 
   const recentMainItems = dummyData.slice(0, 5);
   const recentSubItems = dummySubItems.slice(0, 6);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("52.79.95.216:8080/post");
+  //       const responseData = await response.json();
+
+  //       // Assuming the API response is an array of items
+  //       const sortedData = responseData.slice().reverse();
+
+  //       const mainData = sortedData.slice(0, 5);
+  //       const subData = sortedData.slice(5, 12);
+
+  //       setMainItems(mainData);
+  //       setSubItems(subData);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+
 
   return (
     <Wrapper>
@@ -165,11 +129,12 @@ const MainItemWrapper = styled.div`
   width: 936px;
   height: 240px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
 `;
 const MainItemBox = styled.div`
   width: 180px;
   height: 240px;
+  margin-right : 5px;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
