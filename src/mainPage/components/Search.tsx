@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import search from "../../../../public/img/main/search.png";
+import search from "../../../public/img/main/search.png"
 const Search = () => {
   return (
     <div>
@@ -28,17 +28,18 @@ const SearchDiv = styled.div`
 const SearchBox = styled.div`
   width: 171px;
   height: 32px;
-  border: 1px solid rgb(229, 229, 229);
+  border: 1px solid rgb(199, 199, 199);
   display: flex;
   
 `;
 
 const SearchInput = styled.input`
   width: 120px;
-  height: 14px;
+  height: 30px;
   padding: 8px 0px 8px 10px;
   border: none;
   display: flex;
+  outline: none;
 `;
 const SearchImg = styled.div`
   width: 41px;

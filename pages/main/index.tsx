@@ -1,4 +1,4 @@
-import MainPage from "@/components/mainPage/MainPage";
+import MainPage from "@/mainPage/MainPage";
 import type { NextPage } from "next";
 
 const Main: NextPage = () => {
