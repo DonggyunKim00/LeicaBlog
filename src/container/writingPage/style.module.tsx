@@ -48,6 +48,26 @@ export const Container = styled.div`
     height: 0;
     pointer-events: none;
   }
+  .image-resizer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .resize-trigger {
+      position: relative;
+      top: 8px;
+      margin-left: -13px;
+    }
+  }
+  iframe {
+    border: 8px solid #000;
+    border-radius: 4px;
+    display: block;
+    margin: auto;
+    height: 350px;
+  }
+  div[data-youtube-video] > iframe {
+    cursor: move;
+  }
 
   /* HorizontalRule style */
   .ProseMirror div.hrDiv {
@@ -88,16 +108,6 @@ export const Container = styled.div`
     width: 250px;
   }
 
-  .ProseMirror li {
-    margin: 0px 0px 15px 30px;
-    ::marker {
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      font-size: 20px; /* 마커 폰트 크기 설정 */
-      margin-right: 10px; /* 마커와 텍스트 간격 설정 */
-    }
-  }
   .ProseMirror blockquote.openEndQuoteGray {
     ::before {
       content: "";
@@ -277,5 +287,48 @@ export const Container = styled.div`
     box-sizing: border-box;
     padding: 0 20px;
     border-left: 6px solid #b5b2b2;
+  }
+
+  .ProseMirror ul {
+    list-style-type: none;
+  }
+  .ProseMirror ul.bulletList > li > p {
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 13px;
+      background-image: url(/img/writingPage/bullet.png);
+      background-repeat: no-repeat;
+    }
+  }
+  .ProseMirror ul.diamondList > li > p {
+    list-style-type: none;
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 13px;
+      background-image: url(/img/writingPage/diamond.png);
+      background-repeat: no-repeat;
+    }
+  }
+  .ProseMirror ul.checkList > li > p {
+    list-style-type: none;
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 10px;
+      background-image: url(/img/writingPage/check.png);
+      background-repeat: no-repeat;
+    }
+  }
+  .ProseMirror ol {
+    margin-left: 18px;
+    list-style-position: inherit;
   }
 `;
