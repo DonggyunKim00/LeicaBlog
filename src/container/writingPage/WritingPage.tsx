@@ -18,6 +18,7 @@ import FontSize from "tiptap-extension-font-size";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
+import Link from "@tiptap/extension-link";
 import {
   CustomHorizontalRule1,
   CustomHorizontalRule2,
@@ -80,6 +81,13 @@ const WritingPage = () => {
       CustomBulletList2,
       CustomBulletList3,
       ImageResize,
+      Link.configure({
+        autolink: false,
+        linkOnPaste: false,
+        HTMLAttributes: {
+          class: "custom-HyperLink",
+        },
+      }),
     ],
     content: "",
   });
