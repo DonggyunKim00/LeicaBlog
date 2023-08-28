@@ -9,14 +9,14 @@ import {
   BsTypeStrikethrough,
   BsArrowReturnLeft,
   BsArrowReturnRight,
-  BsImage,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
 import { ToolBarDivider } from "./ToolbarDivider";
 import { FieldValues } from "react-hook-form";
 import ToolbarSelectors from "./ToolbarSelectors";
-import { uploadImage } from "../../../../../pages/api/board";
+import { uploadImage } from "../../../../../pages/api/image";
+import { postBoard } from "../../../../../pages/api/board";
 
 export interface ToolBarProps {
   editor?: Editor | null;
@@ -25,8 +25,11 @@ export interface ToolBarProps {
 
 const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
   const submit = (data: FieldValues) => {
-    console.log(data);
-    console.log(editor?.getJSON());
+    const title = data.mainFolder;
+    const categoryName = data.subFolder;
+    const content = editor && editor.getJSON(); // JSON 타입으로 받아야함 -> 백엔드쪽 타입 설정 필요
+    console.log(content);
+    // console.log(postBoard({ title, categoryName, content }));
   };
 
   const addYoutubeVideo = () => {
@@ -150,8 +153,15 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         >
           h3
         </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => {
+        <ToolBarDivider />
+        <ToolbarSelector
+          optionArr={[
+            { value: "", label: "이미지,동영상 삽입" },
+            { value: "left" },
+            { value: "center" },
+            { value: "right" },
+          ]}
+          command={(value) => {
             const input = document.createElement("input");
 
             input.type = "file";
@@ -162,19 +172,21 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
               }
 
               const files = Array.from(input.files);
-
               files.forEach(async (file) => {
                 const url = await uploadImage({
                   image: file,
                 });
-                editor?.chain().focus().setImage({ src: url.toString() }).run();
+                editor
+                  ?.chain()
+                  .focus()
+                  .setImage({ src: url.toString(), id: value })
+                  .run();
               });
             };
             input.click();
           }}
-        >
-          <BsImage size="20" />
-        </ToolbarBtn>
+        />
+        <ToolBarDivider />
         <ToolbarBtn onClick={addYoutubeVideo}>유튜브 동영상 추가</ToolbarBtn>
       </ExtraLine>
       <TextLine>
@@ -192,6 +204,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
             editor?.chain().focus().setFontFamily(value).run()
           }
         />
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
             { value: "16px", label: "글자 크기" },
@@ -244,6 +257,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
           ]}
           command={(value) => editor?.chain().focus().setColor(value).run()}
         />
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
             { value: "", label: "텍스트 하이라이트" },
