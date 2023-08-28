@@ -1,5 +1,4 @@
-import { Component, FC, ReactElement } from "react";
-import { mergeAttributes, nodeInputRule, Node } from "@tiptap/core";
+import { mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import ImageResizeComponent from "./ImageResizeComponent";
 import Image from "@tiptap/extension-image";
@@ -21,7 +20,6 @@ declare module "@tiptap/core" {
         height?: string | number;
         draggable?: boolean;
         id?: string;
-        videos?: boolean;
       }) => ReturnType;
     };
   }
