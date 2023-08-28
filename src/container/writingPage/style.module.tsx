@@ -48,6 +48,11 @@ export const Container = styled.div`
     height: 0;
     pointer-events: none;
   }
+  .ProseMirror .custom-HyperLink {
+    color: #608cba;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
   .image-resizer {
     display: flex;

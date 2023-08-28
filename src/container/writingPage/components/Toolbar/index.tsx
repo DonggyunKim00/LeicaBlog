@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -9,6 +9,7 @@ import {
   BsTypeStrikethrough,
   BsArrowReturnLeft,
   BsArrowReturnRight,
+  BsYoutube,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
@@ -17,7 +18,6 @@ import { FieldValues } from "react-hook-form";
 import ToolbarSelectors from "./ToolbarSelectors";
 import { uploadImage } from "../../../../../pages/api/image";
 import { postBoard } from "../../../../../pages/api/board";
-
 export interface ToolBarProps {
   editor?: Editor | null;
   handleSubmit: any;
@@ -40,6 +40,25 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
       });
     }
   };
+
+  const setLink = useCallback(() => {
+    const url = prompt("연결 할 URL을 입력하세요. ex)https://example.com");
+    if (url === null) {
+      return;
+    }
+    if (url === "") {
+      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    editor
+      ?.chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  }, [editor]);
   return (
     <Container>
       <SubmitLine>
@@ -154,6 +173,10 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
           h3
         </ToolbarBtn>
         <ToolBarDivider />
+        <ToolbarBtn onClick={setLink} isActive={editor?.isActive("link")}>
+          http://
+        </ToolbarBtn>
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
             { value: "", label: "이미지,동영상 삽입" },
@@ -187,7 +210,9 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
           }}
         />
         <ToolBarDivider />
-        <ToolbarBtn onClick={addYoutubeVideo}>유튜브 동영상 추가</ToolbarBtn>
+        <ToolbarBtn onClick={addYoutubeVideo}>
+          <BsYoutube size="20" />
+        </ToolbarBtn>
       </ExtraLine>
       <TextLine>
         {/* 텍스트 스타일 버튼 */}
