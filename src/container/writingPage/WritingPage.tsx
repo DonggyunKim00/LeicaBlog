@@ -38,7 +38,7 @@ import {
   CustomBulletList2,
   CustomBulletList3,
 } from "./components/customExtension/list";
-import ImageResize from "./components/customExtension/imageAlignment";
+import { ImageResize } from "./components/customExtension/file";
 
 const WritingPage = () => {
   const editor = useEditor({
