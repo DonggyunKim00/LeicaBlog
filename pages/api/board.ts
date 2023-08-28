@@ -1,23 +1,24 @@
 import axios from "axios";
 
-export interface IUploadImage {
-  image: File;
+export interface boardPostType {
+  title: string;
+  categoryName: string;
+  content: any;
 }
 
-export async function uploadImage({ image }: IUploadImage) {
-  const formData = new FormData();
-
-  formData.append("file", image);
-
+export async function postBoard({
+  title,
+  categoryName,
+  content,
+}: boardPostType) {
   const res = await axios.post(
-    `http://krleicablog.shop:8080/admin/upload`,
-    formData,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/post`,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      title: title,
+      categoryName: categoryName,
+      content: content,
     }
   );
 
-  return res.data as string;
+  return res;
 }
