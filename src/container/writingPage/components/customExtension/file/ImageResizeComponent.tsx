@@ -8,7 +8,7 @@ const ImageResizeComponent = (props: any) => {
     const parent = (mouseDownEvent.target as HTMLElement).closest(
       ".image-resizer"
     );
-    const image = parent?.querySelector("img.postimage") ?? null;
+    const image = parent?.querySelector("embed.postimage") ?? null;
     if (image === null) return;
     const startSize = { x: image.clientWidth, y: image.clientHeight };
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
@@ -26,38 +26,22 @@ const ImageResizeComponent = (props: any) => {
     document.body.addEventListener("mousemove", onMouseMove);
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
   };
+
   return (
-    <NodeViewWrapper className="image-resizer">
-      {props.extension.options.useFigure ? (
-        <>
-          <PostImage
-            {...props.node.attrs}
-            src={props.node.attrs.src}
-            className="postimage"
-            contentEditable="true"
-          />
-          <div className="resize-trigger" onMouseDown={handler}>
-            {props.extension.options.resizeIcon}
-          </div>
-        </>
-      ) : (
-        <>
-          <PostImage
-            {...props.node.attrs}
-            className="postimage"
-            contentEditable="true"
-          />
-          <div className="resize-trigger" onMouseDown={handler}>
-            {props.extension.options.resizeIcon}
-          </div>
-        </>
-      )}
+    <NodeViewWrapper className="image-resizer" id={props.node.attrs.id}>
+      <PostFile
+        {...props.node.attrs}
+        className="postimage"
+        contentEditable="true"
+      />
+      <div className="resize-trigger" onMouseDown={handler}>
+        {props.extension.options.resizeIcon}
+      </div>
     </NodeViewWrapper>
   );
 };
 
 export default ImageResizeComponent;
-
-const PostImage = styled.img`
+const PostFile = styled.embed`
   display: inline-block;
 `;

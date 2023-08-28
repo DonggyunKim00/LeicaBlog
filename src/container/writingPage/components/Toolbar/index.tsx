@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -9,15 +9,15 @@ import {
   BsTypeStrikethrough,
   BsArrowReturnLeft,
   BsArrowReturnRight,
-  BsImage,
+  BsYoutube,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
 import { ToolBarDivider } from "./ToolbarDivider";
 import { FieldValues } from "react-hook-form";
 import ToolbarSelectors from "./ToolbarSelectors";
-import { uploadImage } from "../../../../../pages/api/board";
-
+import { uploadImage } from "../../../../../pages/api/image";
+import { postBoard } from "../../../../../pages/api/board";
 export interface ToolBarProps {
   editor?: Editor | null;
   handleSubmit: any;
@@ -25,8 +25,11 @@ export interface ToolBarProps {
 
 const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
   const submit = (data: FieldValues) => {
-    console.log(data);
-    console.log(editor?.getJSON());
+    const title = data.mainFolder;
+    const categoryName = data.subFolder;
+    const content = editor && editor.getJSON(); // JSON 타입으로 받아야함 -> 백엔드쪽 타입 설정 필요
+    console.log(content);
+    // console.log(postBoard({ title, categoryName, content }));
   };
 
   const addYoutubeVideo = () => {
@@ -37,6 +40,25 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
       });
     }
   };
+
+  const setLink = useCallback(() => {
+    const url = prompt("연결 할 URL을 입력하세요. ex)https://example.com");
+    if (url === null) {
+      return;
+    }
+    if (url === "") {
+      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    editor
+      ?.chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  }, [editor]);
   return (
     <Container>
       <SubmitLine>
@@ -150,8 +172,19 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
         >
           h3
         </ToolbarBtn>
-        <ToolbarBtn
-          onClick={() => {
+        <ToolBarDivider />
+        <ToolbarBtn onClick={setLink} isActive={editor?.isActive("link")}>
+          http://
+        </ToolbarBtn>
+        <ToolBarDivider />
+        <ToolbarSelector
+          optionArr={[
+            { value: "", label: "이미지,동영상 삽입" },
+            { value: "left" },
+            { value: "center" },
+            { value: "right" },
+          ]}
+          command={(value) => {
             const input = document.createElement("input");
 
             input.type = "file";
@@ -162,20 +195,24 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
               }
 
               const files = Array.from(input.files);
-
               files.forEach(async (file) => {
                 const url = await uploadImage({
                   image: file,
                 });
-                editor?.chain().focus().setImage({ src: url.toString() }).run();
+                editor
+                  ?.chain()
+                  .focus()
+                  .setImage({ src: url.toString(), id: value })
+                  .run();
               });
             };
             input.click();
           }}
-        >
-          <BsImage size="20" />
+        />
+        <ToolBarDivider />
+        <ToolbarBtn onClick={addYoutubeVideo}>
+          <BsYoutube size="20" />
         </ToolbarBtn>
-        <ToolbarBtn onClick={addYoutubeVideo}>유튜브 동영상 추가</ToolbarBtn>
       </ExtraLine>
       <TextLine>
         {/* 텍스트 스타일 버튼 */}
@@ -192,6 +229,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
             editor?.chain().focus().setFontFamily(value).run()
           }
         />
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
             { value: "16px", label: "글자 크기" },
@@ -244,6 +282,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
           ]}
           command={(value) => editor?.chain().focus().setColor(value).run()}
         />
+        <ToolBarDivider />
         <ToolbarSelector
           optionArr={[
             { value: "", label: "텍스트 하이라이트" },
