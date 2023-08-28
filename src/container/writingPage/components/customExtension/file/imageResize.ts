@@ -9,7 +9,6 @@ export interface ImageOptions {
   allowBase64: boolean;
   HTMLAttributes: Record<string, any>;
   resizeIcon: any;
-  useFigure: boolean;
 }
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -22,6 +21,7 @@ declare module "@tiptap/core" {
         height?: string | number;
         draggable?: boolean;
         id?: string;
+        videos?: boolean;
       }) => ReturnType;
     };
   }
@@ -37,7 +37,6 @@ export const ImageResize = Image.extend<ImageOptions>({
       allowBase64: true,
       HTMLAttributes: {},
       resizeIcon: "⊙",
-      useFigure: true,
     };
   },
   addAttributes() {
@@ -73,7 +72,7 @@ export const ImageResize = Image.extend<ImageOptions>({
         },
       },
       id: {
-        default: "",
+        default: "center",
         renderHTML: (attributes) => {
           return { id: attributes.id };
         },
@@ -83,14 +82,14 @@ export const ImageResize = Image.extend<ImageOptions>({
   parseHTML() {
     return [
       {
-        tag: "image-resizer",
+        tag: "file-resizer",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      "image-resizer",
+      "file-resizer",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
     ];
   },
