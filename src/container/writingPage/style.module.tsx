@@ -48,6 +48,12 @@ export const Container = styled.div`
     height: 0;
     pointer-events: none;
   }
+  .ProseMirror .custom-HyperLink {
+    color: #608cba;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   .image-resizer {
     display: flex;
     justify-content: center;
@@ -58,6 +64,45 @@ export const Container = styled.div`
       margin-left: -13px;
     }
   }
+  .ProseMirror img {
+    display: block;
+    cursor: move;
+  }
+  div #left {
+    float: left;
+    margin-right: 36px;
+    &::before {
+      clear: left;
+      display: block;
+    }
+    &::after {
+      clear: left;
+      display: block;
+    }
+    .resize-trigger {
+      position: relative;
+      top: 15px;
+      margin-left: -41px;
+    }
+  }
+  div #right {
+    float: right;
+    margin-left: 36px;
+    &::before {
+      clear: right;
+      display: block;
+    }
+    &::after {
+      clear: right;
+      display: block;
+    }
+    .resize-trigger {
+      position: relative;
+      top: 8px;
+      margin-left: -13px;
+    }
+  }
+
   iframe {
     border: 8px solid #000;
     border-radius: 4px;

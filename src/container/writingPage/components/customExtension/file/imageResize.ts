@@ -1,5 +1,4 @@
-import { Component, FC, ReactElement } from "react";
-import { mergeAttributes, nodeInputRule, Node } from "@tiptap/core";
+import { mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import ImageResizeComponent from "./ImageResizeComponent";
 import Image from "@tiptap/extension-image";
@@ -9,7 +8,6 @@ export interface ImageOptions {
   allowBase64: boolean;
   HTMLAttributes: Record<string, any>;
   resizeIcon: any;
-  useFigure: boolean;
 }
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -37,7 +35,6 @@ export const ImageResize = Image.extend<ImageOptions>({
       allowBase64: true,
       HTMLAttributes: {},
       resizeIcon: "⊙",
-      useFigure: true,
     };
   },
   addAttributes() {
@@ -73,7 +70,7 @@ export const ImageResize = Image.extend<ImageOptions>({
         },
       },
       id: {
-        default: "",
+        default: "center",
         renderHTML: (attributes) => {
           return { id: attributes.id };
         },
@@ -83,14 +80,14 @@ export const ImageResize = Image.extend<ImageOptions>({
   parseHTML() {
     return [
       {
-        tag: "image-resizer",
+        tag: "file-resizer",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      "image-resizer",
+      "file-resizer",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
     ];
   },
