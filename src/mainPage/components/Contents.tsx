@@ -1,95 +1,102 @@
-import React , {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
+interface Item {
+  id: number;
+  thumbnail: string | null;
+  title: string;
+  content: string;
+  createdAt: number;
+}
+
 const Contents = () => {
+  const [mainItems, setMainItems] = useState<Item[]>([]);
+  const [subItems, setSubItems] = useState<Item[]>([]);
 
-  const [mainItems, setMainItems] = useState([]);
-  const [subItems, setSubItems] = useState([]);
+  // const dummyData = [
+  //   {
+  //     id: 1,
+  //     imgSrc: "/img/main/middle/1.png",
+  //     name: "검사 효율성을 최적화하기 위한 방법",
+  //     date: "2023. 7. 6.",
+  //   },
+  // ];
 
+  // const dummySubItems = [
+  //   {
+  //     id: 1,
+  //     imgSrc: "/img/main/middle/s1.png",
+  //     name: "[소식] 김성훈 스쿼트 140 3트에 모두 실패해.....",
+  //     content:
+  //       "김효성과 하체운동을 하는도중 스쿼트 기록 갱신에 도전했지만 3번 모두 실패하는 모습을 보여",
+  //     date: "2023. 06. 23.",
+  //   },
+  //   {
+  //     id: 2,
+  //     imgSrc: "/img/main/middle/s2.png",
+  //     name: "[소식] 김동균 벤치 90도 못들어....충격...",
+  //     content:
+  //       "김효성과의 가슴운동중 벤치 90에 깔리는 참사가 발생에 중상자 1명발생 (김효성 배꼽이 빠져 응급실로 이송)'",
+  //     date: "2023. 6. 16.",
+  //   },
+  //   {
+  //     id: 3,
+  //     imgSrc: "/img/main/middle/s3.png",
+  //     name: "[소식] 김효성 스쿼트 25KG으로 밝혀져 세간의 주목을 받고 있다고...",
+  //     content: "스쿼트 1RM이 벤치 1RM 보다 가볍다고 알려져 충격",
+  //     date: "2023. 6. 10.",
+  //   },
+  //   {
+  //     id: 4,
+  //     imgSrc: "/img/main/middle/s4.png",
+  //     name: "[소식] 강혜미 3대 700KG 달성으로 제2의 장미란 발굴.",
+  //     content: "엄청난 근육과 함께 엄청난 식사량을 자랑 ",
+  //     date: "2023. 5. 30.",
+  //   },
+  // ];
 
-  const dummyData = [
-    {
-      id: 1,
-      imgSrc: "/img/main/middle/1.png",
-      name: "검사 효율성을 최적화하기 위한 방법",
-      date: "2023. 7. 6.",
-    },
- 
+  // const recentMainItems = dummyData.slice(0, 5);
+  // const recentSubItems = dummySubItems.slice(0, 6);
 
-   
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("52.79.95.216:8080/post");
+        const responseData = await response.json();
 
-  const dummySubItems = [
-    {
-      id: 1,
-      imgSrc: "/img/main/middle/s1.png",
-      name: "[소식] 김성훈 스쿼트 140 3트에 모두 실패해.....",
-      content:
-        "김효성과 하체운동을 하는도중 스쿼트 기록 갱신에 도전했지만 3번 모두 실패하는 모습을 보여",
-      date: "2023. 06. 23.",
-    },
-    {
-      id: 2,
-      imgSrc: "/img/main/middle/s2.png",
-      name: "[소식] 김동균 벤치 90도 못들어....충격...",
-      content:
-        "김효성과의 가슴운동중 벤치 90에 깔리는 참사가 발생에 중상자 1명발생 (김효성 배꼽이 빠져 응급실로 이송)'",
-      date: "2023. 6. 16.",
-    },
-    {
-      id: 3,
-      imgSrc: "/img/main/middle/s3.png",
-      name: "[소식] 김효성 스쿼트 25KG으로 밝혀져 세간의 주목을 받고 있다고...",
-      content: "스쿼트 1RM이 벤치 1RM 보다 가볍다고 알려져 충격",
-      date: "2023. 6. 10.",
-    },
-    {
-      id: 4,
-      imgSrc: "/img/main/middle/s4.png",
-      name: "[소식] 강혜미 3대 700KG 달성으로 제2의 장미란 발굴.",
-      content: "엄청난 근육과 함께 엄청난 식사량을 자랑 ",
-      date: "2023. 5. 30.",
-    },
-  ];
+        // Assuming the API response is an array of items
+        const sortedData = responseData.slice().reverse();
 
-  const recentMainItems = dummyData.slice(0, 5);
-  const recentSubItems = dummySubItems.slice(0, 6);
+        const mainData = sortedData.slice(0, 5);
+        const subData = sortedData.slice(5, 12);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("52.79.95.216:8080/post");
-  //       const responseData = await response.json();
+        setMainItems(mainData);
+        setSubItems(subData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //       // Assuming the API response is an array of items
-  //       const sortedData = responseData.slice().reverse();
-
-  //       const mainData = sortedData.slice(0, 5);
-  //       const subData = sortedData.slice(5, 12);
-
-  //       setMainItems(mainData);
-  //       setSubItems(subData);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-
+    fetchData();
+  }, []);
 
   return (
     <Wrapper>
       <MainItemWrapper>
-        {recentMainItems.map((item) => (
-          <MainItemBox key={item.id}>
+        {mainItems.map((item) => (
+          <MainItemBox key={item.title}>
             <MainItemImg>
-              <Image src={item.imgSrc} alt="" width={180} height={185} />
+              {item.thumbnail ? (
+                <Image src={item.thumbnail} alt="" width={180} height={185} />
+              ) : (
+                <div>No Thumbnail</div>
+              )}
             </MainItemImg>
-            <MainItemName>{item.name}</MainItemName>
-            <MainItemDate>{item.date}</MainItemDate>
+            <MainItemName>{item.title}</MainItemName>
+            <MainItemDate>
+              {new Date(item.createdAt).toLocaleDateString()}
+            </MainItemDate>
           </MainItemBox>
         ))}
       </MainItemWrapper>
@@ -97,15 +104,21 @@ const Contents = () => {
       <SubItemTitle>- 라이카 news</SubItemTitle>
 
       <SubItemWrapper>
-        {recentSubItems.map((subItem) => (
-          <SubItemBox key={subItem.id}>
+        {subItems.map((subItem) => (
+          <SubItemBox key={subItem.title}>
             <SubItemImg>
-              <Image src={subItem.imgSrc} alt="" width={90} height={90} />
+              {subItem.thumbnail ? (
+                <Image src={subItem.thumbnail} alt="" width={90} height={90} />
+              ) : (
+                <div>No Thumbnail</div>
+              )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName>{subItem.name}</SubItemName>
+              <SubItemName>{subItem.title}</SubItemName>
               <SubItemContent>{subItem.content}</SubItemContent>
-              <SubItemDate>{subItem.date}</SubItemDate>
+              <SubItemDate>
+                {new Date(subItem.createdAt).toLocaleDateString()}
+              </SubItemDate>
             </SubItemSpan>
           </SubItemBox>
         ))}
@@ -134,7 +147,7 @@ const MainItemWrapper = styled.div`
 const MainItemBox = styled.div`
   width: 180px;
   height: 240px;
-  margin-right : 5px;
+  margin-right: 5px;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
