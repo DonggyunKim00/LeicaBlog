@@ -1,8 +1,8 @@
 import React from "react";
-import Top from "../mainPage/components/Top";
-import Search from "@/mainPage/components/Search";
-import Footer from "@/mainPage/components/Footer";
-import ContentsList from "@/microScopePage/components/ContentsList";
+import Top from "../../components/Top";
+import Search from "../../components/Search";
+import Footer from "../../components/Footer";
+import ContentsList from "@/container/microScopePage/components/ContentsList";
 import Content from "./components/Content";
 const DetailPostPage = () => {
   return (
