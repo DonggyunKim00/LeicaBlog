@@ -21,18 +21,16 @@ const CreateContent: React.FC = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            parentName: {category},
+            parentName: category,
             name: subcategoryName,
           }),
         });
 
-        // Handle the response as needed
+      
         if (response.ok) {
-          // Handle successful creation
-          console.log("Subcategory created successfully");
-          // You might want to navigate to a different page or perform other actions here
+          alert( category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
+          setSubcategoryName("");
         } else {
-          // Handle error
           console.error("Failed to create subcategory");
         }
       } catch (error) {
