@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import Inquiry from "./Inquiry";
 
 const CategoryModifyModal = () => {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
