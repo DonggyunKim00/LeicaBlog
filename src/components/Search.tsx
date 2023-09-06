@@ -1,27 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import search from "../../public/img/main/search.png";
-import Router from "next/router";
-import { pathName } from "@/config/pathName";
+import { useSearchSubmit } from "@/hooks/searchHook/useSearchSubmit";
 
 const Search = () => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const submit = (e: any, inputValue: string) => {
-    e.preventDefault();
-    if (!inputValue) {
-      alert("검색할 내용을 넣어주세요.");
-      return;
-    }
-    Router.push({
-      pathname: pathName.SEARCH,
-      query: { keyword: inputValue },
-    });
-  };
+  const { inputValue, setInputValue, submit } = useSearchSubmit();
+
   return (
     <SearchDiv>
       <SearchBox onSubmit={(e: any) => submit(e, inputValue)}>
         <SearchInput
+          value={inputValue}
           onChange={(e: any) => {
             setInputValue(e.target.value);
           }}
@@ -56,7 +46,6 @@ const SearchInput = styled.input`
   padding: 8px 0px 8px 10px;
   border: none;
   display: flex;
-  outline: none;
 `;
 const SearchImg = styled.button`
   width: 41px;
