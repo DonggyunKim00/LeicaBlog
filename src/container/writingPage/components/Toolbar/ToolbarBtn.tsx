@@ -26,7 +26,7 @@ const Container = styled.button<{ active: string }>`
   border-radius: 10px;
   border: 1px solid #99999a;
   background-color: ${(props) =>
-    props.active === "true" ? "#05af1e" : "transparent"};
+    props.active === "true" ? "#05af1e" : "white"};
   &:hover {
     cursor: pointer;
     border: 1px solid #0000001a;

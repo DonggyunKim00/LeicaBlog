@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { styled } from "styled-components";
 
 interface OptionListSet {
@@ -8,7 +8,7 @@ interface OptionListSet {
 
 interface ToolbarSelectorProps {
   optionArr: Array<OptionListSet>;
-  command: (value: string) => boolean | undefined;
+  command: (value: string) => boolean | undefined | void;
 }
 
 /**
@@ -23,22 +23,29 @@ const ToolbarSelector = ({ optionArr, command }: ToolbarSelectorProps) => {
 
   const handleChange = (value: string) => {
     setSelectedOption(value);
-    command(value);
+  };
+  const handleApply = () => {
+    command(selectedOption);
   };
 
   return (
-    <SelectContainer
-      value={selectedOption || ""}
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-        handleChange(e.target.value)
-      }
-    >
-      {optionArr.map((option, idx) => (
-        <option key={idx} value={option.value}>
-          {option.label ? option.label : option.value}
-        </option>
-      ))}
-    </SelectContainer>
+    <>
+      <SelectContainer
+        value={selectedOption || ""}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          handleChange(e.target.value);
+        }}
+      >
+        {optionArr.map((option, idx) => (
+          <option key={idx} value={option.value} onClick={() => {}}>
+            {option.label ? option.label : option.value}
+          </option>
+        ))}
+      </SelectContainer>
+      <ClickBtn type="button" onClick={handleApply}>
+        적용
+      </ClickBtn>
+    </>
   );
 };
 
@@ -52,4 +59,10 @@ const SelectContainer = styled.select`
   border-radius: 10px;
   border: 1px solid #99999a;
   outline: none;
+`;
+const ClickBtn = styled.button`
+  border-radius: 10px;
+  border: 1px solid #99999a;
+  padding: 5px;
+  background-color: white;
 `;

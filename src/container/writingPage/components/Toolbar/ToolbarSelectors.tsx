@@ -21,22 +21,29 @@ const ToolbarSelectors = ({ optionArr }: ToolbarSelectorProps) => {
 
   const handleChange = (value: number) => {
     setSelectedOption(value);
-    optionArr[value].command();
+  };
+  const handleApply = () => {
+    optionArr[selectedOption].command();
   };
 
   return (
-    <SelectContainer
-      value={selectedOption || 0}
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-        handleChange(Number(e.target.value))
-      }
-    >
-      {optionArr.map((option, idx) => (
-        <option key={idx} value={idx}>
-          {option.label}
-        </option>
-      ))}
-    </SelectContainer>
+    <>
+      <SelectContainer
+        value={selectedOption || 0}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          handleChange(Number(e.target.value))
+        }
+      >
+        {optionArr.map((option, idx) => (
+          <option key={idx} value={idx}>
+            {option.label}
+          </option>
+        ))}
+      </SelectContainer>
+      <ClickBtn type="button" onClick={handleApply}>
+        적용
+      </ClickBtn>
+    </>
   );
 };
 
@@ -50,4 +57,10 @@ const SelectContainer = styled.select`
   border-radius: 10px;
   border: 1px solid #99999a;
   outline: none;
+`;
+const ClickBtn = styled.button`
+  border-radius: 10px;
+  border: 1px solid #99999a;
+  padding: 5px;
+  background-color: white;
 `;

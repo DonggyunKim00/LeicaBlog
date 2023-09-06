@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import leicaTypo from "../../../public/img/main/leicaTypo.jpg";
+import leicaTypo from "../../public/img/main/leicaTypo.jpg";
 import Image from "next/image";
-import topPicture from "../../../public/img/main/topPicture.png";
-import microScope from "../../../public/img/main/microScope.png";
+import topPicture from "../../public/img/main/topPicture.png";
+import microScope from "../../public/img/main/microScope.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
 
@@ -123,7 +123,7 @@ const LeicaTypoBox = styled.div`
 `;
 const LeicaTypo = styled.div`
   width: 160px;
-   &:hover {
+  &:hover {
     cursor: pointer;
   }
 `;
@@ -221,7 +221,7 @@ const EstimateBox = styled.div<{ $hovered: boolean }>`
   top: 100px;
   right: 20px;
   width: 200px;
-  height: ${props => props.$hovered ? "140px" : "100px"};
+  height: ${(props) => (props.$hovered ? "140px" : "100px")};
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   background-color: white;
