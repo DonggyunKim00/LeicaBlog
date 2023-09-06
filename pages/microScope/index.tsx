@@ -1,8 +1,13 @@
-import MicroScopePage from "@/microScopePage/microScopePage";
+import Layout from "@/components/Layout";
+import MicroScopePage from "@/container/microScopePage/microScopePage";
 import type { NextPage } from "next";
 
 const MicroScope: NextPage = () => {
-  return <MicroScopePage />;
+  return (
+    <Layout>
+      <MicroScopePage />
+    </Layout>
+  );
 };
 
 export default MicroScope;
