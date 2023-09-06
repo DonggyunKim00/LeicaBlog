@@ -26,7 +26,7 @@ export default Header;
 const LeicaBar = styled.div`
   width: 100%;
   height: 100px;
-  background-color: rgb(245, 245, 244);
+
   margin-bottom: 100px;
   position: sticky;
   padding-left: 100px;
