@@ -17,7 +17,6 @@ const ContentsList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
 
-
   const toggleList = () => {
     setShowList((prevState) => !prevState);
   };
@@ -33,25 +32,28 @@ const ContentsList: React.FC = () => {
     const fetchData = async () => {
       try {
         if (category) {
-       
-          const categoryResponse = await fetch(`http://52.79.95.216:8080/api/category/${category}`);
+          const categoryResponse = await fetch(
+            `http://52.79.95.216:8080/api/category/${category}`
+          );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
-          
+
             const children = categoryData.children;
             setCategories(children);
           } else {
-            console.error("API request for category failed with status:", categoryResponse.status);
+            console.error(
+              "API request for category failed with status:",
+              categoryResponse.status
+            );
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [category]);
-  
 
   return (
     <ListWrapper $expanded={showList}>

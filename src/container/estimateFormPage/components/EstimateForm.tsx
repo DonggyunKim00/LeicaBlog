@@ -24,9 +24,8 @@ const EstimateForm = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (event : any) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
-
 
     const emailBody = `
 견적 요청

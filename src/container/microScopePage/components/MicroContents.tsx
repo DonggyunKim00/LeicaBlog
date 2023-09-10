@@ -151,7 +151,6 @@ const MicroContents = () => {
     setCurrentPage(newPage);
   };
 
- 
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
