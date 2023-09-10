@@ -23,15 +23,40 @@ const Footer = () => {
           </ProfileInfo>
         </ProfileBox>
       </Profile>
-      <Youtube>
-        <Image
-          src="/img/main/footer/LeicaCard.jpg"
-          alt=""
-          width={400}
-          height={248}
-        />
-      </Youtube>
-  
+      <NameCard>
+        <NameCardLine>
+          <H1>대표 김영길 </H1>
+        </NameCardLine>
+        <NameCardLine>
+          <NameCardDiv>
+            <GrayDiv>Mobile :</GrayDiv>010-6778-5445
+          </NameCardDiv>
+        </NameCardLine>
+        <NameCardLine>
+          <NameCardDiv>
+            <GrayDiv>Email : </GrayDiv> jajaewa@naver.com
+          </NameCardDiv>
+        </NameCardLine>
+        <NameCardLine>
+          <NameCardDiv>
+            <GrayDiv> Tel : </GrayDiv>042-931-1012 <GrayDiv>Fax :</GrayDiv>
+            042-931-1013
+          </NameCardDiv>
+        </NameCardLine>
+
+        <NameCardLine>
+          <NameCardDiv>
+            대전광역시 유성구 테크노2로 314, 202-1호(탑립동)
+          </NameCardDiv>
+        </NameCardLine>
+
+        <NameCardLine>
+          <NameCardDiv>
+            서울특별시 금천구 남부순환로112길 27(가산동)
+          </NameCardDiv>
+        </NameCardLine>
+      </NameCard>
+
       <BusinesssInfoBox>
         <BusinessInfo>
           <InfoTitleBox>
@@ -49,7 +74,9 @@ const Footer = () => {
           </InfoLi>
           <InfoLi>
             <InfoLiTitle>· 주소 :</InfoLiTitle>
-            <InfoLiContent>서울특별시 강남구 영동대로 741(청담동)6층</InfoLiContent>
+            <InfoLiContent>
+              서울특별시 강남구 영동대로 741(청담동)6층
+            </InfoLiContent>
           </InfoLi>
           <InfoLi>
             <InfoLiTitle>· 전화 :</InfoLiTitle>
@@ -65,7 +92,7 @@ const Footer = () => {
           </InfoLi>
           <InfoLi>
             <InfoLiTitle>· 이용약관 :</InfoLiTitle>
-            <InfoLiContent>이용약관 보기  </InfoLiContent>
+            <InfoLiContent>이용약관 보기 </InfoLiContent>
           </InfoLi>
           <InfoLi>
             <InfoLiTitle>· 총신판매번호 :</InfoLiTitle>
@@ -117,25 +144,13 @@ const ProfileInfo = styled.div`
   color: rgb(138, 131, 126);
   line-height: 18px;
 `;
-const Youtube = styled.div`
-  width: 400px;
-  height: 250px;
-  margin-left: 16px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  border: 1px solid;
-  border-color: rgb(233, 233, 233);
-`;
-
-
 
 const BusinesssInfoBox = styled.div`
   width: 171px;
   height: 212px;
   border: 1px solid;
   border-color: rgb(211, 211, 211);
-  margin-left : 205px;
+  margin-left: 100px;
 `;
 
 const BusinessInfo = styled.div`
@@ -190,4 +205,33 @@ const InfoLiContent = styled.div`
   font-size: 11px;
   margin-left: 2px;
   word-break: break-word;
+`;
+
+const NameCard = styled.div`
+  margin-left: 121px;
+  height: 250px;
+  margin-top: 30px;
+  width: 400px;
+`;
+
+const H1 = styled.div`
+  font-size: 24px;
+  font-weight: 600;
+  justify-content: center;
+`;
+
+const NameCardLine = styled.div`
+  align-items: center;
+  display: flex;
+  margin-bottom: 15px;
+  justify-content: center;
+`;
+const GrayDiv = styled.div`
+  color: rgb(150, 150, 150);
+  margin-right: 8px;
+  margin-left: 8px;
+`;
+const NameCardDiv = styled.div`
+  display: flex;
+  justify-content: center;
 `;

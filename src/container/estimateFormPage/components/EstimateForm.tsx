@@ -1,17 +1,61 @@
+import { AnyARecord } from "dns";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 const EstimateForm = () => {
   const [agreePrivacyPolicy, setAgreePrivacyPolicy] = useState("");
+  const [userData, setUserData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    phone: "",
+    company: "",
+    position: "",
+    region: "",
+    country: "",
+    request: "",
+    agreePrivacyPolicy: "",
+  });
 
-  const handleAgreeChange = (event: any) => {
-    setAgreePrivacyPolicy(event.target.value);
+  const handleInputChange = (event: any) => {
+    const { name, value } = event.target;
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
   };
-
   const handleSubmit = (event: any) => {
     event.preventDefault();
-  };
 
+    const emailBody = `
+견적 요청
+
+이름: ${userData.name}
+성: ${userData.surname}
+이메일: ${userData.email}
+휴대폰번호: ${userData.phone}
+회사/기관: ${userData.company}
+직책: ${userData.position}
+지역: ${userData.region}
+국가 혹은 지역: ${userData.country}
+
+기타 요청사항이나 문의 사항:
+${userData.request}
+
+개인정보 수집 및 활용에 대한 동의:
+- 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를 통해 제공
+- 서비스 개선/개발을 위한 만족도조사 및 통계처리
+
+동의 여부: ${
+      userData.agreePrivacyPolicy === "yes"
+        ? "예 (동의함)"
+        : "아니오 (동의하지 않음)"
+    }
+    `;
+
+    // emailBody를 서버로 보내거나 필요한 곳에 사용
+    console.log(emailBody); // 이 부분을 실제로 서버로 전송하는 로직으로 변경해야 합니다.
+  };
   return (
     <EstimateBox>
       <ContactWrapper>
@@ -20,41 +64,81 @@ const EstimateForm = () => {
       <Line>
         <Wrapper>
           <Label htmlFor="name">이름 *</Label>
-          <Input id="name" name="name" />
+          <Input
+            id="name"
+            name="name"
+            value={userData.name}
+            onChange={handleInputChange}
+          />
         </Wrapper>
         <Wrapper>
           <Label htmlFor="surname">성 *</Label>
-          <Input id="surname" name="surname" />
+          <Input
+            id="surname"
+            name="surname"
+            value={userData.surname}
+            onChange={handleInputChange}
+          />
         </Wrapper>
       </Line>
       <Line>
         <Wrapper>
           <Label htmlFor="email">이메일 *</Label>
-          <Input id="email" name="email" />
+          <Input
+            id="email"
+            name="email"
+            value={userData.email}
+            onChange={handleInputChange}
+          />
         </Wrapper>
         <Wrapper>
           <Label htmlFor="phone">휴대폰번호 *</Label>
-          <Input id="phone" name="phone" />
+          <Input
+            id="phone"
+            name="phone"
+            value={userData.phone}
+            onChange={handleInputChange}
+          />
         </Wrapper>
       </Line>
       <Line>
         <Wrapper>
           <Label htmlFor="company">회사/기관 *</Label>
-          <Input id="company" name="company" />
+          <Input
+            id="company"
+            name="company"
+            value={userData.company}
+            onChange={handleInputChange}
+          />
         </Wrapper>
         <Wrapper>
           <Label htmlFor="position">직책 *</Label>
-          <Input id="position" name="position" />
+          <Input
+            id="position"
+            name="position"
+            value={userData.position}
+            onChange={handleInputChange}
+          />
         </Wrapper>
       </Line>
       <Line>
         <Wrapper>
           <Label htmlFor="region">지역 *</Label>
-          <Input id="region" name="region" />
+          <Input
+            id="region"
+            name="region"
+            value={userData.region}
+            onChange={handleInputChange}
+          />
         </Wrapper>
         <Wrapper>
           <Label htmlFor="country">국가 혹은 지역을 선택해주십시요 *</Label>
-          <Input id="country" name="country" />
+          <Input
+            id="country"
+            name="country"
+            value={userData.country}
+            onChange={handleInputChange}
+          />
         </Wrapper>
       </Line>
 
@@ -62,23 +146,29 @@ const EstimateForm = () => {
         기타 요청사항이나 문의 사항이 있으면 기재해주세요.
       </Label>
       <RequestBox>
-        <RequestInput id="request" name="request" />
+        <RequestInput
+          id="request"
+          name="request"
+          value={userData.request}
+          onChange={handleInputChange}
+        />
       </RequestBox>
       <PrivacyLabel>
         상기의 개인정보(이메일,연락처)를 라이카마이크로시스템즈에서 아래와 같은
         목적으로 수집/활용하는 것에 동의합니다. <br />
         - 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를
-        통해 제공<br />- 서비스 개선/개발을 위한 만족도조사 및 통계처리 *
+        통해 제공
+        <br />- 서비스 개선/개발을 위한 만족도조사 및 통계처리 *
       </PrivacyLabel>
       <RadioButtonGroup>
         <RadioBox>
           <RadioButton
             type="radio"
             id="agreeYes"
-            name="agree"
+            name="agreePrivacyPolicy"
             value="yes"
-            checked={agreePrivacyPolicy === "yes"}
-            onChange={handleAgreeChange}
+            checked={userData.agreePrivacyPolicy === "yes"}
+            onChange={handleInputChange}
           />
           <RadioLabel htmlFor="agreeYes">예</RadioLabel>
         </RadioBox>
@@ -87,10 +177,10 @@ const EstimateForm = () => {
           <RadioButton
             type="radio"
             id="agreeNo"
-            name="agree"
+            name="agreePrivacyPolicy"
             value="no"
-            checked={agreePrivacyPolicy === "no"}
-            onChange={handleAgreeChange}
+            checked={userData.agreePrivacyPolicy === "no"}
+            onChange={handleInputChange}
           />
           <RadioLabel htmlFor="agreeNo">아니오</RadioLabel>
         </RadioBox>
@@ -98,7 +188,7 @@ const EstimateForm = () => {
       <AgreeDiv>
         아래의 (지금 전송) 버튼 클릭함으로써 라이카마이크로시스템즈의 <br />
         <RedText>이용약관과 개인정보 취급방침</RedText>을 검토하고 동의하였음을
-        확인합니다. <br/>
+        확인합니다. <br />
         또한 본인의 개인정보에 대한 선택을 라이카마이크로시스템즈의
         <br />
         <RedText>개인정보 취급방침</RedText>에 따라 처리하는것에 동의합니다.
@@ -112,7 +202,7 @@ export default EstimateForm;
 
 const EstimateBox = styled.div`
   width: 658.6px;
-  height: 997.2px;
+  height: auto;
   background-color: #f5f5f4;
   padding: 0px 32px 32px 32px;
   border-radius: 5px;

@@ -1,5 +1,6 @@
-export const pathName ={
-ESTIMATE : "/Estimate",
-MAIN : "/",
-MICROSCOPE : "/microScope"
+export const pathName = {
+  ESTIMATE: "/Estimate",
+  MAIN: "/",
+  MICROSCOPE: "/microScope",
+  SEARCH: "/search",
 };
