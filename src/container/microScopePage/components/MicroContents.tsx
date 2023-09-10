@@ -151,7 +151,10 @@ const MicroContents = () => {
     setCurrentPage(newPage);
   };
 
+<<<<<<< HEAD
  
+=======
+>>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);

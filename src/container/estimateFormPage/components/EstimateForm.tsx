@@ -24,10 +24,16 @@ const EstimateForm = () => {
       [name]: value,
     });
   };
+<<<<<<< HEAD
   const handleSubmit = (event : any) => {
     event.preventDefault();
 
 
+=======
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+
+>>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
     const emailBody = `
 견적 요청
 
