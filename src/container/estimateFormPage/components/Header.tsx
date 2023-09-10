@@ -30,10 +30,10 @@ const LeicaBar = styled.div`
   margin-bottom: 100px;
   position: sticky;
   padding-left: 100px;
-
 `;
 const LeicaBox = styled.div`
-width : 160px;
+  width: 160px;
   &:hover {
     cursor: pointer;
-  }`;
+  }
+`;

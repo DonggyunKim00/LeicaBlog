@@ -15,24 +15,24 @@ const CreateContent: React.FC = () => {
   const handleCreate = async () => {
     if (subcategoryName) {
       try {
-        const response = await fetch("http://52.79.95.216:8080/api/category/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            parentName: {category},
-            name: subcategoryName,
-          }),
-        });
+        const response = await fetch(
+          "http://52.79.95.216:8080/api/category/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              parentName: category,
+              name: subcategoryName,
+            }),
+          }
+        );
 
-        // Handle the response as needed
         if (response.ok) {
-          // Handle successful creation
-          console.log("Subcategory created successfully");
-          // You might want to navigate to a different page or perform other actions here
+          alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
+          setSubcategoryName("");
         } else {
-          // Handle error
           console.error("Failed to create subcategory");
         }
       } catch (error) {
@@ -52,12 +52,12 @@ const CreateContent: React.FC = () => {
           <ContentInputLabel>카테고리 제목 입력</ContentInputLabel>
         </ContentsTitleBox>
         <InputBox>
-        <CreateInput 
+          <CreateInput
             value={subcategoryName}
-            onChange={(e : any) => setSubcategoryName(e.target.value)}
+            onChange={(e: any) => setSubcategoryName(e.target.value)}
             placeholder="세부 카테고리 이름 입력"
-          /> 
-        <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
+          />
+          <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
         </InputBox>
       </ListContents>
     </ListWrapper>
@@ -118,24 +118,22 @@ const ContentInputLabel = styled.div`
 `;
 
 const CreateInput = styled.input`
-    width : 200px;
-    height : 30px;
-`
+  width: 200px;
+  height: 30px;
+`;
 
 const InputBox = styled.div`
-display: flex;
-justify-content: center;
-align-items : center;
-  
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const InputBtn = styled.button`
-  width : 100px;
-  height : 20px;
+  width: 100px;
+  height: 20px;
   &:hover {
     cursor: pointer;
   }
-  border : 1px solid rgb(146, 146, 146);
+  border: 1px solid rgb(146, 146, 146);
   border-radius: 2px;
-  margin-left : 20px;
-
+  margin-left: 20px;
 `;

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface PageButtonProps {
-  $isactive : boolean;
+  $isactive: boolean;
 }
 
 const MicroContents = () => {
+  const router = useRouter();
+  const { category } = router.query;
+
   const dummyData = [
     {
       id: 1,
@@ -110,15 +114,31 @@ const MicroContents = () => {
       name: "김동균 멍청이 김동균 멍청이 김동균 멍청이",
       date: "2023. 7. 6.",
     },
-
-
   ];
+
+  const fetchCategoryData = async () => {
+    try {
+      const response = await fetch(`http://52.79.95.216:8080/${category}`);
+      const responseData = await response.json();
+      // responseData를 가공하여 mainItems 혹은 subItems 업데이트
+      // ...
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // 페이지가 로드될 때와 카테고리가 변경될 때 데이터를 가져옴
+  useEffect(() => {
+    if (category) {
+      fetchCategoryData();
+    }
+  }, [category]);
+
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(dummyData.length / itemsPerPage);
 
-  // 페이지가 변경될 때마다 새로운 데이터 계산
   const getPaginatedData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -131,7 +151,6 @@ const MicroContents = () => {
     setCurrentPage(newPage);
   };
 
-  // 페이지가 마지막 페이지보다 크다면 마지막 페이지로 설정
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
@@ -252,16 +271,6 @@ const Page = styled.div`
   justify-content: center;
 `;
 
-const PageNum = styled.div`
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  :hover {
-    border: 2px solid #ff0000; /* 호버 시 보더 스타일 정의 */
-  }
-`;
 const PageButton = styled.button<PageButtonProps>`
   width: 26px;
   height: 26px;
@@ -276,6 +285,6 @@ const PageButton = styled.button<PageButtonProps>`
   cursor: pointer;
   outline: none;
   &:hover {
-    border: 2px solid #d3d3d3; /* 호버 시 보더 스타일 정의 */
+    border: 2px solid #d3d3d3;
   }
 `;
