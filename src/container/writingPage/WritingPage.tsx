@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "./style.module";
 import { useEditor } from "@tiptap/react";
 import Editor from "./components/Editor";
@@ -42,6 +42,8 @@ import {
 import { ImageResize } from "./components/customExtension/file";
 
 const WritingPage = () => {
+  const [editorContent, setEditorContent] = useState<any>();
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -90,7 +92,11 @@ const WritingPage = () => {
       }),
     ],
     content: "",
+    // onUpdate({ editor }) {
+    //   setEditorContent(editor.getJSON);
+    // },
   });
+  // console.log(editorContent);
 
   return (
     <Container>

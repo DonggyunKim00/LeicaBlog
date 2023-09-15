@@ -10,12 +10,13 @@ export async function uploadImage({ image }: IUploadImage) {
   formData.append("file", image);
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/upload`,
+    `${process.env.NEXT_PUBLIC_API_URL}/upload`,
     formData,
     {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     }
   );
 

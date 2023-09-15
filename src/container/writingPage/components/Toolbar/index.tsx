@@ -1,4 +1,8 @@
-import React, { useCallback } from "react";
+import React, {
+  experimental_useEffectEvent,
+  useCallback,
+  useEffect,
+} from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -21,15 +25,40 @@ import { postBoard } from "../../../../../pages/api/board";
 export interface ToolBarProps {
   editor?: Editor | null;
   handleSubmit: any;
+  thumbnailUrl: string;
 }
 
-const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
+const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
   const submit = (data: FieldValues) => {
     const title = data.mainFolder;
-    const categoryName = data.subFolder;
-    const content = editor && editor.getJSON(); // JSON 타입으로 받아야함 -> 백엔드쪽 타입 설정 필요
-    console.log(content);
-    // console.log(postBoard({ title, categoryName, content }));
+    const content = editor && JSON.stringify(editor.getJSON());
+    const thumbnail = thumbnailUrl;
+    const mainCategory = data.mainFolder;
+    const subCategory = data.subFolder;
+
+    const searchArr = editor
+      ?.getJSON()
+      .content?.map((item) => {
+        if (item.content) {
+          const textContent = item.content.find(
+            (contentItem) => contentItem.text
+          );
+          return textContent ? textContent.text : "";
+        }
+        return "";
+      })
+      .filter((text) => text !== "")
+      .join("/");
+
+    // console.log(
+    //   postBoard({
+    //     title,
+    //     content,
+    //     mainCategory,
+    //     subCategory,
+    //     thumbnail,
+    //   })
+    // );
   };
 
   const addYoutubeVideo = () => {
@@ -59,6 +88,7 @@ const Toolbar = ({ editor, handleSubmit }: ToolBarProps) => {
       .setLink({ href: url })
       .run();
   }, [editor]);
+
   return (
     <Container>
       <SubmitLine>
