@@ -13,71 +13,30 @@ interface Item {
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
-
-  // const dummyData = [
-  //   {
-  //     id: 1,
-  //     imgSrc: "/img/main/middle/1.png",
-  //     name: "검사 효율성을 최적화하기 위한 방법",
-  //     date: "2023. 7. 6.",
-  //   },
-  // ];
-
-  // const dummySubItems = [
-  //   {
-  //     id: 1,
-  //     imgSrc: "/img/main/middle/s1.png",
-  //     name: "[소식] 김성훈 스쿼트 140 3트에 모두 실패해.....",
-  //     content:
-  //       "김효성과 하체운동을 하는도중 스쿼트 기록 갱신에 도전했지만 3번 모두 실패하는 모습을 보여",
-  //     date: "2023. 06. 23.",
-  //   },
-  //   {
-  //     id: 2,
-  //     imgSrc: "/img/main/middle/s2.png",
-  //     name: "[소식] 김동균 벤치 90도 못들어....충격...",
-  //     content:
-  //       "김효성과의 가슴운동중 벤치 90에 깔리는 참사가 발생에 중상자 1명발생 (김효성 배꼽이 빠져 응급실로 이송)'",
-  //     date: "2023. 6. 16.",
-  //   },
-  //   {
-  //     id: 3,
-  //     imgSrc: "/img/main/middle/s3.png",
-  //     name: "[소식] 김효성 스쿼트 25KG으로 밝혀져 세간의 주목을 받고 있다고...",
-  //     content: "스쿼트 1RM이 벤치 1RM 보다 가볍다고 알려져 충격",
-  //     date: "2023. 6. 10.",
-  //   },
-  //   {
-  //     id: 4,
-  //     imgSrc: "/img/main/middle/s4.png",
-  //     name: "[소식] 강혜미 3대 700KG 달성으로 제2의 장미란 발굴.",
-  //     content: "엄청난 근육과 함께 엄청난 식사량을 자랑 ",
-  //     date: "2023. 5. 30.",
-  //   },
-  // ];
-
-  // const recentMainItems = dummyData.slice(0, 5);
-  // const recentSubItems = dummySubItems.slice(0, 6);
+  mainItems.forEach((item) => {
+    console.log(item.thumbnail);
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("52.79.95.216:8080/post");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/`);
         const responseData = await response.json();
 
-        // Assuming the API response is an array of items
-        const sortedData = responseData.slice().reverse();
+        if (Array.isArray(responseData.childList)) {
+          const sortedData = responseData.childList.slice().reverse();
+          const mainData = sortedData.slice(0, 5);
+          const subData = sortedData.slice(5, 12);
 
-        const mainData = sortedData.slice(0, 5);
-        const subData = sortedData.slice(5, 12);
-
-        setMainItems(mainData);
-        setSubItems(subData);
+          setMainItems(mainData);
+          setSubItems(subData);
+        } else {
+          // 데이터가 배열이 아닌 경우 처리
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -87,10 +46,10 @@ const Contents = () => {
         {mainItems.map((item) => (
           <MainItemBox key={item.title}>
             <MainItemImg>
-              {item.thumbnail ? (
+              {item.thumbnail && item.thumbnail !== "none" ? (
                 <Image src={item.thumbnail} alt="" width={180} height={185} />
               ) : (
-                <div>No Thumbnail</div>
+                <Image src={"/img/main/header.png"} alt="" width={180} height={185} />
               )}
             </MainItemImg>
             <MainItemName>{item.title}</MainItemName>
@@ -107,10 +66,10 @@ const Contents = () => {
         {subItems.map((subItem) => (
           <SubItemBox key={subItem.title}>
             <SubItemImg>
-              {subItem.thumbnail ? (
+            {subItem.thumbnail && subItem.thumbnail !== "none" ? (
                 <Image src={subItem.thumbnail} alt="" width={90} height={90} />
-              ) : (
-                <div>No Thumbnail</div>
+              ) :  (
+                <Image src={"/img/main/header.png"} alt="" width={90} height={90} />
               )}
             </SubItemImg>
             <SubItemSpan>
@@ -156,7 +115,7 @@ const MainItemName = styled.div`
   width: 180px;
   height: 16px;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -232,7 +191,7 @@ const SubItemName = styled.div`
   height: 20px;
   margin-bottom: 6px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
