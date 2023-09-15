@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import leicaTypo from "../../../../public/img/main/header.jpg";
+import leicaTypo from "../../../../public/img/main/header.png";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
