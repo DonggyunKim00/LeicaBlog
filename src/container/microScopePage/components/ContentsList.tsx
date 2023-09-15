@@ -8,8 +8,8 @@ interface ListWrapperProps {
 }
 
 interface Category {
-  name: string;
-  posts: { id: number; title: string }[];
+  id: string;
+  childName : string;
 }
 
 const ContentsList: React.FC = () => {
@@ -17,10 +17,6 @@ const ContentsList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
   const toggleList = () => {
     setShowList((prevState) => !prevState);
   };
@@ -36,47 +32,29 @@ const ContentsList: React.FC = () => {
     const fetchData = async () => {
       try {
         if (category) {
-<<<<<<< HEAD
-       
-          const categoryResponse = await fetch(`http://52.79.95.216:8080/api/category/${category}`);
-          if (categoryResponse.ok) {
-            const categoryData = await categoryResponse.json();
-          
-            const children = categoryData.children;
-            setCategories(children);
-          } else {
-            console.error("API request for category failed with status:", categoryResponse.status);
-=======
           const categoryResponse = await fetch(
-            `http://52.79.95.216:8080/api/category/${category}`
+            `http://krleicablog.shop:8080/find/category/${category}`
           );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
 
-            const children = categoryData.children;
+            const children = categoryData;
             setCategories(children);
           } else {
             console.error(
               "API request for category failed with status:",
               categoryResponse.status
             );
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-<<<<<<< HEAD
-  
-    fetchData();
-  }, [category]);
-  
-=======
 
+    
     fetchData();
   }, [category]);
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
 
   return (
     <ListWrapper $expanded={showList}>
@@ -95,8 +73,8 @@ const ContentsList: React.FC = () => {
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
           {categories.map((category, index) => (
-            <ContentBox key={category.name}>
-              <CategoryTitle>{category.name}</CategoryTitle>
+            <ContentBox key={category.childName}>
+              <CategoryTitle>{category.childName}</CategoryTitle>
               <CategoryAmount>2 개의 글</CategoryAmount>
               <DetailBtn>
                 <svg

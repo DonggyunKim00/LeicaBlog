@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import leicaTypo from "../../../../public/img/main/leicaTypo.jpg";
+import leicaTypo from "../../../../public/img/main/header.jpg";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
@@ -26,19 +26,6 @@ export default Header;
 const LeicaBar = styled.div`
   width: 100%;
   height: 100px;
-<<<<<<< HEAD
-
-  margin-bottom: 100px;
-  position: sticky;
-  padding-left: 100px;
-
-`;
-const LeicaBox = styled.div`
-width : 160px;
-  &:hover {
-    cursor: pointer;
-  }`;
-=======
   background-color: rgb(245, 245, 244);
   margin-bottom: 100px;
   position: sticky;
@@ -50,4 +37,3 @@ const LeicaBox = styled.div`
     cursor: pointer;
   }
 `;
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81

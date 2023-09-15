@@ -15,24 +15,8 @@ const CreateContent: React.FC = () => {
   const handleCreate = async () => {
     if (subcategoryName) {
       try {
-<<<<<<< HEAD
-        const response = await fetch("http://52.79.95.216:8080/api/category/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            parentName: category,
-            name: subcategoryName,
-          }),
-        });
-
-      
-        if (response.ok) {
-          alert( category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
-=======
         const response = await fetch(
-          "http://52.79.95.216:8080/api/category/create",
+          `${process.env.NEXT_PUBLIC_API_URL}/create/category/child`,
           {
             method: "POST",
             headers: {
@@ -47,7 +31,6 @@ const CreateContent: React.FC = () => {
 
         if (response.ok) {
           alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
           setSubcategoryName("");
         } else {
           console.error("Failed to create subcategory");
@@ -69,21 +52,12 @@ const CreateContent: React.FC = () => {
           <ContentInputLabel>카테고리 제목 입력</ContentInputLabel>
         </ContentsTitleBox>
         <InputBox>
-<<<<<<< HEAD
-        <CreateInput 
-            value={subcategoryName}
-            onChange={(e : any) => setSubcategoryName(e.target.value)}
-            placeholder="세부 카테고리 이름 입력"
-          /> 
-        <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
-=======
           <CreateInput
             value={subcategoryName}
             onChange={(e: any) => setSubcategoryName(e.target.value)}
             placeholder="세부 카테고리 이름 입력"
           />
           <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
         </InputBox>
       </ListContents>
     </ListWrapper>
@@ -144,29 +118,6 @@ const ContentInputLabel = styled.div`
 `;
 
 const CreateInput = styled.input`
-<<<<<<< HEAD
-    width : 200px;
-    height : 30px;
-`
-
-const InputBox = styled.div`
-display: flex;
-justify-content: center;
-align-items : center;
-  
-`
-const InputBtn = styled.button`
-  width : 100px;
-  height : 20px;
-  &:hover {
-    cursor: pointer;
-  }
-  border : 1px solid rgb(146, 146, 146);
-  border-radius: 2px;
-  margin-left : 20px;
-
-`;
-=======
   width: 200px;
   height: 30px;
 `;
@@ -186,4 +137,3 @@ const InputBtn = styled.button`
   border-radius: 2px;
   margin-left: 20px;
 `;
->>>>>>> cd3452a447cb29ed3c5a7c44b78ddf7661a19c81
