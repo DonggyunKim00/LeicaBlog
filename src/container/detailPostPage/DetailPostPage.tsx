@@ -1,10 +1,10 @@
 import React from "react";
-import ContentsList from "@/container/microScopePage/components/ContentsList";
+import List from "./components/List";
 import Content from "./components/Content";
 const DetailPostPage = () => {
   return (
     <>
-      <ContentsList />
+      <List />
       <Content />
     </>
   );
