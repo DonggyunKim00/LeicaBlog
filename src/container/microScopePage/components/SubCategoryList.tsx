@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 
@@ -8,14 +8,17 @@ interface ListWrapperProps {
 }
 
 interface Category {
-  id: string;
-  childName : string;
+  name: string;
+  posts: { id: number; title: string }[];
 }
 
-const ContentsList: React.FC = () => {
+const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
+  
+
+
 
   const toggleList = () => {
     setShowList((prevState) => !prevState);
@@ -32,29 +35,28 @@ const ContentsList: React.FC = () => {
     const fetchData = async () => {
       try {
         if (category) {
-          const categoryResponse = await fetch(
-            `http://krleicablog.shop:8080/find/category/${category}`
-          );
+       
+          const categoryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/${category}`);
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
-
-            const children = categoryData;
+          
+            const children = categoryData.children;
+          
             setCategories(children);
+           
+
           } else {
-            console.error(
-              "API request for category failed with status:",
-              categoryResponse.status
-            );
+            console.error("API request for category failed with status:", categoryResponse.status);
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
-    
+  
     fetchData();
-  }, [category]);
+  }, [category, categories]);
+  
 
   return (
     <ListWrapper $expanded={showList}>
@@ -73,8 +75,8 @@ const ContentsList: React.FC = () => {
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
           {categories.map((category, index) => (
-            <ContentBox key={category.childName}>
-              <CategoryTitle>{category.childName}</CategoryTitle>
+            <ContentBox key={category.name}>
+              <CategoryTitle>{category.name}</CategoryTitle>
               <CategoryAmount>2 개의 글</CategoryAmount>
               <DetailBtn>
                 <svg
@@ -97,7 +99,7 @@ const ContentsList: React.FC = () => {
   );
 };
 
-export default ContentsList;
+export default SubCategoryList;
 
 const ListWrapper = styled.div<ListWrapperProps>`
   width: 966px;

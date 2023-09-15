@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import leicaTypo from "../../public/img/main/leicaTypo.jpg";
+import leicaTypo from "../../public/img/main/header.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import microScope from "../../public/img/main/microScope.png";

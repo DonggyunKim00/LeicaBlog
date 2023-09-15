@@ -16,7 +16,7 @@ const CreateContent: React.FC = () => {
     if (subcategoryName) {
       try {
         const response = await fetch(
-          "http://52.79.95.216:8080/api/category/create",
+          `${process.env.NEXT_PUBLIC_API_URL}/create/category/child`,
           {
             method: "POST",
             headers: {
