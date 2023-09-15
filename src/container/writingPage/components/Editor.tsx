@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Toolbar from "./Toolbar";
 import ContentBox from "./ContentBox";
 import { Editor as RawEditor } from "@tiptap/react";
@@ -9,11 +9,21 @@ interface EditorProps {
 }
 const Editor = ({ editor }: EditorProps) => {
   const { register, handleSubmit } = useForm();
+  const [thumbnailUrl, setThumnailUrl] = useState<string>("");
 
   return (
     <>
-      <Toolbar editor={editor} handleSubmit={handleSubmit} />
-      <ContentBox editor={editor} register={register} />
+      <Toolbar
+        editor={editor}
+        handleSubmit={handleSubmit}
+        thumbnailUrl={thumbnailUrl}
+      />
+      <ContentBox
+        editor={editor}
+        register={register}
+        thumbnailUrl={thumbnailUrl}
+        setThumnailUrl={setThumnailUrl}
+      />
     </>
   );
 };
