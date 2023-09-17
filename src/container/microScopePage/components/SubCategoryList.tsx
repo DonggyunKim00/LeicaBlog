@@ -8,17 +8,14 @@ interface ListWrapperProps {
 }
 
 interface Category {
-  name: string;
-  posts: { id: number; title: string }[];
+  childName: string;
+  size: number;
 }
 
 const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
-  
-
-
 
   const toggleList = () => {
     setShowList((prevState) => !prevState);
@@ -35,33 +32,31 @@ const SubCategoryList: React.FC = () => {
     const fetchData = async () => {
       try {
         if (category) {
-       
-          const categoryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/${category}`);
+          const categoryResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
+          );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
-          
-            const children = categoryData.children;
-          
-            setCategories(children);
-           
-
+            setCategories(categoryData);
           } else {
-            console.error("API request for category failed with status:", categoryResponse.status);
+            console.error(
+              "API request for category failed with status:",
+              categoryResponse.status
+            );
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
     fetchData();
-  }, [category, categories]);
-  
+  }, [category]);
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
         <ListTitle>{category}</ListTitle>
+
         <ListAmount>{categories.length}개의 카테고리</ListAmount>
 
         <ListToggleBtn onClick={toggleList}>
@@ -74,10 +69,13 @@ const SubCategoryList: React.FC = () => {
             <ContentsTitleSpan>카테고리 제목</ContentsTitleSpan>
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
+
           {categories.map((category, index) => (
-            <ContentBox key={category.name}>
-              <CategoryTitle>{category.name}</CategoryTitle>
-              <CategoryAmount>2 개의 글</CategoryAmount>
+            <ContentBox key={category.childName}>
+              <CategoryTitle>{category.childName}</CategoryTitle>
+
+              <CategoryAmount>{category.size}개의 글</CategoryAmount>
+
               <DetailBtn>
                 <svg
                   focusable="false"
@@ -188,6 +186,7 @@ const CategoryAmount = styled.div`
   font-size: 12px;
   color: rgb(146, 146, 146);
 `;
+
 const DetailBtn = styled.div`
   color: rgb(146, 146, 146);
   margin-left: 15px;

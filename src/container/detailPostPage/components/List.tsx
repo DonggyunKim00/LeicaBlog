@@ -11,29 +11,52 @@ interface Category {
   posts: { id: number; title: string }[];
 }
 
+interface Post {
+  id: number;
+  title: string;
+  subTitle: string;
+  content: string;
+  thumbnail: string;
+  writer: string;
+  category: string;
+}
+
 const ContentsList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<Category[]>([]);
-
-  
-
-
-
+  const router = useRouter();
+  const { id } = router.query;
+  const [post, setPost] = useState<Post | null>(null);
   const toggleList = () => {
     setShowList((prevState) => !prevState);
   };
 
-  const router = useRouter();
-  const { category } = router.query;
+  useEffect(() => {
+    if (id) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPost(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [id]);
 
-  
+
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
-        <ListTitle>....ㅠ</ListTitle>
-        <ListAmount>{categories.length}개의 글</ListAmount> 
-{/* 게시물 갯수 받아와야 함*/}
+      {post ? (
+          <>
+            <ListTitle>{post.category}</ListTitle>
+            <ListAmount>{categories.length}개의 글</ListAmount>
+          </>
+        ) : (
+          <div>Loading...</div>
+        )}
         <ListToggleBtn onClick={toggleList}>
           {showList ? "목록닫기" : "목록열기"}
         </ListToggleBtn>
@@ -48,7 +71,6 @@ const ContentsList: React.FC = () => {
             <ContentBox key={category.name}>
               <CategoryTitle>{category.name}</CategoryTitle>
               <CategoryAmount>2 개의 글</CategoryAmount>
-              {/* 글 Title이랑 작성 날짜  */}
             </ContentBox>
           ))}
         </ListContents>

@@ -14,128 +14,21 @@ interface ResponseDataItem {
   category: string;
 }
 
-
 const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
 
-  const dummyData = [
-    {
-      id: 1,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 2,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 3,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 4,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 7,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 8,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 9,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 10,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 11,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 12,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 13,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 14,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 15,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 16,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 17,
-      imgSrc: "/img/main/middle/2.png",
-      name: "김동균 멍청이 김동균 멍청이 김동균 멍청이",
-      date: "2023. 7. 6.",
-    },
-  ];
-
-
-
   const fetchCategoryData = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/post/${category}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${category}`
+      );
       const responseData = await response.json();
-      
+
       if (Array.isArray(responseData)) {
         setMainItems(responseData);
       } else {
-        
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -151,9 +44,9 @@ const MicroContents = () => {
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(mainItems.length / itemsPerPage);
+  const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
 
-  const getPaginatedData = (data : any) => {
+  const getPaginatedData = (data: any) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
@@ -175,15 +68,24 @@ const MicroContents = () => {
       <Box>
         <Wrapper>
           <MainItemWrapper>
-            {currentItems.map((item: ResponseDataItem) => (
-              <MainItemBox key={item.id}>
-                <MainItemImg>
-                  <Image src={item.thumbnail} alt="" width={200} height={200} />
-                </MainItemImg>
-                <MainItemName>{item.title}</MainItemName>
-                <MainItemDate>{item.subTitle}</MainItemDate>
-              </MainItemBox>
-            ))}
+            {currentItems.length === 0 ? (
+              <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
+            ) : (
+              currentItems.map((item: ResponseDataItem) => (
+                <MainItemBox key={item.id}>
+                  <MainItemImg>
+                    <Image
+                      src={item.thumbnail}
+                      alt=""
+                      width={200}
+                      height={200}
+                    />
+                  </MainItemImg>
+                  <MainItemName>{item.title}</MainItemName>
+                  <MainItemDate>{item.subTitle}</MainItemDate>
+                </MainItemBox>
+              ))
+            )}
           </MainItemWrapper>
         </Wrapper>
       </Box>
@@ -301,3 +203,7 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
+const NoPostsMessage = styled.div`
+ 
+
+`
