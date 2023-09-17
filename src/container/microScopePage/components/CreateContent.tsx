@@ -16,7 +16,7 @@ const CreateContent: React.FC = () => {
     if (subcategoryName) {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/create/category/child`,
+          `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
           {
             method: "POST",
             headers: {
@@ -24,7 +24,7 @@ const CreateContent: React.FC = () => {
             },
             body: JSON.stringify({
               parentName: category,
-              name: subcategoryName,
+              childName: subcategoryName,
             }),
           }
         );
