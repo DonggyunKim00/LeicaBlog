@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 interface Item {
   id: number;
@@ -9,13 +11,14 @@ interface Item {
   content: string;
   createdAt: number;
 }
+interface MainItemNameProps {
+  $isHovered: boolean;
+}
 
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
-  mainItems.forEach((item) => {
-    console.log(item.thumbnail);
-  });
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,19 +43,37 @@ const Contents = () => {
     fetchData();
   }, []);
 
+  const handleDetailClick = (itemId: number) => {
+    Router.push({
+      pathname: pathName.DETAIL,
+      query: { id: itemId },
+    });
+  };
   return (
     <Wrapper>
       <MainItemWrapper>
         {mainItems.map((item) => (
-          <MainItemBox key={item.title}>
+          <MainItemBox
+            onClick={() => handleDetailClick(item.id)}
+            key={item.title}
+            onMouseEnter={() => setHoveredItem(item.id)}
+            onMouseLeave={() => setHoveredItem(null)}
+          >
             <MainItemImg>
               {item.thumbnail && item.thumbnail !== "none" ? (
                 <Image src={item.thumbnail} alt="" width={180} height={185} />
               ) : (
-                <Image src={"/img/main/header.png"} alt="" width={180} height={185} />
+                <Image
+                  src={"/img/main/header.png"}
+                  alt=""
+                  width={180}
+                  height={185}
+                />
               )}
             </MainItemImg>
-            <MainItemName>{item.title}</MainItemName>
+            <MainItemName $isHovered={hoveredItem === item.id}>
+              {item.title}
+            </MainItemName>
             <MainItemDate>
               {new Date(item.createdAt).toLocaleDateString()}
             </MainItemDate>
@@ -64,17 +85,31 @@ const Contents = () => {
 
       <SubItemWrapper>
         {subItems.map((subItem) => (
-          <SubItemBox key={subItem.title}>
+          <SubItemBox
+            key={subItem.title}
+            onMouseEnter={() => setHoveredItem(subItem.id)}
+            onMouseLeave={() => setHoveredItem(null)}
+            onClick={() => handleDetailClick(subItem.id)}
+          >
             <SubItemImg>
-            {subItem.thumbnail && subItem.thumbnail !== "none" ? (
+              {subItem.thumbnail && subItem.thumbnail !== "none" ? (
                 <Image src={subItem.thumbnail} alt="" width={90} height={90} />
-              ) :  (
-                <Image src={"/img/main/header.png"} alt="" width={90} height={90} />
+              ) : (
+                <Image
+                  src={"/img/main/header.png"}
+                  alt=""
+                  width={90}
+                  height={90}
+                />
               )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName>{subItem.title}</SubItemName>
-              <SubItemContent>{subItem.content}</SubItemContent>
+              <SubItemName $isHovered={hoveredItem === subItem.id}>
+                {subItem.title}
+              </SubItemName>
+              <SubItemContent $isHovered={hoveredItem === subItem.id}>
+                {subItem.content}
+              </SubItemContent>
               <SubItemDate>
                 {new Date(subItem.createdAt).toLocaleDateString()}
               </SubItemDate>
@@ -107,11 +142,12 @@ const MainItemBox = styled.div`
   width: 180px;
   height: 240px;
   margin-right: 5px;
+  cursor: pointer;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
 `;
-const MainItemName = styled.div`
+const MainItemName = styled.div<MainItemNameProps>`
   width: 180px;
   height: 16px;
   align-items: center;
@@ -121,10 +157,7 @@ const MainItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
 `;
 const MainItemDate = styled.div`
   width: 180px;
@@ -172,6 +205,7 @@ const SubItemWrapper = styled.div`
 const SubItemBox = styled.div`
   width: 308px;
   height: 120px;
+  cursor: pointer;
   display: flex;
 `;
 const SubItemImg = styled.div`
@@ -186,7 +220,7 @@ const SubItemSpan = styled.div`
   padding: 5px 15px 6px 0px;
 `;
 
-const SubItemName = styled.div`
+const SubItemName = styled.div<MainItemNameProps>`
   width: 193px;
   height: 20px;
   margin-bottom: 6px;
@@ -196,13 +230,10 @@ const SubItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
 `;
 
-const SubItemContent = styled.div`
+const SubItemContent = styled.div<MainItemNameProps>`
   width: 193px;
   height: 48px;
   font-size: 12px;
@@ -210,10 +241,7 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
 `;
 
 const SubItemDate = styled.div`

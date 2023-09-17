@@ -1,34 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/router";
+
+
+interface Post {
+  id: number;
+  title: string;
+  subTitle: string;
+  content: string;
+  thumbnail: string;
+  writer: string;
+  category: string;
+}
+
 
 const Content = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [post, setPost] = useState<Post | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      // API 호출
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPost(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [id]);
   return (
-    <>
-      <Box>
-        여기다가 뭐 형식 알아서 뿌려주면 될듯..?
-        <br />
-        사진도 넣고
-        <br />
-        글자도 넣고
-        <br /> \
-        음 height는 auto로 줬음
-        <br />
-        몰루~?
-        <br />
-        아 그리고 위에 카테고리는 실제 라이카 보면
-        <br /> 
-        카테고리 종류가 아니라 
-        <br />
-        그 세부 카테고리 안의 다른 글들이 몇개 있는지 보여주는거고 
-        <br />
-        목록 열면 해당 세부 카테고리에 어떤 게시물 있는지 보여주는 거거든 
-        <br />
-        그거 클릭하면 해당 게시물 페이지로 링크되고
-        <br />
-        그것도 나중에 구현 해줄게
-  
-      </Box>
-    </>
+    <Box>
+      {post ? (
+          <>
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+            <h1>{post.subTitle}</h1>
+            <p>{post.writer}</p>
+            <p>{post.category}</p>
+            <p></p>
+
+          </>
+        ) : (
+          // id가 없거나 게시물을 아직 불러오지 못한 경우
+          <p>게시물을 불러오는 중...</p>
+        )}
+    </Box>
   );
 };
 
