@@ -85,7 +85,7 @@ const Top: React.FC = () => {
             수퍼해상도 현미경
           </ScopeMenuBox>
           <ScopeMenuBox
-            onClick={() => handleCategoryClick("실체 현미경, 마크로 현미경")}
+            onClick={() => handleCategoryClick("실체현미경 마크로 현미경")}
           >
             실체현미경
             <br />
@@ -97,7 +97,7 @@ const Top: React.FC = () => {
             현미경 소프트웨어
           </ScopeMenuBox>
           <ScopeMenuBox
-            onClick={() => handleCategoryClick("전자현미경, 시료전처리")}
+            onClick={() => handleCategoryClick("전자현미경 시료전처리")}
           >
             전자현미경 <br />
             시료전처리
