@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Container } from "./style.module";
 import { useEditor } from "@tiptap/react";
 import Editor from "./components/Editor";
-import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Heading from "@tiptap/extension-heading";
 import Text from "@tiptap/extension-text";
+import ListItem from "@tiptap/extension-list-item";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import FontFamily from "@tiptap/extension-font-family";
@@ -42,11 +42,9 @@ import {
 import { ImageResize } from "./components/customExtension/file";
 
 const WritingPage = () => {
-  const [editorContent, setEditorContent] = useState<any>();
-
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      ListItem,
       Document,
       Paragraph,
       Text,
@@ -92,11 +90,7 @@ const WritingPage = () => {
       }),
     ],
     content: "",
-    // onUpdate({ editor }) {
-    //   setEditorContent(editor.getJSON);
-    // },
   });
-  // console.log(editorContent);
 
   return (
     <Container>
