@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { adminLoginApi } from "../../../pages/api/login";
 
@@ -6,6 +7,7 @@ export interface InputForm {
   id: string;
   password: string;
 }
+
 const LoginPage = () => {
   const [form, setForm] = useState<InputForm>({ id: "", password: "" });
 

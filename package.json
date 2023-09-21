@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:https" :"node server.js"
   },
   "dependencies": {
     "@tiptap/extension-color": "^2.0.4",
