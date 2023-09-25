@@ -17,6 +17,7 @@ export const adminLoginApi = async (form: InputForm) => {
       }
     );
 
+    console.log(res);
     return res;
   } catch (err) {
     console.log(err);
