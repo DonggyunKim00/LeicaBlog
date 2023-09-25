@@ -6,10 +6,18 @@ import { useRouter } from "next/router";
 interface PageButtonProps {
   $isactive: boolean;
 }
+interface ResponseDataItem {
+  id: number;
+  title: string;
+  thumbnail: string;
+  subTitle: string;
+  category: string;
+}
 
 const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
+<<<<<<< HEAD
 
   const dummyData = [
     {
@@ -115,19 +123,26 @@ const MicroContents = () => {
       date: "2023. 7. 6.",
     },
   ];
+=======
+  const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
+>>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
 
   const fetchCategoryData = async () => {
     try {
-      const response = await fetch(`http://52.79.95.216:8080/${category}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${category}`
+      );
       const responseData = await response.json();
-      // responseData를 가공하여 mainItems 혹은 subItems 업데이트
-      // ...
+
+      if (Array.isArray(responseData)) {
+        setMainItems(responseData);
+      } else {
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  // 페이지가 로드될 때와 카테고리가 변경될 때 데이터를 가져옴
   useEffect(() => {
     if (category) {
       fetchCategoryData();
@@ -137,15 +152,18 @@ const MicroContents = () => {
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(dummyData.length / itemsPerPage);
+  const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
 
+<<<<<<< HEAD
   const getPaginatedData = () => {
+=======
+  const getPaginatedData = (data: any) => {
+>>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return dummyData.slice(startIndex, endIndex);
+    return data.slice(startIndex, endIndex);
   };
-
-  const currentItems = getPaginatedData();
+  const currentItems = getPaginatedData(mainItems);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -162,15 +180,24 @@ const MicroContents = () => {
       <Box>
         <Wrapper>
           <MainItemWrapper>
-            {currentItems.map((item) => (
-              <MainItemBox key={item.id}>
-                <MainItemImg>
-                  <Image src={item.imgSrc} alt="" width={200} height={200} />
-                </MainItemImg>
-                <MainItemName>{item.name}</MainItemName>
-                <MainItemDate>{item.date}</MainItemDate>
-              </MainItemBox>
-            ))}
+            {currentItems.length === 0 ? (
+              <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
+            ) : (
+              currentItems.map((item: ResponseDataItem) => (
+                <MainItemBox key={item.id}>
+                  <MainItemImg>
+                    <Image
+                      src={item.thumbnail}
+                      alt=""
+                      width={200}
+                      height={200}
+                    />
+                  </MainItemImg>
+                  <MainItemName>{item.title}</MainItemName>
+                  <MainItemDate>{item.subTitle}</MainItemDate>
+                </MainItemBox>
+              ))
+            )}
           </MainItemWrapper>
         </Wrapper>
       </Box>
@@ -288,3 +315,7 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
+const NoPostsMessage = styled.div`
+ 
+
+`

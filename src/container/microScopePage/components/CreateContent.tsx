@@ -16,7 +16,11 @@ const CreateContent: React.FC = () => {
     if (subcategoryName) {
       try {
         const response = await fetch(
+<<<<<<< HEAD
           "http://52.79.95.216:8080/api/category/create",
+=======
+          `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
+>>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
           {
             method: "POST",
             headers: {
@@ -24,7 +28,11 @@ const CreateContent: React.FC = () => {
             },
             body: JSON.stringify({
               parentName: category,
+<<<<<<< HEAD
               name: subcategoryName,
+=======
+              childName: subcategoryName,
+>>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
             }),
           }
         );

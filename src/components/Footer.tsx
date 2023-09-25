@@ -5,23 +5,16 @@ const Footer = () => {
   return (
     <Wrapper>
       <Profile>
-        <ProfileBox>
-          <Image
-            src="/img/main/footer/LeicaProfile.png"
-            alt=""
-            width={155}
-            height={155}
-          />
-          <ProfileName>라이카코리아</ProfileName>
-          <ProfileInfo>
-            라이카 마이크로시스템즈
-            <br />
-            Leica Microsysyems
-            <br />
-            한국지사 공식블로그
-            <br /> <br />• 02-3416-4430
-          </ProfileInfo>
-        </ProfileBox>
+        <Image src="/img/main/ntsLogo.png" alt="" width={155} height={155} />
+        <ProfileName>라이카코리아</ProfileName>
+        <ProfileInfo>
+          라이카 마이크로시스템즈
+          <br />
+          Leica Microsysyems
+          <br />
+          한국지사 공식블로그
+          <br /> <br />• 02-3416-4430
+        </ProfileInfo>
       </Profile>
       <NameCard>
         <NameCardLine>
@@ -107,29 +100,28 @@ const Footer = () => {
 export default Footer;
 
 const Wrapper = styled.div`
-  width: 980px;
   height: 391.8px;
   padding-bottom: 10px;
-  margin: 16px auto 0;
+  margin: 16px 0px;
   display: flex;
+  justify-content: center;
+  gap: 110px;
 `;
 const Profile = styled.div`
   width: 171px;
   height: 320.8px;
-  margin-left: 8px;
   border: 1px solid;
   border-color: rgb(233, 233, 233);
   border-radius: 5px;
-`;
-const ProfileBox = styled.div`
-  margin: 8px 5px 6px 5px;
-  width: 141px;
-  height: 376.8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 const ProfileName = styled.div`
   width: 143px;
   height: 22px;
-  padding-top: 12px;
+  padding-top: 20px;
   margin: 0px 9px 0px 9px;
   color: rgb(138, 131, 126);
   font-size: 14px;
@@ -150,7 +142,10 @@ const BusinesssInfoBox = styled.div`
   height: 212px;
   border: 1px solid;
   border-color: rgb(211, 211, 211);
+<<<<<<< HEAD
   margin-left: 100px;
+=======
+>>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
 `;
 
 const BusinessInfo = styled.div`
@@ -208,7 +203,6 @@ const InfoLiContent = styled.div`
 `;
 
 const NameCard = styled.div`
-  margin-left: 121px;
   height: 250px;
   margin-top: 30px;
   width: 400px;
