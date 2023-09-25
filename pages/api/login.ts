@@ -10,12 +10,14 @@ export const adminLoginApi = async (form: InputForm) => {
       `${process.env.NEXT_PUBLIC_API_URL}/login`,
       formData,
       {
+        withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
         },
       }
     );
 
+    console.log(res);
     return res;
   } catch (err) {
     console.log(err);
