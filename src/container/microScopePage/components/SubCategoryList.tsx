@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 
@@ -8,11 +8,11 @@ interface ListWrapperProps {
 }
 
 interface Category {
-  id: string;
-  childName : string;
+  childName: string;
+  size: number;
 }
 
-const ContentsList: React.FC = () => {
+const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
@@ -33,21 +33,11 @@ const ContentsList: React.FC = () => {
       try {
         if (category) {
           const categoryResponse = await fetch(
-<<<<<<< HEAD
-            `http://52.79.95.216:8080/api/category/${category}`
-=======
-            `http://krleicablog.shop:8080/find/category/${category}`
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
+            `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
           );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
-
-<<<<<<< HEAD
-            const children = categoryData.children;
-=======
-            const children = categoryData;
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
-            setCategories(children);
+            setCategories(categoryData);
           } else {
             console.error(
               "API request for category failed with status:",
@@ -59,11 +49,6 @@ const ContentsList: React.FC = () => {
         console.error("Error fetching data:", error);
       }
     };
-
-<<<<<<< HEAD
-=======
-    
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
     fetchData();
   }, [category]);
 
@@ -71,6 +56,7 @@ const ContentsList: React.FC = () => {
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
         <ListTitle>{category}</ListTitle>
+
         <ListAmount>{categories.length}개의 카테고리</ListAmount>
 
         <ListToggleBtn onClick={toggleList}>
@@ -83,10 +69,13 @@ const ContentsList: React.FC = () => {
             <ContentsTitleSpan>카테고리 제목</ContentsTitleSpan>
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
+
           {categories.map((category, index) => (
             <ContentBox key={category.childName}>
               <CategoryTitle>{category.childName}</CategoryTitle>
-              <CategoryAmount>2 개의 글</CategoryAmount>
+
+              <CategoryAmount>{category.size}개의 글</CategoryAmount>
+
               <DetailBtn>
                 <svg
                   focusable="false"
@@ -108,7 +97,7 @@ const ContentsList: React.FC = () => {
   );
 };
 
-export default ContentsList;
+export default SubCategoryList;
 
 const ListWrapper = styled.div<ListWrapperProps>`
   width: 966px;
@@ -197,6 +186,7 @@ const CategoryAmount = styled.div`
   font-size: 12px;
   color: rgb(146, 146, 146);
 `;
+
 const DetailBtn = styled.div`
   color: rgb(146, 146, 146);
   margin-left: 15px;

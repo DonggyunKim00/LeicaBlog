@@ -80,14 +80,14 @@ export const ImageResize = Image.extend<ImageOptions>({
   parseHTML() {
     return [
       {
-        tag: "file-resizer",
+        tag: "img",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      "file-resizer",
+      "img",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
     ];
   },

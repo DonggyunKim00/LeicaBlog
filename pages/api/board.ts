@@ -1,22 +1,39 @@
 import axios from "axios";
 
 export interface boardPostType {
+  searchContent: string;
   title: string;
-  categoryName: string;
   content: any;
+  thumbnail: string;
+  mainCategory: string;
+  subCategory: string;
+  subTitle: string;
 }
 
 export async function postBoard({
+  searchContent,
   title,
-  categoryName,
   content,
+  thumbnail,
+  mainCategory,
+  subCategory,
+  subTitle,
 }: boardPostType) {
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/post`,
+    `${process.env.NEXT_PUBLIC_API_URL}/post`,
     {
-      title: title,
-      categoryName: categoryName,
-      content: content,
+      searchContent: searchContent,
+      post: {
+        title: title,
+        thumbnail: thumbnail,
+        subTitle: subTitle,
+        content: content,
+        parentName: mainCategory,
+        childName: subCategory,
+      },
+    },
+    {
+      withCredentials: true,
     }
   );
 

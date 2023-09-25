@@ -3,4 +3,5 @@ export const pathName = {
   MAIN: "/",
   MICROSCOPE: "/microScope",
   SEARCH: "/search",
+  DETAIL: "/Detail",
 };
