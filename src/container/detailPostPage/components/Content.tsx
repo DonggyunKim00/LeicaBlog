@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { useRouter } from "next/router";
 
 
+
 interface Post {
   id: number;
   title: string;
@@ -11,6 +12,7 @@ interface Post {
   thumbnail: string;
   writer: string;
   category: string;
+  parentCategory : string;
 }
 
 
@@ -38,9 +40,9 @@ const Content = () => {
           <>
             <h2>{post.title}</h2>
             <p>{post.content}</p>
-            <h1>{post.subTitle}</h1>
             <p>{post.writer}</p>
             <p>{post.category}</p>
+            <p>{post.parentCategory}</p>
             <p></p>
 
           </>
