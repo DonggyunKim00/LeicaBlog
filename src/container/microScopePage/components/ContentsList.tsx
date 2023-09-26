@@ -33,7 +33,7 @@ const ContentsList: React.FC = () => {
       try {
         if (category) {
           const categoryResponse = await fetch(
-            `http://krleicablog.shop:8080/find/category/${category}`
+            `${process.env.NEXT_PUBLIC_API_URL}/find/category/${category}`
           );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
