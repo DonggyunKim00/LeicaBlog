@@ -142,7 +142,6 @@ const BusinesssInfoBox = styled.div`
   height: 212px;
   border: 1px solid;
   border-color: rgb(211, 211, 211);
-  margin-left: 100px;
 `;
 
 const BusinessInfo = styled.div`
