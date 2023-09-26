@@ -43,7 +43,6 @@ const Content = () => {
     }
   }, [post]);
 
-  console.log(post);
   return (
     <Box>
       {post ? (
