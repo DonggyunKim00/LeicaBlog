@@ -9,7 +9,7 @@ interface ListWrapperProps {
 
 interface Category {
   id: string;
-  childName : string;
+  childName: string;
 }
 
 const ContentsList: React.FC = () => {
@@ -33,20 +33,12 @@ const ContentsList: React.FC = () => {
       try {
         if (category) {
           const categoryResponse = await fetch(
-<<<<<<< HEAD
-            `http://52.79.95.216:8080/api/category/${category}`
-=======
-            `http://krleicablog.shop:8080/find/category/${category}`
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
+            `${process.env.NEXT_PUBLIC_API_URL}/find/category/${category}`
           );
           if (categoryResponse.ok) {
             const categoryData = await categoryResponse.json();
 
-<<<<<<< HEAD
-            const children = categoryData.children;
-=======
             const children = categoryData;
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
             setCategories(children);
           } else {
             console.error(
@@ -60,10 +52,6 @@ const ContentsList: React.FC = () => {
       }
     };
 
-<<<<<<< HEAD
-=======
-    
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
     fetchData();
   }, [category]);
 

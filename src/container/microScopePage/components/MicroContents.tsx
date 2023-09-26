@@ -2,130 +2,28 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 interface PageButtonProps {
   $isactive: boolean;
 }
 interface ResponseDataItem {
+  size: number;
+  childList: ChildrenList[];
+}
+interface ChildrenList {
   id: number;
   title: string;
-  thumbnail: string;
   subTitle: string;
+  thumbnail: string;
   category: string;
 }
 
 const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
-<<<<<<< HEAD
-
-  const dummyData = [
-    {
-      id: 1,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 2,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 3,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 4,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 7,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 8,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 9,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 10,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 11,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 12,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 13,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 14,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 15,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 16,
-      imgSrc: "/img/main/middle/1.png",
-      name: "김성훈 바보 김성훈 바보 김성훈 바보",
-      date: "2023. 7. 6.",
-    },
-    {
-      id: 17,
-      imgSrc: "/img/main/middle/2.png",
-      name: "김동균 멍청이 김동균 멍청이 김동균 멍청이",
-      date: "2023. 7. 6.",
-    },
-  ];
-=======
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
 
   const fetchCategoryData = async () => {
     try {
@@ -134,10 +32,8 @@ const MicroContents = () => {
       );
       const responseData = await response.json();
 
-      if (Array.isArray(responseData)) {
-        setMainItems(responseData);
-      } else {
-      }
+      setMainItems(responseData.childList);
+      console.log(responseData.childList);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -151,19 +47,15 @@ const MicroContents = () => {
 
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
-
   const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
 
-<<<<<<< HEAD
-  const getPaginatedData = () => {
-=======
   const getPaginatedData = (data: any) => {
->>>>>>> dba3123a478a6459f4600a184976dcd51b0bead8
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-  const currentItems = getPaginatedData(mainItems);
+
+  const currentItems = getPaginatedData(mainItems).reverse();
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -175,6 +67,13 @@ const MicroContents = () => {
     }
   }, [currentPage, totalPages]);
 
+  const handleDetailClick = (itemId: number) => {
+    Router.push({
+      pathname: pathName.DETAIL,
+      query: { id: itemId },
+    });
+  };
+
   return (
     <div>
       <Box>
@@ -183,8 +82,13 @@ const MicroContents = () => {
             {currentItems.length === 0 ? (
               <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
             ) : (
-              currentItems.map((item: ResponseDataItem) => (
-                <MainItemBox key={item.id}>
+              currentItems.map((item: ChildrenList) => (
+                <MainItemBox
+                  key={item.id}
+                  onClick={() => handleDetailClick(item.id)}
+                  // onMouseEnter={() => setHoveredItem(true)}
+                  // onMouseLeave={() => setHoveredItem(false)}
+                >
                   <MainItemImg>
                     <Image
                       src={item.thumbnail}
@@ -315,7 +219,4 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
-const NoPostsMessage = styled.div`
- 
-
-`
+const NoPostsMessage = styled.div``;

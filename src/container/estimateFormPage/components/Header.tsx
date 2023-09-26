@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import leicaTypo from "../../../../public/img/main/header.png";
+
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
@@ -14,12 +14,13 @@ const Header = () => {
             Router.push(pathName.MAIN);
           }}
         >
-          <Image width={160} height={100} alt={""} src={leicaTypo} />
+          {/* <Image width={160} height={100} alt={""} src={leicaTypo} /> */}
         </LeicaBox>
       </LeicaBar>
     </div>
   );
 };
+
 
 export default Header;
 
