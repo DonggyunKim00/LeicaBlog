@@ -5,16 +5,17 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 export interface BoardProps {
-  boardId: number;
-  imgSrc: string;
+  id: number;
   title: string;
-  subCategory: string;
-  mainText: string;
-  createTime: string;
+  thumbnail: string;
+  subTitle: string | null;
+  childName: string;
+  content: string;
+  createTime?: string;
 }
 const Board = ({ ...props }: BoardProps) => {
   const router = useRouter();
-  const { boardId, imgSrc, title, subCategory, mainText, createTime } = props;
+  const { id, thumbnail, title, childName, content, createTime } = props;
 
   const [titleRegData, setTitleRegData] = useState<string>("");
   const [mainRegData, setMainRegData] = useState<string>("");
@@ -29,26 +30,26 @@ const Board = ({ ...props }: BoardProps) => {
         `<strong>${keyword}</strong>`
       );
       setTitleRegData(titleMatches);
-      const mainMatches = mainText.replaceAll(
+      const mainMatches = content.replaceAll(
         regex,
         `<strong>${keyword}</strong>`
       );
       setMainRegData(mainMatches);
     }
-  }, [router, mainText, title]);
+  }, [router, content, title]);
   return (
     <Container>
       <RightCont>
-        <ImgWrapper href={`/${boardId}`}>
-          <Image src={imgSrc} width={68} height={68} alt="" />
+        <ImgWrapper href={`/Detail?id=${id}`}>
+          <Image src={thumbnail} width={68} height={68} alt="" />
         </ImgWrapper>
         <TextContent>
           <Top>
             <Title
-              href={`/${boardId}`}
+              href={`/${id}`}
               dangerouslySetInnerHTML={{ __html: titleRegData }}
             />
-            <SubCategory>{"| " + subCategory}</SubCategory>
+            <SubCategory>{"| " + childName}</SubCategory>
           </Top>
           <MainText dangerouslySetInnerHTML={{ __html: mainRegData }} />
         </TextContent>

@@ -24,7 +24,6 @@ const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
-  const [hoveredItem, setHoveredItem] = useState(null);
 
   const fetchCategoryData = async () => {
     try {
