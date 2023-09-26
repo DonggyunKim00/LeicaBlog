@@ -19,13 +19,15 @@ interface ChildrenList {
   thumbnail: string;
   category: string;
 }
+interface ItemNameProps {
+  hoveredItem: boolean;
+}
 
 const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
-  const [hoveredItem, setHoveredItem] = useState(null);
-
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const fetchCategoryData = async () => {
     try {
       const response = await fetch(
@@ -34,7 +36,7 @@ const MicroContents = () => {
       const responseData = await response.json();
 
       setMainItems(responseData.childList);
-      console.log(responseData.childList);
+    
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -87,8 +89,8 @@ const MicroContents = () => {
                 <MainItemBox
                   key={item.id}
                   onClick={() => handleDetailClick(item.id)}
-                  // onMouseEnter={() => setHoveredItem(true)}
-                  // onMouseLeave={() => setHoveredItem(false)}
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   <MainItemImg>
                     <Image
@@ -98,8 +100,8 @@ const MicroContents = () => {
                       height={200}
                     />
                   </MainItemImg>
-                  <MainItemName>{item.title}</MainItemName>
-                  <MainItemDate>{item.subTitle}</MainItemDate>
+                  <MainItemName hoveredItem={hoveredItem===item.id}>{item.subTitle}</MainItemName>
+                  <MainItemDate>date of item</MainItemDate>
                 </MainItemBox>
               ))
             )}
@@ -150,11 +152,12 @@ const MainItemBox = styled.div`
   width: 200px;
   height: 299px;
   margin: 39px 30px 0px 0px;
+  cursor : pointer;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
 `;
-const MainItemName = styled.div`
+const MainItemName = styled.div<ItemNameProps>`
   width: 200px;
   height: 63px;
   margin-bottom: 12px;
@@ -168,9 +171,7 @@ const MainItemName = styled.div`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: ${(props) => (props.hoveredItem ? "underline" : "none")};
 `;
 
 const MainItemDate = styled.div`

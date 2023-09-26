@@ -176,15 +176,16 @@ const ContentBox = styled.div`
 `;
 
 const CategoryTitle = styled.div`
-  width: 200px;
+  width: 800px;
   font-size: 12px;
   font: 나눔고딕;
 `;
 
 const CategoryAmount = styled.div`
-  margin-left: 650px;
+  margin-left: 0px;
   font-size: 12px;
   color: rgb(146, 146, 146);
+  width : 100px;
 `;
 
 const DetailBtn = styled.div`
