@@ -196,11 +196,11 @@ const SubItemTitle = styled.div`
 
 const SubItemWrapper = styled.div`
   width: 936px;
-  height: auto; 
+  height: auto;
   margin-top: 3px;
   padding-bottom: 10px;
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 `;
 
 const SubItemBox = styled.div`

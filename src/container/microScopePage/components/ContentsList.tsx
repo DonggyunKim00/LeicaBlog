@@ -9,7 +9,7 @@ interface ListWrapperProps {
 
 interface Category {
   id: string;
-  childName : string;
+  childName: string;
 }
 
 const ContentsList: React.FC = () => {
@@ -52,7 +52,6 @@ const ContentsList: React.FC = () => {
       }
     };
 
-    
     fetchData();
   }, [category]);
 

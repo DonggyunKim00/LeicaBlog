@@ -1,9 +1,4 @@
-import React, {
-  experimental_useEffectEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { useCallback, useState } from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -76,7 +71,6 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
       });
     }
   };
-
   const setPreview = (data: FieldValues) => {
     const content = editor && JSON.stringify(editor.getJSON());
     setOnPreview((prev) => !prev);
@@ -107,10 +101,8 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
     }
     if (url === "") {
       editor?.chain().focus().extendMarkRange("link").unsetLink().run();
-
       return;
     }
-
     editor
       ?.chain()
       .focus()
