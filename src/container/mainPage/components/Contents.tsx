@@ -49,6 +49,7 @@ const Contents = () => {
       query: { id: itemId },
     });
   };
+
   return (
     <Wrapper>
       <MainItemWrapper>
@@ -195,11 +196,11 @@ const SubItemTitle = styled.div`
 
 const SubItemWrapper = styled.div`
   width: 936px;
-  height: auto; /* Adjust the height to allow wrapping */
+  height: auto; 
   margin-top: 3px;
   padding-bottom: 10px;
   display: flex;
-  flex-wrap: wrap; /* Allow flex items to wrap */
+  flex-wrap: wrap; 
 `;
 
 const SubItemBox = styled.div`

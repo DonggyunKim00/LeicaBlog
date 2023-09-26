@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 interface PageButtonProps {
   $isactive: boolean;
@@ -22,6 +24,7 @@ const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const fetchCategoryData = async () => {
     try {
@@ -53,7 +56,7 @@ const MicroContents = () => {
     return data.slice(startIndex, endIndex);
   };
 
-  const currentItems = getPaginatedData(mainItems);
+  const currentItems = getPaginatedData(mainItems).reverse();
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -64,7 +67,13 @@ const MicroContents = () => {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
-  
+
+  const handleDetailClick = (itemId: number) => {
+    Router.push({
+      pathname: pathName.DETAIL,
+      query: { id: itemId },
+    });
+  };
 
   return (
     <div>
@@ -74,24 +83,25 @@ const MicroContents = () => {
             {currentItems.length === 0 ? (
               <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
             ) : (
-              currentItems.map(
-                (
-                  item: ChildrenList // 수정된 부분
-                ) => (
-                  <MainItemBox key={item.id}>
-                    <MainItemImg>
-                      <Image
-                        src={item.thumbnail}
-                        alt=""
-                        width={200}
-                        height={200}
-                      />
-                    </MainItemImg>
-                    <MainItemName>{item.title}</MainItemName>
-                    <MainItemDate>{item.subTitle}</MainItemDate>
-                  </MainItemBox>
-                )
-              )
+              currentItems.map((item: ChildrenList) => (
+                <MainItemBox
+                  key={item.id}
+                  onClick={() => handleDetailClick(item.id)}
+                  // onMouseEnter={() => setHoveredItem(true)}
+                  // onMouseLeave={() => setHoveredItem(false)}
+                >
+                  <MainItemImg>
+                    <Image
+                      src={item.thumbnail}
+                      alt=""
+                      width={200}
+                      height={200}
+                    />
+                  </MainItemImg>
+                  <MainItemName>{item.title}</MainItemName>
+                  <MainItemDate>{item.subTitle}</MainItemDate>
+                </MainItemBox>
+              ))
             )}
           </MainItemWrapper>
         </Wrapper>
