@@ -7,10 +7,14 @@ interface PageButtonProps {
   $isactive: boolean;
 }
 interface ResponseDataItem {
+  size: number;
+  childList: ChildrenList[];
+}
+interface ChildrenList {
   id: number;
   title: string;
-  thumbnail: string;
   subTitle: string;
+  thumbnail: string;
   category: string;
 }
 
@@ -26,10 +30,8 @@ const MicroContents = () => {
       );
       const responseData = await response.json();
 
-      if (Array.isArray(responseData)) {
-        setMainItems(responseData);
-      } else {
-      }
+      setMainItems(responseData.childList);
+      console.log(responseData.childList);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -43,7 +45,6 @@ const MicroContents = () => {
 
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
-
   const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
 
   const getPaginatedData = (data: any) => {
@@ -51,6 +52,7 @@ const MicroContents = () => {
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
+
   const currentItems = getPaginatedData(mainItems);
 
   const handlePageChange = (newPage: number) => {
@@ -62,6 +64,7 @@ const MicroContents = () => {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
+  
 
   return (
     <div>
@@ -71,20 +74,24 @@ const MicroContents = () => {
             {currentItems.length === 0 ? (
               <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
             ) : (
-              currentItems.map((item: ResponseDataItem) => (
-                <MainItemBox key={item.id}>
-                  <MainItemImg>
-                    <Image
-                      src={item.thumbnail}
-                      alt=""
-                      width={200}
-                      height={200}
-                    />
-                  </MainItemImg>
-                  <MainItemName>{item.title}</MainItemName>
-                  <MainItemDate>{item.subTitle}</MainItemDate>
-                </MainItemBox>
-              ))
+              currentItems.map(
+                (
+                  item: ChildrenList // 수정된 부분
+                ) => (
+                  <MainItemBox key={item.id}>
+                    <MainItemImg>
+                      <Image
+                        src={item.thumbnail}
+                        alt=""
+                        width={200}
+                        height={200}
+                      />
+                    </MainItemImg>
+                    <MainItemName>{item.title}</MainItemName>
+                    <MainItemDate>{item.subTitle}</MainItemDate>
+                  </MainItemBox>
+                )
+              )
             )}
           </MainItemWrapper>
         </Wrapper>
@@ -203,7 +210,4 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
-const NoPostsMessage = styled.div`
- 
-
-`
+const NoPostsMessage = styled.div``;

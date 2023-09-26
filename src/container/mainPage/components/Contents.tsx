@@ -29,7 +29,7 @@ const Contents = () => {
         if (Array.isArray(responseData.childList)) {
           const sortedData = responseData.childList.slice().reverse();
           const mainData = sortedData.slice(0, 5);
-          const subData = sortedData.slice(5, 12);
+          const subData = sortedData.slice(5, 11);
 
           setMainItems(mainData);
           setSubItems(subData);
@@ -55,7 +55,7 @@ const Contents = () => {
         {mainItems.map((item) => (
           <MainItemBox
             onClick={() => handleDetailClick(item.id)}
-            key={item.title}
+            key={item.id}
             onMouseEnter={() => setHoveredItem(item.id)}
             onMouseLeave={() => setHoveredItem(null)}
           >
@@ -86,7 +86,7 @@ const Contents = () => {
       <SubItemWrapper>
         {subItems.map((subItem) => (
           <SubItemBox
-            key={subItem.title}
+            key={subItem.id}
             onMouseEnter={() => setHoveredItem(subItem.id)}
             onMouseLeave={() => setHoveredItem(null)}
             onClick={() => handleDetailClick(subItem.id)}
