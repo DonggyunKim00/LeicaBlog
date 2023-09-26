@@ -1,76 +1,192 @@
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import { styled } from "styled-components";
+import { generateHTML } from "@tiptap/react";
+import { extension } from "@/utils/editorExtension";
+import Image from "next/image";
 
-export const Container = styled.div`
+export interface PreviewData {
+  content: string;
+  subCategory: string;
+  title: string;
+  thumbnail: string;
+  subTitle: string;
+}
+
+const Preview = ({ ...props }: PreviewData) => {
+  const [context, setContext] = useState("");
+  useEffect(() => {
+    const html = generateHTML(JSON.parse(props.content), extension);
+    setContext(html);
+  }, [props.content]);
+
+  return (
+    <Wrapper>
+      <Box>
+        <InnerDiv>
+          {context ? (
+            <>
+              <BoardTitle>
+                <Category>{props.subCategory}</Category>
+                <Title>{props.title}</Title>
+                <InfoDiv>
+                  <RoundImage>
+                    <Image
+                      src="/img/main/ntsLogo.png"
+                      width={20}
+                      height={20}
+                      alt=""
+                    />
+                  </RoundImage>
+                  <Nick>nts</Nick>
+                  <PublishDate>2023. 3. 8. 8:50</PublishDate>
+                </InfoDiv>
+              </BoardTitle>
+              <ThumbnailDiv>
+                <ThumbnailImg src={props.thumbnail} alt="" />
+              </ThumbnailDiv>
+              <HrDiv></HrDiv>
+              <SubTitle>{props.subTitle}</SubTitle>
+              <HtmlCont dangerouslySetInnerHTML={{ __html: context }} />
+            </>
+          ) : (
+            // id가 없거나 게시물을 아직 불러오지 못한 경우
+            <p>게시물을 불러오는 중...</p>
+          )}
+        </InnerDiv>
+      </Box>
+    </Wrapper>
+  );
+};
+
+export default Preview;
+
+const Wrapper = styled.div`
+  position: fixed;
+  left: 25%;
+  top: 10%;
+  z-index: 1000;
+`;
+
+const Box = styled.div`
+  width: 966px;
+  height: 800px;
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  padding: 0px 40px;
+  background-color: white;
+  overflow-y: scroll;
+`;
+const InnerDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+const BoardTitle = styled.div`
+  width: 100%;
+  padding: 50px 0px 10px;
+  border-bottom: 1px solid #dedede;
+`;
+const PublishDate = styled.span`
+  font-size: 14px;
+  color: #252525;
+  opacity: 0.5;
+`;
+const RoundImage = styled.div`
+  display: flex;
+  justify-content: center;
   align-items: center;
-  background-color: #999999;
-
-  .ProseMirror {
-    min-height: 1000px;
-    height: auto;
-    padding: 80px 60px;
-    font-size: 16px;
-    background-color: white;
-    color: #252525;
-    margin-top: 10px;
-    margin-bottom: 50px;
-    h1,
-    h2,
-    h3,
-    span {
-      line-height: 1.8;
-    }
-    p {
-      font-weight: normal;
-      min-height: 27px;
-      margin: 0;
-    }
-    h1 {
-      font-size: 2em;
-    }
-    h2 {
-      font-size: 1.5em;
-    }
-    h3 {
-      font-size: 1.25em;
-    }
+  border: 1px solid #dedede;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+`;
+const ThumbnailDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const ThumbnailImg = styled.img`
+  width: 550px;
+  height: 550px;
+  padding: 50px 0px 20px;
+`;
+const HrDiv = styled.div`
+  border-top: 1px solid #ddd;
+  margin: 20px auto;
+  border-top: 1px solid #252525;
+  margin: 40px auto 0px;
+  width: 250px;
+  &::after {
+    content: "◇";
+    font-size: 30px;
+    position: relative;
+    top: -14px;
+    left: calc(50% - 8px);
+    background-clip: padding-box;
+    background-color: #fbfbff;
   }
-
-  .ProseMirror:focus {
-    outline: none;
+`;
+const SubTitle = styled.h2`
+  display: flex;
+  justify-content: center;
+  font-weight: normal;
+  font-size: 34px;
+  line-height: 1.8;
+  margin-bottom: 40px;
+`;
+const Category = styled.span`
+  color: rgb(37, 37, 37);
+  font-size: 16px;
+  opacity: 0.5;
+`;
+const Title = styled.h1`
+  line-height: 48px;
+  font-size: 32px;
+  padding: 20px 0px 34px;
+  font-weight: normal;
+  word-wrap: break-word;
+`;
+const InfoDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+const Nick = styled.span`
+  font-size: 14px;
+  color: #252525;
+`;
+const HtmlCont = styled.div`
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  margin-bottom: 100px;
+  span {
+    line-height: 1.8;
   }
-
-  /* first view placeHolder style */
-  .ProseMirror p.is-editor-empty:first-child::before {
-    color: #adb5bd;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
+  p {
+    font-weight: normal;
+    min-height: 27px;
+    margin: 0;
   }
-  .ProseMirror .custom-HyperLink {
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h3 {
+    font-size: 1.25em;
+  }
+  .custom-HyperLink {
     color: #608cba;
     text-decoration: underline;
     cursor: pointer;
   }
-
-  .image-resizer {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    .resize-trigger {
-      position: relative;
-      top: 8px;
-      margin-left: -13px;
-    }
-  }
-  .ProseMirror img {
+  /* image style */
+  img {
     display: block;
-    cursor: move;
   }
-  div #left {
+  #left {
     float: left;
     margin-right: 36px;
     &::before {
@@ -81,13 +197,8 @@ export const Container = styled.div`
       clear: left;
       display: block;
     }
-    .resize-trigger {
-      position: relative;
-      top: 15px;
-      margin-left: -41px;
-    }
   }
-  div #right {
+  #right {
     float: right;
     margin-left: 36px;
     &::before {
@@ -98,30 +209,22 @@ export const Container = styled.div`
       clear: right;
       display: block;
     }
-    .resize-trigger {
-      position: relative;
-      top: 8px;
-      margin-left: -13px;
-    }
   }
-
+  /* youtube style */
   iframe {
-    border: 8px solid #000;
+    border: 2px solid #000;
     border-radius: 4px;
     display: block;
     margin: auto;
     height: 350px;
   }
-  div[data-youtube-video] > iframe {
-    cursor: move;
-  }
 
   /* HorizontalRule style */
-  .ProseMirror div.hrDiv {
+  div.hrDiv {
     border-top: 1px solid #ddd;
     margin: 20px auto;
   }
-  .ProseMirror div.hrDivWhiteSquare {
+  div.hrDivWhiteSquare {
     border-top: 1px solid #252525;
     margin: 40px auto 0px;
     width: 250px;
@@ -129,13 +232,13 @@ export const Container = styled.div`
       content: "◇";
       font-size: 30px;
       position: relative;
-      top: -14px;
+      top: -9px;
       left: calc(50% - 8px);
       background-clip: padding-box;
-      background-color: #fff;
+      background-color: #fbfbff;
     }
   }
-  .ProseMirror div.hrDivDarkSquare {
+  div.hrDivDarkSquare {
     border-top: 1px solid #252525;
     margin: 40px auto 0px;
     width: 250px;
@@ -146,16 +249,16 @@ export const Container = styled.div`
       top: -16px;
       left: calc(50% - 8px);
       background-clip: padding-box;
-      background-color: #fff;
+      background-color: #fbfbff;
     }
   }
-  .ProseMirror div.hrDivShort {
+  div.hrDivShort {
     border-top: 1px solid #ddd;
     margin: 20px auto;
     width: 250px;
   }
 
-  .ProseMirror blockquote.openEndQuoteGray {
+  blockquote.openEndQuoteGray {
     ::before {
       content: "";
       display: inline-block;
@@ -186,7 +289,7 @@ export const Container = styled.div`
     }
   }
 
-  .ProseMirror blockquote.openEndQuoteDark {
+  blockquote.openEndQuoteDark {
     ::before {
       content: "";
       display: inline-block;
@@ -217,11 +320,13 @@ export const Container = styled.div`
     }
   }
 
-  .ProseMirror blockquote.borderSquareQuote {
+  blockquote.borderSquareQuote {
     position: relative;
+    /* width: 380px; */
     margin-bottom: 50px;
-    margin: 50px 300px;
-    padding: 20px 30px;
+    margin: 50px 280px;
+    /* padding: 20px 30px; */
+    word-wrap: break-word;
     ::before,
     ::after {
       content: "";
@@ -242,7 +347,7 @@ export const Container = styled.div`
     }
   }
 
-  .ProseMirror blockquote.paperBoardQuote {
+  blockquote.paperBoardQuote {
     max-width: 460px;
     padding: 33px 33px 0;
     border: solid #d5d5d5;
@@ -277,7 +382,7 @@ export const Container = styled.div`
     }
   }
 
-  .ProseMirror blockquote.balloonQuote {
+  blockquote.balloonQuote {
     padding-top: 35px;
     padding-bottom: 33px;
     border-width: 5px;
@@ -290,6 +395,7 @@ export const Container = styled.div`
     position: relative;
     margin: auto;
     margin-bottom: 50px;
+    word-wrap: break-word;
     ::before {
       content: "";
       position: absolute;
@@ -320,14 +426,14 @@ export const Container = styled.div`
       background-size: 432px 428px;
     }
   }
-  .ProseMirror blockquote.basicDarkQuote {
+  blockquote.basicDarkQuote {
     position: relative;
     margin: auto;
     box-sizing: border-box;
     padding: 0 20px;
     border-left: 6px solid #515151;
   }
-  .ProseMirror blockquote.basicGrayQuote {
+  blockquote.basicGrayQuote {
     position: relative;
     margin: auto;
     box-sizing: border-box;
@@ -335,10 +441,10 @@ export const Container = styled.div`
     border-left: 6px solid #b5b2b2;
   }
 
-  .ProseMirror ul {
+  ul {
     list-style-type: none;
   }
-  .ProseMirror ul.bulletList > li > p {
+  ul.bulletList > li > p {
     &::before {
       content: "";
       display: inline-block;
@@ -349,7 +455,7 @@ export const Container = styled.div`
       background-repeat: no-repeat;
     }
   }
-  .ProseMirror ul.diamondList > li > p {
+  ul.diamondList > li > p {
     list-style-type: none;
     &::before {
       content: "";
@@ -361,7 +467,7 @@ export const Container = styled.div`
       background-repeat: no-repeat;
     }
   }
-  .ProseMirror ul.checkList > li > p {
+  ul.checkList > li > p {
     list-style-type: none;
     &::before {
       content: "";
@@ -373,7 +479,7 @@ export const Container = styled.div`
       background-repeat: no-repeat;
     }
   }
-  .ProseMirror ol {
+  ol {
     margin-left: 18px;
     list-style-position: inherit;
   }

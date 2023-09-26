@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import leicaTypo from "../../public/img/main/header.png";
+import leicaTypo from "../../public/img/main/ntsLogo.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import microScope from "../../public/img/main/microScope.png";
@@ -25,101 +25,94 @@ const Top: React.FC = () => {
     });
   };
   return (
-    <div>
-      <Wrapper>
-        <LeicaTypoBox>
-          <LeicaTypo
-            onClick={() => {
-              Router.push(pathName.MAIN);
-            }}
-          >
-            <Image width={160} height={100} alt={""} src={leicaTypo} />
-          </LeicaTypo>
-        </LeicaTypoBox>
-        <ContentWrapper>
-          <Image width={917} height={500} alt={""} src={topPicture} />
-        </ContentWrapper>
-        <EstimateBox
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          $hovered={hovered}
+    <Wrapper>
+      <LeicaTypoBox>
+        <LeicaTypo
           onClick={() => {
-            Router.push(pathName.ESTIMATE);
+            Router.push(pathName.MAIN);
           }}
         >
-          <EstimateImage>
-            <Image width={30} height={30} alt={""} src={microScope} />
-          </EstimateImage>
-          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-          {hovered && (
-            <EstimateMessage>
-              문의 사항이 있으신가요?
-              <br />
-              클릭해주세요!
-            </EstimateMessage>
-          )}
-        </EstimateBox>
-        <ScopeMenuWrapper>
-          <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
-            광학 현미경
-          </ScopeMenuBox>
-          <ScopeMenuBox
-            onClick={() => handleCategoryClick("공초점레이저 현미경")}
-          >
-            공초점레이저 현미경
-          </ScopeMenuBox>
-          <ScopeMenuBox onClick={() => handleCategoryClick("디지털 현미경")}>
-            디지털 현미경
-          </ScopeMenuBox>
-          <ScopeMenuBox onClick={() => handleCategoryClick("현미경 카메라")}>
-            현미경 카메라
-          </ScopeMenuBox>
-          <ScopeMenuBox2 onClick={() => handleCategoryClick("수술용 현미경")}>
-            수술용 현미경
-          </ScopeMenuBox2>
-        </ScopeMenuWrapper>
-        <ScopeMenuWrapper2>
-          <ScopeMenuBox
-            onClick={() => handleCategoryClick("수퍼해상도 현미경")}
-          >
-            수퍼해상도 현미경
-          </ScopeMenuBox>
-          <ScopeMenuBox
-            onClick={() => handleCategoryClick("실체현미경 마크로 현미경")}
-          >
-            실체현미경
+          <Image width={160} height={100} alt={""} src={leicaTypo} />
+        </LeicaTypo>
+      </LeicaTypoBox>
+      <ContentWrapper>
+        <Image width={917} height={500} alt={""} src={topPicture} />
+      </ContentWrapper>
+      <EstimateBox
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        $hovered={hovered}
+        onClick={() => {
+          Router.push(pathName.ESTIMATE);
+        }}
+      >
+        <EstimateImage>
+          <Image width={30} height={30} alt={""} src={microScope} />
+        </EstimateImage>
+        <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
+        {hovered && (
+          <EstimateMessage>
+            문의 사항이 있으신가요?
             <br />
-            마크로 현미경
-          </ScopeMenuBox>
-          <ScopeMenuBox
-            onClick={() => handleCategoryClick("현미경 소프트웨어")}
-          >
-            현미경 소프트웨어
-          </ScopeMenuBox>
-          <ScopeMenuBox
-            onClick={() => handleCategoryClick("전자현미경 시료전처리")}
-          >
-            전자현미경 <br />
-            시료전처리
-          </ScopeMenuBox>
-          <ScopeMenuBox2 onClick={() => handleCategoryClick("교육용 현미경")}>
-            교육용 현미경
-          </ScopeMenuBox2>
-        </ScopeMenuWrapper2>
-      </Wrapper>
-    </div>
+            클릭해주세요!
+          </EstimateMessage>
+        )}
+      </EstimateBox>
+      <ScopeMenuWrapper>
+        <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
+          광학 현미경
+        </ScopeMenuBox>
+        <ScopeMenuBox
+          onClick={() => handleCategoryClick("공초점레이저 현미경")}
+        >
+          공초점레이저 현미경
+        </ScopeMenuBox>
+        <ScopeMenuBox onClick={() => handleCategoryClick("디지털 현미경")}>
+          디지털 현미경
+        </ScopeMenuBox>
+        <ScopeMenuBox onClick={() => handleCategoryClick("현미경 카메라")}>
+          현미경 카메라
+        </ScopeMenuBox>
+        <ScopeMenuBox2 onClick={() => handleCategoryClick("수술용 현미경")}>
+          수술용 현미경
+        </ScopeMenuBox2>
+      </ScopeMenuWrapper>
+      <ScopeMenuWrapper2>
+        <ScopeMenuBox onClick={() => handleCategoryClick("수퍼해상도 현미경")}>
+          수퍼해상도 현미경
+        </ScopeMenuBox>
+        <ScopeMenuBox
+          onClick={() => handleCategoryClick("실체현미경 마크로 현미경")}
+        >
+          실체현미경
+          <br />
+          마크로 현미경
+        </ScopeMenuBox>
+        <ScopeMenuBox onClick={() => handleCategoryClick("현미경 소프트웨어")}>
+          현미경 소프트웨어
+        </ScopeMenuBox>
+        <ScopeMenuBox
+          onClick={() => handleCategoryClick("전자현미경 시료전처리")}
+        >
+          전자현미경 <br />
+          시료전처리
+        </ScopeMenuBox>
+        <ScopeMenuBox2 onClick={() => handleCategoryClick("교육용 현미경")}>
+          교육용 현미경
+        </ScopeMenuBox2>
+      </ScopeMenuWrapper2>
+    </Wrapper>
   );
 };
 
 export default Top;
 
 const Wrapper = styled.div`
-  display: flexbox;
+  margin: 10px 0px;
 `;
 const LeicaTypoBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
 `;
 const LeicaTypo = styled.div`
   width: 160px;
