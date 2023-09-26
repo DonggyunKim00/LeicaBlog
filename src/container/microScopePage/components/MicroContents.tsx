@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 interface PageButtonProps {
   $isactive: boolean;
 }
 interface ResponseDataItem {
+  size: number;
+  childList: ChildrenList[];
+}
+interface ChildrenList {
   id: number;
   title: string;
-  thumbnail: string;
   subTitle: string;
+  thumbnail: string;
   category: string;
 }
 
@@ -18,6 +24,7 @@ const MicroContents = () => {
   const router = useRouter();
   const { category } = router.query;
   const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const fetchCategoryData = async () => {
     try {
@@ -26,10 +33,8 @@ const MicroContents = () => {
       );
       const responseData = await response.json();
 
-      if (Array.isArray(responseData)) {
-        setMainItems(responseData);
-      } else {
-      }
+      setMainItems(responseData.childList);
+      console.log(responseData.childList);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -43,7 +48,6 @@ const MicroContents = () => {
 
   const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
-
   const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
 
   const getPaginatedData = (data: any) => {
@@ -51,7 +55,8 @@ const MicroContents = () => {
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-  const currentItems = getPaginatedData(mainItems);
+
+  const currentItems = getPaginatedData(mainItems).reverse();
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -63,6 +68,13 @@ const MicroContents = () => {
     }
   }, [currentPage, totalPages]);
 
+  const handleDetailClick = (itemId: number) => {
+    Router.push({
+      pathname: pathName.DETAIL,
+      query: { id: itemId },
+    });
+  };
+
   return (
     <div>
       <Box>
@@ -71,8 +83,13 @@ const MicroContents = () => {
             {currentItems.length === 0 ? (
               <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
             ) : (
-              currentItems.map((item: ResponseDataItem) => (
-                <MainItemBox key={item.id}>
+              currentItems.map((item: ChildrenList) => (
+                <MainItemBox
+                  key={item.id}
+                  onClick={() => handleDetailClick(item.id)}
+                  // onMouseEnter={() => setHoveredItem(true)}
+                  // onMouseLeave={() => setHoveredItem(false)}
+                >
                   <MainItemImg>
                     <Image
                       src={item.thumbnail}
@@ -203,7 +220,4 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
-const NoPostsMessage = styled.div`
- 
-
-`
+const NoPostsMessage = styled.div``;
