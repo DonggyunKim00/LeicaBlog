@@ -5,24 +5,28 @@ import { ToolBarDivider } from "../Toolbar/ToolbarDivider";
 import { BsCardImage } from "react-icons/bs";
 import { useGetCategory } from "@/hooks/categoryHook/useCategory";
 import { uploadImage } from "../../../../../pages/api/image";
+import { ErrorMessage } from "@hookform/error-message";
 
 interface ContentBoxProps {
   editor: Editor | null;
   register: any;
   thumbnailUrl: string;
   setThumnailUrl: any;
+  errors: any;
 }
 const ContentBox = ({
   editor,
   register,
   thumbnailUrl,
   setThumnailUrl,
+  errors,
 }: ContentBoxProps) => {
   const [mainCate, setMainCate] = useState<string>("광학 현미경");
 
   const { data, refetch } = useGetCategory(mainCate, {
     refetchOnWindowFocus: false,
   });
+
   return (
     <Container>
       <ImageWrapper src={thumbnailUrl || "/img/writingPage/defaultImg.png"} />
@@ -47,7 +51,14 @@ const ContentBox = ({
         </SelectBoard>
         <ToolBarDivider />
         {data ? (
-          <SelectBoard {...register("subFolder", { required: true })}>
+          <SelectBoard
+            {...register("subFolder", {
+              required: {
+                value: true,
+                message: "서브 카테고리는 필수값 입니다.",
+              },
+            })}
+          >
             {data.data.map((item: any) => {
               return (
                 <option value={item.childName} key={item.id}>
@@ -61,23 +72,26 @@ const ContentBox = ({
         )}
         <ToolBarDivider />
         <TitleDiv>
+          <ErrorMessage
+            errors={errors}
+            name="title"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
           <Title
             placeholder="제목"
             type="text"
-            {...register("title", { required: true })}
+            {...register("title", {
+              required: { value: true, message: "제목은 필수 입니다." },
+            })}
           />
-          <Title
-            placeholder="부제목"
-            type="text"
-            {...register("subTitle", { required: true })}
-          />
+          <Title placeholder="부제목" type="text" {...register("subTitle")} />
         </TitleDiv>
         <ToolBarDivider />
         <ThumbnailInput
           type="file"
           id="thumbnail-file"
           {...register("thumbnail", {
-            required: true,
+            required: { value: true, message: "썸네일 이미지는 필수 입니다." },
             onChange: async (e: any) => {
               if (!e.target.files) {
                 return;
@@ -93,9 +107,16 @@ const ContentBox = ({
             },
           })}
         />
-        <ThumbnailInputLabel htmlFor="thumbnail-file">
-          <BsCardImage size="40" />
-        </ThumbnailInputLabel>
+        <ImageSelectDiv>
+          <ThumbnailInputLabel htmlFor="thumbnail-file">
+            <BsCardImage size="40" />
+          </ThumbnailInputLabel>
+          <ErrorMessage
+            errors={errors}
+            name="thumbnail"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
+        </ImageSelectDiv>
       </TitleBox>
       <EditorContent editor={editor} />
     </Container>
@@ -103,7 +124,17 @@ const ContentBox = ({
 };
 
 export default ContentBox;
-
+const ImageSelectDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+const ErrorSpan = styled.span`
+  position: relative;
+  z-index: 3;
+  color: red;
+  font-size: 5px;
+`;
 const ThumbnailInput = styled.input`
   display: none;
 `;

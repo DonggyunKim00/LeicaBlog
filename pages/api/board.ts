@@ -7,7 +7,7 @@ export interface boardPostType {
   thumbnail: string;
   mainCategory: string;
   subCategory: string;
-  subTitle: string;
+  subTitle?: string;
 }
 
 export async function postBoard({

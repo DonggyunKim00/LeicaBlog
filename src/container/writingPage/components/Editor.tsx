@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Toolbar from "./Toolbar";
 import ContentBox from "./ContentBox";
 import { Editor as RawEditor } from "@tiptap/react";
 import { useForm } from "react-hook-form";
-import Preview from "./Preview";
 
 interface EditorProps {
   editor: RawEditor | null;
 }
 const Editor = ({ editor }: EditorProps) => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [thumbnailUrl, setThumnailUrl] = useState<string>("");
 
   return (
@@ -22,6 +25,7 @@ const Editor = ({ editor }: EditorProps) => {
       <ContentBox
         editor={editor}
         register={register}
+        errors={errors}
         thumbnailUrl={thumbnailUrl}
         setThumnailUrl={setThumnailUrl}
       />

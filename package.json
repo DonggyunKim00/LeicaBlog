@@ -10,6 +10,7 @@
     "dev:https": "node server.js"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.1",
     "@tiptap/extension-color": "^2.0.4",
     "@tiptap/extension-font-family": "^2.0.4",
     "@tiptap/extension-heading": "^2.0.4",
