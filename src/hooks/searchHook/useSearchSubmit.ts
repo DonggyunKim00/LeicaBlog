@@ -1,7 +1,6 @@
 import { pathName } from "@/config/pathName";
 import Router from "next/router";
 import { useState } from "react";
-
 export const useSearchSubmit = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const submit = (e: any, inputValue: string) => {

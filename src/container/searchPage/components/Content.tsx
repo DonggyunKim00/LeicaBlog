@@ -7,53 +7,37 @@ interface PageButtonProps {
   $isactive: boolean;
 }
 const Content = () => {
-  const dummyData: any = [
-    {
-      boardId: 1,
-      imgSrc: "/img/main/middle/1.png",
-      title: "김성훈 바보 김성훈 바보 김성훈 바보",
-      subCategory: "김동균",
-      mainText: "김동균이에요",
-      createTime: "2023/07/14 11:12",
-    },
-    {
-      boardId: 2,
-      imgSrc: "/img/main/middle/1.png",
-      title: "김성훈 바보 김성훈 바보 김성훈 바보",
-      subCategory: "김동균",
-      mainText:
-        "김성훈 바보 김성훈 바보 김성훈 바보김성훈 바보 김성훈 바보 김성훈 바보",
-      createTime: "2023/07/14 11:12",
-    },
-    {
-      boardId: 3,
-      imgSrc: "/img/main/middle/1.png",
-      title: "김성훈 바보 김성훈 바보 김성훈 바보",
-      subCategory: "김동균",
-      mainText:
-        "김성훈 바보 김성훈 바보 김성훈 바보김성훈 바보 김성훈 바보 김성훈 바보",
-      createTime: "2023/07/14 11:12",
-    },
-    {
-      boardId: 4,
-      imgSrc: "/img/main/middle/1.png",
-      title: "김성훈 바보 김성훈 바보 김성훈 바보",
-      subCategory: "김동균",
-      mainText:
-        "김성훈 바보 김성훈 바보 김성훈 바보김성훈 바보 김성훈 바보 김성훈 바보",
-      createTime: "2023/07/14 11:12",
-    },
-  ];
+  const router = useRouter();
+
+  const { keyword } = router.query;
+  const [findBoard, setFindBoard] = useState<any>(null);
+
+  useEffect(() => {
+    if (keyword) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/post?keyword=${keyword}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFindBoard(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [keyword]);
+  console.log(findBoard);
+
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(dummyData.length / itemsPerPage);
+  const totalPages = findBoard && Math.ceil(findBoard.size / itemsPerPage);
 
   // 페이지가 변경될 때마다 새로운 데이터 계산
   const getPaginatedData = () => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return dummyData.slice(startIndex, endIndex);
+    if (findBoard) {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      return findBoard.childList.slice(startIndex, endIndex);
+    }
   };
 
   const currentItems = getPaginatedData();
@@ -62,6 +46,7 @@ const Content = () => {
     setCurrentPage(newPage);
   };
 
+  console.log(currentItems);
   // 페이지가 마지막 페이지보다 크다면 마지막 페이지로 설정
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -69,33 +54,33 @@ const Content = () => {
     }
   }, [currentPage, totalPages]);
 
-  const router = useRouter();
   return (
     <Container>
       <Header>
         <Result>
           <span>검색 결과</span>
-          <span className="orange">639건</span>
+          {findBoard && <span className="orange">{findBoard.size}</span>}
         </Result>
         <Line />
       </Header>
       <BoardList>
-        {currentItems ? (
-          currentItems.map((item: BoardProps, idx: number) => {
+        {findBoard && findBoard.size != 0 ? (
+          findBoard.childList.map((item: BoardProps, idx: number) => {
             return (
               <Board
-                boardId={item.boardId}
-                imgSrc={item.imgSrc}
+                id={item.id}
+                thumbnail={item.thumbnail}
                 title={item.title}
-                subCategory={item.subCategory}
-                mainText={item.mainText}
+                childName={item.childName}
+                content={item.content}
                 createTime={item.createTime}
+                subTitle={item.subTitle}
                 key={idx}
               />
             );
           })
         ) : (
-          <NoDataBoard>{` "${router.query.keyword}"+ 검색결과가 없습니다.`}</NoDataBoard>
+          <NoDataBoard>{` "${router.query.keyword}" 검색결과가 없습니다.`}</NoDataBoard>
         )}
       </BoardList>
       <PageBoxContainer>
@@ -124,6 +109,8 @@ const Container = styled.div`
   line-height: 17px;
 `;
 const NoDataBoard = styled.div`
+  display: flex;
+  justify-content: center;
   padding: 120px 0px;
 `;
 const Header = styled.div``;
