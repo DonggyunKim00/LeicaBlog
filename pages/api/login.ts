@@ -1,5 +1,7 @@
 import axios from "axios";
 import { InputForm } from "@/container/adminLoginPage/LoginPage";
+import secureLocalStorage from "react-secure-storage";
+
 export const adminLoginApi = async (form: InputForm) => {
   try {
     const formData = new FormData();
@@ -17,7 +19,10 @@ export const adminLoginApi = async (form: InputForm) => {
       }
     );
 
-    console.log(res);
+    // 로그인 성공할시 kimyounggil이라는 string을 Buffer로 암호화하여 세션스토리지에 저장
+    if (res.status) {
+      secureLocalStorage.setItem("adminKey", "kimyounggil");
+    }
     return res;
   } catch (err) {
     console.log(err);
