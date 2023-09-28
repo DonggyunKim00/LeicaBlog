@@ -1,75 +1,185 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor, EditorContent } from "@tiptap/react";
 import styled, { css } from "styled-components";
 import { ToolBarDivider } from "../Toolbar/ToolbarDivider";
 import { BsCardImage } from "react-icons/bs";
 import { useGetCategory } from "@/hooks/categoryHook/useCategory";
 import { uploadImage } from "../../../../../pages/api/image";
+import { ErrorMessage } from "@hookform/error-message";
+import { useRouter } from "next/router";
+import { useIsUpdateBoard } from "@/hooks/boardHook/useBoard";
 
 interface ContentBoxProps {
   editor: Editor | null;
   register: any;
   thumbnailUrl: string;
   setThumnailUrl: any;
+  errors: any;
+  setValue: any;
+  setPreRenderThumbnail: any;
+  preRenderThumbnail: string;
 }
 const ContentBox = ({
   editor,
   register,
   thumbnailUrl,
   setThumnailUrl,
+  errors,
+  setValue,
+  setPreRenderThumbnail,
+  preRenderThumbnail,
 }: ContentBoxProps) => {
-  const [mainCate, setMainCate] = useState<string>("광학 현미경");
+  const router = useRouter();
+  const boardId = Number(router.query.id);
 
+  // 초기값 설정을 위한 state
+  // update페이지가 아닐때는 기본값이 ""
+  // update일때는 기본값이 post에 의존(아래의 useEffect 참조)
+  const [mainCate, setMainCate] = useState<string>("");
+  const [subCate, setSubCate] = useState<string>("");
+  const [titleValue, setTitleValue] = useState<string>("");
+  const [subTitleValue, setSubTitleValue] = useState<string>("");
+
+  const { post } = useIsUpdateBoard(boardId);
+
+  console.log(post);
   const { data, refetch } = useGetCategory(mainCate, {
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    // update페이지 일때 post를 이용하여 초기값 설정
+    if (post) {
+      setMainCate(post.parentCategory);
+      setSubCate(post.category);
+      setTitleValue(post.title);
+      setSubTitleValue(post.subTitle);
+      setPreRenderThumbnail(post.thumbnail || "");
+    }
+  }, [post, setPreRenderThumbnail]);
+
+  useEffect(() => {
+    // 마운트 이후에 react-hook-form의 value값 초기화.
+    // post가 있을때는 초기값이 post값, 없을때는 state 기본값
+    setValue("title", titleValue);
+    setValue("subTitle", subTitleValue);
+    setValue("thumbnail", preRenderThumbnail);
+    setValue("mainFolder", mainCate);
+    setValue("subFolder", subCate);
+    refetch();
+  }, [
+    refetch,
+    setValue,
+    titleValue,
+    subTitleValue,
+    preRenderThumbnail,
+    mainCate,
+    subCate,
+  ]);
+
   return (
     <Container>
-      <ImageWrapper src={thumbnailUrl || "/img/writingPage/defaultImg.png"} />
+      <ImageWrapper
+        src={
+          post
+            ? preRenderThumbnail
+            : thumbnailUrl || "/img/writingPage/defaultImg.png"
+        }
+      />
       <TitleBox>
-        <SelectBoard
-          {...register("mainFolder", {
-            required: true,
-            onChange: async (e: any) => {
-              await setMainCate(e.target.value);
-              await refetch();
-            },
-          })}
-        >
-          <option value="광학 현미경">광학 현미경</option>
-          <option value="디지털 현미경">디지털 현미경</option>
-          <option value="현미경 카메라">현미경 카메라</option>
-          <option value="실체현미경">실체현미경</option>
-          <option value="마이크로 현미경">마크로로 현미경</option>
-          <option value="현미경 소프트웨어">현미경 소프트웨어</option>
-          <option value="전자현미경 시료전처리">전자현미경 시료전처리</option>
-          <option value="교육용 현미경">교육용 현미경</option>
-        </SelectBoard>
-        <ToolBarDivider />
-        {data ? (
-          <SelectBoard {...register("subFolder", { required: true })}>
-            {data.data.map((item: any) => {
-              return (
-                <option value={item.childName} key={item.id}>
-                  {item.childName}
-                </option>
-              );
+        <ErrorMessageDiv>
+          <ErrorMessage
+            errors={errors}
+            name="mainFolder"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
+          <SelectBoard
+            value={mainCate}
+            {...register("mainFolder", {
+              required: {
+                value: true,
+                message: "메인 카테고리를 선택해주세요",
+              },
+              onChange: async (e: any) => {
+                await setMainCate(e.target.value);
+                await refetch();
+              },
             })}
+          >
+            <option value="">메인 카테고리를 선택해주세요</option>
+            <option value="광학 현미경">광학 현미경</option>
+            <option value="디지털 현미경">디지털 현미경</option>
+            <option value="현미경 카메라">현미경 카메라</option>
+            <option value="실체 현미경">실체 현미경</option>
+            <option value="마이크로 현미경">마이크로 현미경</option>
+            <option value="현미경 소프트웨어">현미경 소프트웨어</option>
+            <option value="전자현미경 시료전처리">전자현미경 시료전처리</option>
+            <option value="교육용 현미경">교육용 현미경</option>
           </SelectBoard>
-        ) : (
-          <></>
-        )}
+        </ErrorMessageDiv>
+        <ToolBarDivider />
+
+        <ErrorMessageDiv>
+          <ErrorMessage
+            errors={errors}
+            name="subFolder"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
+          {data ? (
+            <SelectBoard
+              value={subCate}
+              {...register("subFolder", {
+                required: {
+                  value: true,
+                  message: "하위 카테고리를 선택해주세요.",
+                },
+                onChange: async (e: any) => {
+                  await setSubCate(e.target.value);
+                },
+              })}
+            >
+              <option value="">하위 카테고리를 선택해주세요</option>
+              {data.data.map((item: any) => {
+                return (
+                  <option value={item.childName} key={item.id}>
+                    {item.childName}
+                  </option>
+                );
+              })}
+            </SelectBoard>
+          ) : (
+            <></>
+          )}
+        </ErrorMessageDiv>
+
         <ToolBarDivider />
         <TitleDiv>
+          <ErrorMessage
+            errors={errors}
+            name="title"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
           <Title
             placeholder="제목"
             type="text"
-            {...register("title", { required: true })}
+            value={titleValue}
+            {...register("title", {
+              required: { value: true, message: "제목은 필수 입니다." },
+              onChange: (e: any) => {
+                setTitleValue(e.target.value);
+              },
+            })}
           />
           <Title
             placeholder="부제목"
             type="text"
-            {...register("subTitle", { required: true })}
+            value={subTitleValue}
+            onChange={(e: any) => setSubTitleValue(e.target.value)} // 상태 업데이트 함수 연결
+            {...register("subTitle", {
+              onChange: (e: any) => {
+                setSubTitleValue(e.target.value);
+              },
+            })}
           />
         </TitleDiv>
         <ToolBarDivider />
@@ -77,7 +187,10 @@ const ContentBox = ({
           type="file"
           id="thumbnail-file"
           {...register("thumbnail", {
-            required: true,
+            required: {
+              value: post?.thumbnail ? false : true,
+              message: "썸네일 이미지는 필수 입니다.",
+            },
             onChange: async (e: any) => {
               if (!e.target.files) {
                 return;
@@ -88,14 +201,22 @@ const ContentBox = ({
                 const url = await uploadImage({
                   image: file,
                 });
-                setThumnailUrl(url);
+                if (preRenderThumbnail) setPreRenderThumbnail(url);
+                else setThumnailUrl(url);
               });
             },
           })}
         />
-        <ThumbnailInputLabel htmlFor="thumbnail-file">
-          <BsCardImage size="40" />
-        </ThumbnailInputLabel>
+        <ErrorMessageDiv>
+          <ThumbnailInputLabel htmlFor="thumbnail-file">
+            <BsCardImage size="40" />
+          </ThumbnailInputLabel>
+          <ErrorMessage
+            errors={errors}
+            name="thumbnail"
+            render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
+          />
+        </ErrorMessageDiv>
       </TitleBox>
       <EditorContent editor={editor} />
     </Container>
@@ -103,7 +224,16 @@ const ContentBox = ({
 };
 
 export default ContentBox;
-
+const ErrorMessageDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const ErrorSpan = styled.span`
+  position: relative;
+  z-index: 3;
+  color: red;
+  font-size: 5px;
+`;
 const ThumbnailInput = styled.input`
   display: none;
 `;
@@ -115,6 +245,7 @@ const ThumbnailInputLabel = styled.label`
   background-color: white;
   position: relative;
   z-index: 2;
+  margin-bottom: 3px;
   &:hover {
     cursor: pointer;
     border: 1px solid #0000001a;
@@ -161,6 +292,7 @@ const Title = styled.input`
   border-radius: 5px;
   position: relative;
   z-index: 2;
+  margin-bottom: 10px;
 `;
 const SelectBoard = styled.select`
   font-size: 15px;
@@ -180,6 +312,5 @@ const Container = styled.div`
 const TitleDiv = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   width: 100%;
 `;

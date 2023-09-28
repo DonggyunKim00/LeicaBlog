@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import leicaTypo from "../../public/img/main/ntsLogo.png";
+import leicaTypo from "../../public/img/main/ntsrow.png";
+import leicaTypo2 from "../../public/img/main/leicalogo.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import microScope from "../../public/img/main/microScope.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
+import BusinessInfoBox from "./BusinessInfoBox";
+import NtsProfile from "./NtsProfile";
 
 const Top: React.FC = () => {
   const [hovered, sethovered] = useState(false);
@@ -25,39 +28,44 @@ const Top: React.FC = () => {
     });
   };
   return (
-    <Wrapper>
+    <>
       <LeicaTypoBox>
         <LeicaTypo
           onClick={() => {
             Router.push(pathName.MAIN);
           }}
         >
-          <Image width={160} height={100} alt={""} src={leicaTypo} />
+          <Image width={300} height={50} alt={""} src={leicaTypo} />
         </LeicaTypo>
       </LeicaTypoBox>
       <ContentWrapper>
         <Image width={917} height={500} alt={""} src={topPicture} />
+        <AbsoluteImg width={220} height={100} alt={""} src={leicaTypo2} />
       </ContentWrapper>
-      <EstimateBox
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        $hovered={hovered}
-        onClick={() => {
-          Router.push(pathName.ESTIMATE);
-        }}
-      >
-        <EstimateImage>
-          <Image width={30} height={30} alt={""} src={microScope} />
-        </EstimateImage>
-        <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-        {hovered && (
-          <EstimateMessage>
-            문의 사항이 있으신가요?
-            <br />
-            클릭해주세요!
-          </EstimateMessage>
-        )}
-      </EstimateBox>
+      <FixedRight>
+        <EstimateBox
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          $hovered={hovered}
+          onClick={() => {
+            Router.push(pathName.ESTIMATE);
+          }}
+        >
+          <EstimateImage>
+            <Image width={30} height={30} alt={""} src={microScope} />
+          </EstimateImage>
+          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
+          {hovered && (
+            <EstimateMessage>
+              문의 사항이 있으신가요?
+              <br />
+              클릭해주세요!
+            </EstimateMessage>
+          )}
+        </EstimateBox>
+        <NtsProfile />
+        <BusinessInfoBox />
+      </FixedRight>
       <ScopeMenuWrapper>
         <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
           광학 현미경
@@ -101,18 +109,21 @@ const Top: React.FC = () => {
           교육용 현미경
         </ScopeMenuBox2>
       </ScopeMenuWrapper2>
-    </Wrapper>
+    </>
   );
 };
 
 export default Top;
 
-const Wrapper = styled.div`
-  margin: 10px 0px;
+const AbsoluteImg = styled(Image)`
+  position: absolute;
+  right: -40px;
+  top: -5px;
 `;
 const LeicaTypoBox = styled.div`
   display: flex;
-  justify-content: center;
+  width: 917px;
+  margin: 15px auto;
 `;
 const LeicaTypo = styled.div`
   width: 160px;
@@ -210,20 +221,12 @@ const ScopeMenuBox2 = styled.div`
 `;
 
 const EstimateBox = styled.div<{ $hovered: boolean }>`
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  width: 200px;
+  width: 170px;
   height: ${(props) => (props.$hovered ? "140px" : "100px")};
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   background-color: white;
-  z-index: 1;
-  display: flexbox;
-  align-items: center;
-  flex-direction: row;
   transition: height 0.3s;
-
   &:hover {
     height: 140px;
     cursor: pointer;
@@ -245,14 +248,21 @@ const EstimateSpan = styled.div`
   letter-spacing: -1.4px;
   color: #686868;
   margin-top: 10px;
+  margin-bottom: 14px;
 `;
 
 const EstimateMessage = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   font-size: 14px;
   color: #686868;
   display: flex;
   justify-content: center;
+`;
+const FixedRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: fixed;
+  top: 80px;
+  right: 2%;
 `;

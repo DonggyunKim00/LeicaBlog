@@ -2,7 +2,7 @@ import React from "react";
 import SearchPage from "@/container/searchPage/SearchPage";
 import Layout from "@/components/Layout";
 
-const writing = () => {
+const search = () => {
   return (
     <Layout>
       <SearchPage />
@@ -10,4 +10,4 @@ const writing = () => {
   );
 };
 
-export default writing;
+export default search;

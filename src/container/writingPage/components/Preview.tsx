@@ -62,14 +62,15 @@ export default Preview;
 
 const Wrapper = styled.div`
   position: fixed;
-  left: 25%;
-  top: 10%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1000;
 `;
 
 const Box = styled.div`
   width: 966px;
-  height: 800px;
+  height: 700px;
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   padding: 0px 40px;
