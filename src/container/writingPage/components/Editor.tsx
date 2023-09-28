@@ -12,8 +12,12 @@ const Editor = ({ editor }: EditorProps) => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
+  // writingPage 자체 헤더툴바에서 보여지기위한 url state
   const [thumbnailUrl, setThumnailUrl] = useState<string>("");
+  // update페이지에서 초기 렌더링을 위한 thumbnail url
+  const [preRenderThumbnail, setPreRenderThumbnail] = useState<string>("");
 
   return (
     <>
@@ -21,6 +25,7 @@ const Editor = ({ editor }: EditorProps) => {
         editor={editor}
         handleSubmit={handleSubmit}
         thumbnailUrl={thumbnailUrl}
+        preRenderThumbnail={preRenderThumbnail}
       />
       <ContentBox
         editor={editor}
@@ -28,6 +33,9 @@ const Editor = ({ editor }: EditorProps) => {
         errors={errors}
         thumbnailUrl={thumbnailUrl}
         setThumnailUrl={setThumnailUrl}
+        setValue={setValue}
+        preRenderThumbnail={preRenderThumbnail}
+        setPreRenderThumbnail={setPreRenderThumbnail}
       />
     </>
   );

@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { generateHTML } from "@tiptap/react";
 import { extension } from "@/utils/editorExtension";
 import Image from "next/image";
+import { useDetailBoard } from "@/hooks/boardHook/useBoard";
 
-interface Post {
+export interface Post {
   id: number;
   title: string;
   subTitle: string;
@@ -13,27 +14,15 @@ interface Post {
   thumbnail: string;
   writer: string;
   category: string;
+  parentCategory: string;
   createDate: string;
 }
 
 const Content = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const [post, setPost] = useState<Post | null>(null);
+  const boardId = Number(router.query.id);
 
-  useEffect(() => {
-    if (id) {
-      // API 호출
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setPost(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
-    }
-  }, [id]);
+  const { post } = useDetailBoard(boardId);
 
   const [context, setContext] = useState("");
   useEffect(() => {

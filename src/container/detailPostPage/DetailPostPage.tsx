@@ -1,23 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import List from "./components/List";
 import Content from "./components/Content";
 import { css, styled } from "styled-components";
 import { useRouter } from "next/router";
 import { deleteBoard } from "../../../pages/api/board";
+import Link from "next/link";
+import secureLocalStorage from "react-secure-storage";
 
 const DetailPostPage = () => {
   const router = useRouter();
-
   const boardId = Number(router.query.id);
-  console.log(boardId);
+
+  const [adminValue, setAdminValue] = useState<boolean>(false);
+  const [onModal, setOnModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    const adminKey = secureLocalStorage.getItem("adminKey");
+    setAdminValue(router.query.admin == adminKey);
+  }, [router.query.admin]);
 
   return (
     <>
       <List />
-      <BtnList>
-        <ModifyBtn>수정하기</ModifyBtn>
-        <DeleteBtn>삭제하기</DeleteBtn>
-      </BtnList>
+      {adminValue && (
+        <BtnList>
+          <Link href={`/update?id=${boardId}`}>
+            <ModifyBtn>수정하기</ModifyBtn>
+          </Link>
+          <DeleteBtn onClick={() => setOnModal(true)}>삭제하기</DeleteBtn>
+        </BtnList>
+      )}
       <Content />
     </>
   );
@@ -45,6 +57,7 @@ const button = css`
 
 const ModifyBtn = styled.button`
   ${button}
+  color:#000;
   background-color: white;
 `;
 const DeleteBtn = styled.button`
