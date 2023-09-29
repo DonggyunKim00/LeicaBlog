@@ -60,6 +60,7 @@ const Container = styled.div`
   border: 3px solid rgb(199, 199, 199);
   padding: 10px 11px;
   background-color: white;
+  border-radius: 5px;
 `;
 
 const InfoTitleBox = styled.div`

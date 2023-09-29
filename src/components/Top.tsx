@@ -126,6 +126,8 @@ export default Top;
 const YoutubeDiv = styled.div`
   padding: 5px;
   border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  background-color: white;
   &:hover {
     cursor: pointer;
   }
