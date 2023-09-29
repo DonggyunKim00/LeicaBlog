@@ -42,7 +42,6 @@ const ContentBox = ({
 
   const { post } = useIsUpdateBoard(boardId);
 
-  console.log(post);
   const { data, refetch } = useGetCategory(mainCate, {
     refetchOnWindowFocus: false,
   });
@@ -61,21 +60,15 @@ const ContentBox = ({
   useEffect(() => {
     // 마운트 이후에 react-hook-form의 value값 초기화.
     // post가 있을때는 초기값이 post값, 없을때는 state 기본값
+    refetch();
+    setValue("mainFolder", mainCate);
+    setValue("subFolder", subCate);
+  }, [refetch, setValue, mainCate, subCate]);
+  useEffect(() => {
     setValue("title", titleValue);
     setValue("subTitle", subTitleValue);
     setValue("thumbnail", preRenderThumbnail);
-    setValue("mainFolder", mainCate);
-    setValue("subFolder", subCate);
-    refetch();
-  }, [
-    refetch,
-    setValue,
-    titleValue,
-    subTitleValue,
-    preRenderThumbnail,
-    mainCate,
-    subCate,
-  ]);
+  }, [setValue, titleValue, subTitleValue, preRenderThumbnail]);
 
   return (
     <Container>
