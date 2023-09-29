@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import leicaTypo from "../../public/img/main/ntsrow.png";
 import leicaTypo2 from "../../public/img/main/leicalogo.png";
+import YoutubeLink from "../../public/img/main/youtube.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import microScope from "../../public/img/main/microScope.png";
@@ -65,6 +66,14 @@ const Top: React.FC = () => {
         </EstimateBox>
         <NtsProfile />
         <BusinessInfoBox />
+        <YoutubeDiv>
+          <a
+            href="https://www.youtube.com/user/LeicaMicrosystems"
+            target="_blank"
+          >
+            <Image width={155} height={30} src={YoutubeLink} alt="" />
+          </a>
+        </YoutubeDiv>
       </FixedRight>
       <ScopeMenuWrapper>
         <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
@@ -114,7 +123,13 @@ const Top: React.FC = () => {
 };
 
 export default Top;
-
+const YoutubeDiv = styled.div`
+  padding: 5px;
+  border: 3px solid rgb(199, 199, 199);
+  &:hover {
+    cursor: pointer;
+  }
+`;
 const AbsoluteImg = styled(Image)`
   position: absolute;
   right: -40px;
