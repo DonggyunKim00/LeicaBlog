@@ -6,7 +6,7 @@ export const AdminContext = createContext({
   isAdmin: false,
 });
 
-export const AdminProvide: React.FC<React.PropsWithChildren> = (props) => {
+export const AdminProvider: React.FC<React.PropsWithChildren> = (props) => {
   const router = useRouter();
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
