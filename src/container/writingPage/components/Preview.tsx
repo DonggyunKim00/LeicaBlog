@@ -10,6 +10,7 @@ export interface PreviewData {
   title: string;
   thumbnail: string;
   subTitle: string;
+  createdAt: string;
 }
 
 const Preview = ({ ...props }: PreviewData) => {
@@ -18,6 +19,14 @@ const Preview = ({ ...props }: PreviewData) => {
     const html = generateHTML(JSON.parse(props.content), extension);
     setContext(html);
   }, [props.content]);
+
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+
+  // yyyy.mm.dd. 형식으로 문자열을 만든다.
+  const formattedDate = `${year}.${month}.${day}`;
 
   return (
     <Wrapper>
@@ -31,26 +40,26 @@ const Preview = ({ ...props }: PreviewData) => {
                 <InfoDiv>
                   <RoundImage>
                     <Image
-                      src="/img/main/ntsLogo.png"
-                      width={20}
-                      height={20}
+                      src="/img/main/ntsSymbol.png"
+                      width={30}
+                      height={15}
                       alt=""
                     />
                   </RoundImage>
-                  <Nick>nts</Nick>
-                  <PublishDate>2023. 3. 8. 8:50</PublishDate>
+                  <Nick>엔티에스</Nick>
+                  <PublishDate>{props.createdAt || formattedDate}</PublishDate>
                 </InfoDiv>
               </BoardTitle>
               <ThumbnailDiv>
                 <ThumbnailImg src={props.thumbnail} alt="" />
               </ThumbnailDiv>
               <HrDiv></HrDiv>
-              <SubTitle>{props.subTitle}</SubTitle>
+              {props.subTitle && <SubTitle>{props.subTitle}</SubTitle>}
               <HtmlCont dangerouslySetInnerHTML={{ __html: context }} />
             </>
           ) : (
             // id가 없거나 게시물을 아직 불러오지 못한 경우
-            <p>게시물을 불러오는 중...</p>
+            <Load>게시물을 불러오는 중...</Load>
           )}
         </InnerDiv>
       </Box>
@@ -59,7 +68,12 @@ const Preview = ({ ...props }: PreviewData) => {
 };
 
 export default Preview;
-
+const Load = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0px;
+`;
 const Wrapper = styled.div`
   position: fixed;
   left: 50%;
@@ -97,8 +111,8 @@ const RoundImage = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid #dedede;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 100%;
 `;
 const ThumbnailDiv = styled.div`
@@ -149,7 +163,7 @@ const Title = styled.h1`
 const InfoDiv = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 `;
 const Nick = styled.span`
   font-size: 14px;

@@ -18,6 +18,7 @@ interface ContentBoxProps {
   setValue: any;
   setPreRenderThumbnail: any;
   preRenderThumbnail: string;
+  setPreRenderCreatedAt: any;
 }
 const ContentBox = ({
   editor,
@@ -28,6 +29,7 @@ const ContentBox = ({
   setValue,
   setPreRenderThumbnail,
   preRenderThumbnail,
+  setPreRenderCreatedAt,
 }: ContentBoxProps) => {
   const router = useRouter();
   const boardId = Number(router.query.id);
@@ -54,8 +56,9 @@ const ContentBox = ({
       setTitleValue(post.title);
       setSubTitleValue(post.subTitle);
       setPreRenderThumbnail(post.thumbnail || "");
+      setPreRenderCreatedAt(post.createdAt || "");
     }
-  }, [post, setPreRenderThumbnail]);
+  }, [post, setPreRenderThumbnail, setPreRenderCreatedAt]);
 
   useEffect(() => {
     // 마운트 이후에 react-hook-form의 value값 초기화.
@@ -67,9 +70,10 @@ const ContentBox = ({
   useEffect(() => {
     setValue("title", titleValue);
     setValue("subTitle", subTitleValue);
+  }, [setValue, titleValue, subTitleValue]);
+  useEffect(() => {
     setValue("thumbnail", preRenderThumbnail);
-  }, [setValue, titleValue, subTitleValue, preRenderThumbnail]);
-
+  }, [setValue, preRenderThumbnail]);
   return (
     <Container>
       <ImageWrapper
@@ -101,10 +105,14 @@ const ContentBox = ({
           >
             <option value="">메인 카테고리를 선택해주세요</option>
             <option value="광학 현미경">광학 현미경</option>
+            <option value="공초점레이저 현미경">공초점레이저 현미경</option>
             <option value="디지털 현미경">디지털 현미경</option>
             <option value="현미경 카메라">현미경 카메라</option>
-            <option value="실체 현미경">실체 현미경</option>
-            <option value="마이크로 현미경">마이크로 현미경</option>
+            <option value="수술용 현미경">수술용 현미경</option>
+            <option value="수퍼해상도 현미경">수퍼해상도 현미경</option>
+            <option value="실체현미경 마크로 현미경">
+              실체현미경 마크로 현미경
+            </option>
             <option value="현미경 소프트웨어">현미경 소프트웨어</option>
             <option value="전자현미경 시료전처리">전자현미경 시료전처리</option>
             <option value="교육용 현미경">교육용 현미경</option>

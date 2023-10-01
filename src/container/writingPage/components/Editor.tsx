@@ -18,7 +18,7 @@ const Editor = ({ editor }: EditorProps) => {
   const [thumbnailUrl, setThumnailUrl] = useState<string>("");
   // update페이지에서 초기 렌더링을 위한 thumbnail url
   const [preRenderThumbnail, setPreRenderThumbnail] = useState<string>("");
-
+  const [preRenderCreatedAt, setPreRenderCreatedAt] = useState<string>("");
   return (
     <>
       <Toolbar
@@ -26,6 +26,7 @@ const Editor = ({ editor }: EditorProps) => {
         handleSubmit={handleSubmit}
         thumbnailUrl={thumbnailUrl}
         preRenderThumbnail={preRenderThumbnail}
+        preRenderCreatedAt={preRenderCreatedAt}
       />
       <ContentBox
         editor={editor}
@@ -36,6 +37,7 @@ const Editor = ({ editor }: EditorProps) => {
         setValue={setValue}
         preRenderThumbnail={preRenderThumbnail}
         setPreRenderThumbnail={setPreRenderThumbnail}
+        setPreRenderCreatedAt={setPreRenderCreatedAt}
       />
     </>
   );
