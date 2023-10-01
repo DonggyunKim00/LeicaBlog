@@ -26,6 +26,7 @@ export interface ToolBarProps {
   handleSubmit: any;
   thumbnailUrl: string;
   preRenderThumbnail: string;
+  preRenderCreatedAt: string;
 }
 
 const Toolbar = ({
@@ -33,6 +34,7 @@ const Toolbar = ({
   handleSubmit,
   thumbnailUrl,
   preRenderThumbnail,
+  preRenderCreatedAt,
 }: ToolBarProps) => {
   const router = useRouter();
   const [onPreview, setOnPreview] = useState<boolean>(false);
@@ -42,6 +44,7 @@ const Toolbar = ({
     thumbnail: "",
     subCategory: "",
     content: "",
+    createdAt: "",
   });
 
   const submit = (data: FieldValues) => {
@@ -106,6 +109,7 @@ const Toolbar = ({
         thumbnail: preRenderThumbnail || thumbnailUrl,
         subCategory: data.subFolder,
         content: content,
+        createdAt: preRenderCreatedAt,
       });
     }
   };
@@ -145,6 +149,7 @@ const Toolbar = ({
           thumbnail={previewProps.thumbnail}
           subCategory={previewProps.subCategory}
           content={previewProps.content}
+          createdAt={previewProps.createdAt}
         />
       ) : (
         <></>
@@ -310,11 +315,12 @@ const Toolbar = ({
                   const url = await uploadImage({
                     image: file,
                   });
-                  editor
-                    ?.chain()
-                    .focus()
-                    .setImage({ src: url.toString(), id: value })
-                    .run();
+                  if (url)
+                    editor
+                      ?.chain()
+                      .focus()
+                      .setImage({ src: url.toString(), id: value })
+                      .run();
                 });
               };
               input.click();

@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import List from "./components/List";
 import Content from "./components/Content";
 import { css, styled } from "styled-components";
 import { useRouter } from "next/router";
 import { deleteBoard } from "../../../pages/api/board";
 import Link from "next/link";
-import secureLocalStorage from "react-secure-storage";
+import { AdminContext } from "@/components/AdminProvider";
 
 const DetailPostPage = () => {
   const router = useRouter();
   const boardId = Number(router.query.id);
 
-  const [adminValue, setAdminValue] = useState<boolean>(false);
   const [onModal, setOnModal] = useState<boolean>(false);
 
-  useEffect(() => {
-    const adminKey = secureLocalStorage.getItem("adminKey");
-    setAdminValue(router.query.admin == adminKey);
-  }, [router.query.admin]);
+  const { isAdmin } = useContext(AdminContext);
 
   return (
     <>
       <List />
-      {adminValue && (
+      {isAdmin && (
         <BtnList>
           <Link href={`/update?id=${boardId}`}>
             <ModifyBtn>수정하기</ModifyBtn>

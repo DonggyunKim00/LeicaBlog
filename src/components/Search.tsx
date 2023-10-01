@@ -46,6 +46,8 @@ const SearchInput = styled.input`
   padding: 8px 0px 8px 10px;
   border: none;
   display: flex;
+  background-color: #fbfbff;
+  outline: none;
 `;
 const SearchImg = styled.button`
   width: 41px;
