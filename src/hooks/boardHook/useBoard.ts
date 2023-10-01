@@ -49,3 +49,49 @@ export const useDetailBoard = (boardId: number) => {
 
   return { post };
 };
+
+interface SearchDataType {
+  size: number;
+  childList: [
+    {
+      id: number;
+      title: string;
+      content: string;
+      subTitle: string | null;
+      thumbnail: string;
+      parentName: string;
+      childName: string;
+    }
+  ];
+}
+export const useSearchBoard = (keyword: string) => {
+  const [findBoard, setFindBoard] = useState<SearchDataType>({
+    size: 0,
+    childList: [
+      {
+        id: 0,
+        title: "",
+        content: "",
+        subTitle: null,
+        thumbnail: "",
+        parentName: "",
+        childName: "",
+      },
+    ],
+  });
+
+  useEffect(() => {
+    if (keyword) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/post?keyword=${keyword}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFindBoard(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [keyword]);
+
+  return { findBoard };
+};
