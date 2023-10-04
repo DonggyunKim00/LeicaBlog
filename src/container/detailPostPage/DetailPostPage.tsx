@@ -11,9 +11,16 @@ const DetailPostPage = () => {
   const router = useRouter();
   const boardId = Number(router.query.id);
 
-  const [onModal, setOnModal] = useState<boolean>(false);
+  const [confirmBool, setConfirmBool] = useState<boolean>(false);
 
   const { isAdmin } = useContext(AdminContext);
+
+  useEffect(() => {
+    if (confirmBool) {
+      deleteBoard(boardId);
+      router.push("/");
+    }
+  }, [confirmBool, boardId, router]);
 
   return (
     <>
@@ -23,7 +30,13 @@ const DetailPostPage = () => {
           <Link href={`/update?id=${boardId}`}>
             <ModifyBtn>수정하기</ModifyBtn>
           </Link>
-          <DeleteBtn onClick={() => setOnModal(true)}>삭제하기</DeleteBtn>
+          <DeleteBtn
+            onClick={() =>
+              setConfirmBool(confirm("정말로 게시물을 삭제 하시겠습니까?"))
+            }
+          >
+            삭제하기
+          </DeleteBtn>
         </BtnList>
       )}
       <Content />

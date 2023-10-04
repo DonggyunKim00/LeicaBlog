@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export interface PreviewData {
   content: string;
+  parentCategory: string;
   subCategory: string;
   title: string;
   thumbnail: string;
@@ -28,6 +29,7 @@ const Preview = ({ ...props }: PreviewData) => {
   // yyyy.mm.dd. 형식으로 문자열을 만든다.
   const formattedDate = `${year}.${month}.${day}`;
 
+  console.log(props);
   return (
     <Wrapper>
       <Box>
@@ -35,7 +37,7 @@ const Preview = ({ ...props }: PreviewData) => {
           {context ? (
             <>
               <BoardTitle>
-                <Category>{props.subCategory}</Category>
+                <Category>{`${props.parentCategory} - ${props.subCategory}`}</Category>
                 <Title>{props.title}</Title>
                 <InfoDiv>
                   <RoundImage>

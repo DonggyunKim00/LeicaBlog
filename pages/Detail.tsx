@@ -6,9 +6,7 @@ import { AdminProvider } from "@/components/AdminProvider";
 const Detail = () => {
   return (
     <Layout>
-      <AdminProvider>
-        <DetailPostPage />
-      </AdminProvider>
+      <DetailPostPage />
     </Layout>
   );
 };

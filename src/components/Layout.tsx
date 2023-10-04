@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { AdminProvider } from "./AdminProvider";
 import Footer from "./Footer";
 import Search from "./Search";
 import Header from "./Top";
@@ -16,10 +17,12 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   }, [router]);
   return (
     <>
-      <Header />
-      <Search />
-      {children}
-      <Footer />
+      <AdminProvider>
+        <Header />
+        <Search />
+        {children}
+        <Footer />
+      </AdminProvider>
     </>
   );
 };
