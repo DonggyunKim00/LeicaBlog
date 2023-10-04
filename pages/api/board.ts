@@ -37,11 +37,16 @@ export async function postBoard({
         withCredentials: true,
       }
     );
-    return res;
+    if (res.status == 200) {
+      alert("게시물 생성 완료");
+      window.location.href = "/";
+      return res;
+    }
   } catch (err: any) {
     // 로그인 안되어있을때 401 에러
     if (err.response.status == 401) {
       alert("로그인 해야 이용할 수 있습니다.");
+      window.location.href = "/adminLogin";
       return;
     }
   }
@@ -78,11 +83,16 @@ export async function putBoard({
         withCredentials: true,
       }
     );
-    return res;
+    if (res.status == 200) {
+      alert("게시물 수정 완료");
+      window.location.href = "/";
+      return res;
+    }
   } catch (err: any) {
     // 로그인 안되어있을때 401 에러
     if (err.response.status == 401) {
       alert("로그인 해야 이용할 수 있습니다.");
+      window.location.href = "/adminLogin";
       return;
     }
   }
@@ -92,13 +102,21 @@ export async function putBoard({
 export async function deleteBoard(boardId: number) {
   try {
     const res = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/post/${boardId}`
+      `${process.env.NEXT_PUBLIC_API_URL}/post/${boardId}`,
+      {
+        withCredentials: true,
+      }
     );
-    return res;
+    if (res.status == 200) {
+      alert("게시물 삭제 완료");
+      window.location.href = "/";
+      return res;
+    }
   } catch (err: any) {
     // 로그인 안되어있을때 401 에러
     if (err.response.status == 401) {
       alert("로그인 해야 이용할 수 있습니다.");
+      window.location.href = "/adminLogin";
       return;
     }
   }
