@@ -42,6 +42,7 @@ const Toolbar = ({
     title: "",
     subTitle: "",
     thumbnail: "",
+    parentCategory: "",
     subCategory: "",
     content: "",
     createdAt: "",
@@ -73,18 +74,16 @@ const Toolbar = ({
       alert("내용을 작성해 주세요.");
     } else {
       if (router.pathname == "/update") {
-        console.log(
-          putBoard({
-            searchContent,
-            title,
-            content,
-            thumbnail,
-            mainCategory,
-            subCategory,
-            subTitle,
-            boardId: Number(router.query.id),
-          })
-        );
+        putBoard({
+          searchContent,
+          title,
+          content,
+          thumbnail,
+          mainCategory,
+          subCategory,
+          subTitle,
+          boardId: Number(router.query.id),
+        });
         return;
       } else {
         postBoard({
@@ -107,6 +106,7 @@ const Toolbar = ({
         title: data.title,
         subTitle: data.subTitle,
         thumbnail: preRenderThumbnail || thumbnailUrl,
+        parentCategory: data.mainFolder,
         subCategory: data.subFolder,
         content: content,
         createdAt: preRenderCreatedAt,
@@ -147,6 +147,7 @@ const Toolbar = ({
           title={previewProps.title}
           subTitle={previewProps.subTitle}
           thumbnail={previewProps.thumbnail}
+          parentCategory={previewProps.parentCategory}
           subCategory={previewProps.subCategory}
           content={previewProps.content}
           createdAt={previewProps.createdAt}
