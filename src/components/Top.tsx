@@ -1,27 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import leicaTypo from "../../public/img/main/ntsrow.png";
 import leicaTypo2 from "../../public/img/main/leicalogo.png";
-import YoutubeLink from "../../public/img/main/youtube.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
-import microScope from "../../public/img/main/microScope.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import BusinessInfoBox from "./BusinessInfoBox";
-import NtsProfile from "./NtsProfile";
 
 const Top: React.FC = () => {
-  const [hovered, sethovered] = useState(false);
-
-  const handleMouseEnter = () => {
-    sethovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    sethovered(false);
-  };
-
   const handleCategoryClick = (categoryName: string) => {
     Router.push({
       pathname: pathName.MICROSCOPE,
@@ -43,38 +29,6 @@ const Top: React.FC = () => {
         <Image width={917} height={500} alt={""} src={topPicture} />
         <AbsoluteImg width={220} height={100} alt={""} src={leicaTypo2} />
       </ContentWrapper>
-      <FixedRight>
-        <EstimateBox
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          $hovered={hovered}
-          onClick={() => {
-            Router.push(pathName.ESTIMATE);
-          }}
-        >
-          <EstimateImage>
-            <Image width={30} height={30} alt={""} src={microScope} />
-          </EstimateImage>
-          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-          {hovered && (
-            <EstimateMessage>
-              문의 사항이 있으신가요?
-              <br />
-              클릭해주세요!
-            </EstimateMessage>
-          )}
-        </EstimateBox>
-        <NtsProfile />
-        <BusinessInfoBox />
-        <YoutubeDiv>
-          <a
-            href="https://www.youtube.com/user/LeicaMicrosystems"
-            target="_blank"
-          >
-            <Image width={155} height={30} src={YoutubeLink} alt="" />
-          </a>
-        </YoutubeDiv>
-      </FixedRight>
       <ScopeMenuWrapper>
         <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
           광학 현미경
@@ -123,15 +77,7 @@ const Top: React.FC = () => {
 };
 
 export default Top;
-const YoutubeDiv = styled.div`
-  padding: 5px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  background-color: white;
-  &:hover {
-    cursor: pointer;
-  }
-`;
+
 const AbsoluteImg = styled(Image)`
   position: absolute;
   right: -40px;
@@ -235,51 +181,4 @@ const ScopeMenuBox2 = styled.div`
   &:hover {
     background-color: #b3babd;
   }
-`;
-
-const EstimateBox = styled.div<{ $hovered: boolean }>`
-  width: 170px;
-  height: ${(props) => (props.$hovered ? "140px" : "100px")};
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  background-color: white;
-  transition: height 0.3s;
-  &:hover {
-    height: 140px;
-    cursor: pointer;
-  }
-`;
-const EstimateImage = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 20px 0px 10px 0px;
-`;
-
-const EstimateSpan = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 10x;
-  font-weight: 600;
-  white-space: nowrap;
-  letter-spacing: -1.4px;
-  color: #686868;
-  margin-top: 10px;
-  margin-bottom: 14px;
-`;
-
-const EstimateMessage = styled.div`
-  font-size: 14px;
-  color: #686868;
-  display: flex;
-  justify-content: center;
-`;
-const FixedRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  position: fixed;
-  top: 80px;
-  right: 2%;
 `;
