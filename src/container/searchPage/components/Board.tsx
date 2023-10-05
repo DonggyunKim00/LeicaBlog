@@ -9,13 +9,15 @@ export interface BoardProps {
   title: string;
   thumbnail: string;
   subTitle: string | null;
+  parentName: string;
   childName: string;
   content: string;
   createTime?: string;
 }
 const Board = ({ ...props }: BoardProps) => {
   const router = useRouter();
-  const { id, thumbnail, title, childName, content, createTime } = props;
+  const { id, thumbnail, title, childName, content, createTime, parentName } =
+    props;
 
   const [titleRegData, setTitleRegData] = useState<string>("");
   const [mainRegData, setMainRegData] = useState<string>("");
@@ -49,7 +51,7 @@ const Board = ({ ...props }: BoardProps) => {
               href={`/${id}`}
               dangerouslySetInnerHTML={{ __html: titleRegData }}
             />
-            <SubCategory>{"| " + childName}</SubCategory>
+            <SubCategory>{"| " + parentName + " - " + childName}</SubCategory>
           </Top>
           <MainText dangerouslySetInnerHTML={{ __html: mainRegData }} />
         </TextContent>

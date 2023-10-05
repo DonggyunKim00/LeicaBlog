@@ -50,8 +50,10 @@ export const useDetailBoard = (boardId: number) => {
   return { post };
 };
 
-interface SearchDataType {
-  size: number;
+interface searchChildListType {
+  size: number; // totalElement 로 변경예정
+  lastPage: boolean;
+  totalPage: number;
   childList: [
     {
       id: number;
@@ -64,9 +66,20 @@ interface SearchDataType {
     }
   ];
 }
-export const useSearchBoard = (keyword: string) => {
-  const [findBoard, setFindBoard] = useState<SearchDataType>({
-    size: 0,
+interface SearchBoardContent {
+  keyword?: string;
+  size: number;
+  page: number;
+}
+export const useSearchBoardData = ({
+  keyword,
+  size,
+  page,
+}: SearchBoardContent) => {
+  const [findBoard, setFindBoard] = useState<searchChildListType>({
+    size: 0, // totalElement로 바뀔예정
+    lastPage: false,
+    totalPage: 1,
     childList: [
       {
         id: 0,
@@ -82,7 +95,11 @@ export const useSearchBoard = (keyword: string) => {
 
   useEffect(() => {
     if (keyword) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/post?keyword=${keyword}`)
+      fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/search/post?keyword=${keyword}&size=${size}&page=${page - 1}`
+      )
         .then((response) => response.json())
         .then((data) => {
           setFindBoard(data);
@@ -91,7 +108,7 @@ export const useSearchBoard = (keyword: string) => {
           console.error("게시물을 가져오는 중 오류 발생:", error);
         });
     }
-  }, [keyword]);
+  }, [keyword, page, size]);
 
   return { findBoard };
 };
