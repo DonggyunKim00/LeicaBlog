@@ -17,7 +17,7 @@ const Content = () => {
 
   const { findBoard } = useSearchBoardData({
     keyword: keyword,
-    size: 1,
+    size: 10,
     page: page,
   });
 
