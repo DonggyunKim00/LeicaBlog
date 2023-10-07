@@ -15,7 +15,7 @@ export const useIsUpdateBoard = (boardId: number) => {
   useEffect(() => {
     if (boardId && routeBool) {
       // API 호출
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${boardId}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/find/${boardId}`)
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
@@ -36,7 +36,7 @@ export const useDetailBoard = (boardId: number) => {
   useEffect(() => {
     if (boardId) {
       // API 호출
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${boardId}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/find/${boardId}`)
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
@@ -98,12 +98,13 @@ export const useSearchBoardData = ({
       fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/search/post?keyword=${keyword}&size=${size}&page=${page - 1}`
+        }/search?keyword=${keyword}&size=${size}&page=${page - 1}`
       )
         .then((response) => response.json())
         .then((data) => {
           setFindBoard(data);
         })
+
         .catch((error) => {
           console.error("게시물을 가져오는 중 오류 발생:", error);
         });
