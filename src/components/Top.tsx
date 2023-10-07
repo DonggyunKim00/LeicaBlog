@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import leicaTypo from "../../public/img/main/ntsrow.png";
 import leicaTypo2 from "../../public/img/main/leicalogo.png";
-import YoutubeLink from "../../public/img/main/youtube.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
-import microScope from "../../public/img/main/microScope.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
 import BusinessInfoBox from "./BusinessInfoBox";
@@ -71,38 +69,6 @@ const Top: React.FC = () => {
         <Image width={917} height={500} alt={""} src={topPicture} />
         <AbsoluteImg width={220} height={100} alt={""} src={leicaTypo2} />
       </ContentWrapper>
-      <FixedRight>
-        <EstimateBox
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          $hovered={hovered}
-          onClick={() => {
-            Router.push(pathName.ESTIMATE);
-          }}
-        >
-          <EstimateImage>
-            <Image width={30} height={30} alt={""} src={microScope} />
-          </EstimateImage>
-          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-          {hovered && (
-            <EstimateMessage>
-              문의 사항이 있으신가요?
-              <br />
-              클릭해주세요!
-            </EstimateMessage>
-          )}
-        </EstimateBox>
-        <NtsProfile />
-        <BusinessInfoBox />
-        <YoutubeDiv>
-          <a
-            href="https://www.youtube.com/user/LeicaMicrosystems"
-            target="_blank"
-          >
-            <Image width={155} height={30} src={YoutubeLink} alt="" />
-          </a>
-        </YoutubeDiv>
-      </FixedRight>
       <ScopeMenuWrapper>
         {categories.map((category, index) => (
           <ScopeMenuBox
@@ -122,15 +88,7 @@ const Top: React.FC = () => {
 };
 
 export default Top;
-const YoutubeDiv = styled.div`
-  padding: 5px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  background-color: white;
-  &:hover {
-    cursor: pointer;
-  }
-`;
+
 const AbsoluteImg = styled(Image)`
   position: absolute;
   right: -40px;
@@ -283,6 +241,7 @@ const EstimateMessage = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const FixedRight = styled.div`
   display: flex;
   flex-direction: column;
