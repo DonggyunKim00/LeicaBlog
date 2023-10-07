@@ -25,7 +25,7 @@ interface ChildrenList {
   subTitle: string;
   thumbnail: string;
   category: string;
-  created_at: string;
+  createdAt: string;
 }
 interface PageButtonProps {
   $isactive: boolean;
@@ -44,7 +44,7 @@ const ContentsList: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/${id}`)
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
@@ -59,7 +59,7 @@ const ContentsList: React.FC = () => {
     if (id && post) {
       const { parentCategory, category } = post;
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${parentCategory}/${category}`
+        `${process.env.NEXT_PUBLIC_API_URL}/post/${parentCategory}/${category}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -131,7 +131,7 @@ const ContentsList: React.FC = () => {
                   onClick={() => handleTitleClick(post.id)}
                 >
                   <CategoryTitle>{post.title}</CategoryTitle>
-                  <CategoryAmount>작성일 {post.created_at}</CategoryAmount>
+                  <CategoryAmount>{post.createdAt}</CategoryAmount>
                 </ContentBox>
               ))
             ) : (

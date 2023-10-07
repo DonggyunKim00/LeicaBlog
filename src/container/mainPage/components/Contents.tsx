@@ -23,11 +23,11 @@ const Contents = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`);
         const responseData = await response.json();
 
         if (Array.isArray(responseData.childList)) {
-          const sortedData = responseData.childList.slice().reverse();
+          const sortedData = responseData.childList.slice();
           const mainData = sortedData.slice(0, 5);
           const subData = sortedData.slice(5, 11);
 

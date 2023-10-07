@@ -24,38 +24,70 @@ const EstimateForm = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    const emailBody = `
-견적 요청
+    const emailData = {
+      mailTo: "sdzx0719@naver.com",
+      content: `
+  견적 요청
+  
+  이름: ${userData.name}
+  성: ${userData.surname}
+  이메일: ${userData.email}
+  휴대폰번호: ${userData.phone}
+  회사/기관: ${userData.company}
+  직책: ${userData.position}
+  지역: ${userData.region}
+  국가 혹은 지역: ${userData.country}
+  
+  기타 요청사항이나 문의 사항:
+  ${userData.request}
+  
+  개인정보 수집 및 활용에 대한 동의:
+  - 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를 통해 제공
+  - 서비스 개선/개발을 위한 만족도조사 및 통계처리
+  
+  동의 여부: ${
+    userData.agreePrivacyPolicy === "yes"
+      ? "예 (동의함)"
+      : "아니오 (동의하지 않음)"
+  }
+      `,
+      subject: "Test Sending Mail",
+    };
 
-이름: ${userData.name}
-성: ${userData.surname}
-이메일: ${userData.email}
-휴대폰번호: ${userData.phone}
-회사/기관: ${userData.company}
-직책: ${userData.position}
-지역: ${userData.region}
-국가 혹은 지역: ${userData.country}
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
 
-기타 요청사항이나 문의 사항:
-${userData.request}
-
-개인정보 수집 및 활용에 대한 동의:
-- 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를 통해 제공
-- 서비스 개선/개발을 위한 만족도조사 및 통계처리
-
-동의 여부: ${
-      userData.agreePrivacyPolicy === "yes"
-        ? "예 (동의함)"
-        : "아니오 (동의하지 않음)"
+      if (response.ok) {
+        alert("이메일이 성공적으로 전송되었습니다")
+        setUserData({
+          name: "",
+          surname: "",
+          email: "",
+          phone: "",
+          company: "",
+          position: "",
+          region: "",
+          country: "",
+          request: "",
+          agreePrivacyPolicy: "",
+        });
+      } else {
+        console.error("이메일 전송 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
     }
-    `;
-
-    // emailBody를 서버로 보내거나 필요한 곳에 사용
-    console.log(emailBody); // 이 부분을 실제로 서버로 전송하는 로직으로 변경해야 합니다.
   };
+
   return (
     <EstimateBox>
       <ContactWrapper>

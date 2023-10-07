@@ -4,72 +4,63 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
+import {
+  useSearchBoard,
+  PagingContent,
+} from "../../../hooks/pagenateHook/usePagenate";
+import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 
 interface PageButtonProps {
   $isactive: boolean;
 }
+
 interface ResponseDataItem {
   size: number;
-  childList: ChildrenList[];
+  lastPage: boolean;
+  totalPage: number;
+  childList: any[];
 }
+
 interface ChildrenList {
   id: number;
   title: string;
-  subTitle: string;
+  content: string;
+  subTitle: string | null;
   thumbnail: string;
-  category: string;
+  parentName: string;
+  childName: string;
 }
 interface ItemNameProps {
-  hoveredItem: boolean;
+  $hoveredItem: boolean;
 }
 
 const MicroContents = () => {
   const router = useRouter();
-  const { category } = router.query;
-  const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
-  const [hoveredItem,setHoveredItem] = useState<Number | null>();
-  const fetchCategoryData = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${category}`
-      );
-      const responseData = await response.json();
+  const { category, subCategory } = router.query;
+  const [mainItems, setMainItems] = useState<ChildrenList[]>([]);
+  const [pageItems, setPageItems] = useState<ResponseDataItem>({
+    size: 0, // totalElement로 바뀔예정
+    lastPage: false,
+    totalPage: 1,
+    childList: [],
+  });
+  const [hoveredItem, setHoveredItem] = useState<Number | null>();
 
-      setMainItems(responseData.childList);
-    
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const page = Number(router.query.page) || 1;
+  
+  const {
+    currentPage,
+    handlePageChange,
+    pages,
+    handleNextGroup,
+    handlePrevGroup,
+    lastPageGroup,
+    pageGroups,
+  } = useSearchBoard({
+    apiData:  pageItems ,
+  });
 
-  useEffect(() => {
-    if (category) {
-      fetchCategoryData();
-    }
-  }, [category]);
-
-  const itemsPerPage = 16;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
-
-  const getPaginatedData = (data: any) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return data.slice(startIndex, endIndex);
-  };
-
-  const currentItems = getPaginatedData(mainItems).reverse();
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
+ 
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
@@ -77,15 +68,38 @@ const MicroContents = () => {
     });
   };
 
+  useEffect(() => {
+    if (category) {
+      {
+        let apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/${category}?size=16&page=${page-1}`;
+        if (subCategory) {
+          apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/${category}/${subCategory}?size=16&page=${page-1}`;
+        }
+
+        const response = fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            setMainItems(data);
+            setPageItems(data);
+          })
+          .catch((error) => {
+            console.error("게시물을 가져오는 중 오류 발생:", error);
+          });
+      }
+    }
+  }, [category, page, subCategory]);
+
+  
+
   return (
     <div>
       <Box>
         <Wrapper>
           <MainItemWrapper>
-            {currentItems.length === 0 ? (
+            {mainItems.length === 0 ? (
               <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
             ) : (
-              currentItems.map((item: ChildrenList) => (
+              pageItems?.childList.map((item: ChildrenList) => (
                 <MainItemBox
                   key={item.id}
                   onClick={() => handleDetailClick(item.id)}
@@ -100,7 +114,9 @@ const MicroContents = () => {
                       height={200}
                     />
                   </MainItemImg>
-                  <MainItemName hoveredItem={hoveredItem===item.id}>{item.subTitle}</MainItemName>
+                  <MainItemName $hoveredItem={hoveredItem === item.id}>
+                    {item.subTitle}
+                  </MainItemName>
                   <MainItemDate>date of item</MainItemDate>
                 </MainItemBox>
               ))
@@ -111,15 +127,38 @@ const MicroContents = () => {
       <PageBoxContainer>
         <PageBox>
           <Page>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <PageButton
-                key={index + 1}
-                $isactive={currentPage === index + 1}
-                onClick={() => handlePageChange(index + 1)}
+            {pageGroups !== 0 && (
+              <div
+                onClick={() => {
+                  handlePrevGroup(pageGroups);
+                }}
               >
-                {index + 1}
-              </PageButton>
-            ))}
+                <BiSolidLeftArrow size="5" />
+              </div>
+            )}
+            {pages ? (
+              pages.map((item: number) => (
+                <PageButton
+                  key={item}
+                  $isactive={currentPage === item}
+                  onClick={() => handlePageChange(item)}
+                  value={currentPage}
+                >
+                  {item}
+                </PageButton>
+              ))
+            ) : (
+              <></>
+            )}
+            {pageGroups !== lastPageGroup && (
+              <div
+                onClick={() => {
+                  handleNextGroup(pageGroups);
+                }}
+              >
+                <BiSolidRightArrow size="5" />
+              </div>
+            )}
           </Page>
         </PageBox>
       </PageBoxContainer>
@@ -152,7 +191,7 @@ const MainItemBox = styled.div`
   width: 200px;
   height: 299px;
   margin: 39px 30px 0px 0px;
-  cursor : pointer;
+  cursor: pointer;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
@@ -171,7 +210,7 @@ const MainItemName = styled.div<ItemNameProps>`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-decoration: ${(props) => (props.hoveredItem ? "underline" : "none")};
+  text-decoration: ${(props) => (props.$hoveredItem ? "underline" : "none")};
 `;
 
 const MainItemDate = styled.div`
