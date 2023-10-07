@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import leicaTypo from "../../public/img/main/ntsrow.png";
 import leicaTypo2 from "../../public/img/main/leicalogo.png";
@@ -10,9 +10,16 @@ import Router from "next/router";
 import { pathName } from "@/config/pathName";
 import BusinessInfoBox from "./BusinessInfoBox";
 import NtsProfile from "./NtsProfile";
+import axios from "axios";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 const Top: React.FC = () => {
   const [hovered, sethovered] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const handleMouseEnter = () => {
     sethovered(true);
@@ -28,6 +35,27 @@ const Top: React.FC = () => {
       query: { category: categoryName },
     });
   };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get<Category[]>(
+          `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+        );
+        setCategories(response.data);
+      } catch (error) {
+        console.error("API 요청 실패:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const emptyBoxes: Array<{ showafter: boolean }> = new Array(8-categories.length)
+    .fill("")
+    .map((_, index, array) => ({
+      showafter: index === array.length - 1 ? false : true,
+    }));
+
   return (
     <>
       <LeicaTypoBox>
@@ -76,48 +104,19 @@ const Top: React.FC = () => {
         </YoutubeDiv>
       </FixedRight>
       <ScopeMenuWrapper>
-        <ScopeMenuBox onClick={() => handleCategoryClick("광학 현미경")}>
-          광학 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          onClick={() => handleCategoryClick("공초점레이저 현미경")}
-        >
-          공초점레이저 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox onClick={() => handleCategoryClick("디지털 현미경")}>
-          디지털 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox onClick={() => handleCategoryClick("현미경 카메라")}>
-          현미경 카메라
-        </ScopeMenuBox>
-        <ScopeMenuBox2 onClick={() => handleCategoryClick("수술용 현미경")}>
-          수술용 현미경
-        </ScopeMenuBox2>
+        {categories.map((category, index) => (
+          <ScopeMenuBox
+            key={index}
+            onClick={() => handleCategoryClick(category.name)}
+            showafter={index === 3 || index === 7 ? false : true}
+          >
+            {category.name}
+          </ScopeMenuBox>
+        ))}{" "}
+        {emptyBoxes.map((emptyBox, index) => (
+          <EmptyScopeMenuBox key={index} showafter={emptyBox.showafter} />
+        ))}
       </ScopeMenuWrapper>
-      <ScopeMenuWrapper2>
-        <ScopeMenuBox onClick={() => handleCategoryClick("수퍼해상도 현미경")}>
-          수퍼해상도 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          onClick={() => handleCategoryClick("실체현미경 마크로 현미경")}
-        >
-          실체현미경
-          <br />
-          마크로 현미경
-        </ScopeMenuBox>
-        <ScopeMenuBox onClick={() => handleCategoryClick("현미경 소프트웨어")}>
-          현미경 소프트웨어
-        </ScopeMenuBox>
-        <ScopeMenuBox
-          onClick={() => handleCategoryClick("전자현미경 시료전처리")}
-        >
-          전자현미경 <br />
-          시료전처리
-        </ScopeMenuBox>
-        <ScopeMenuBox2 onClick={() => handleCategoryClick("교육용 현미경")}>
-          교육용 현미경
-        </ScopeMenuBox2>
-      </ScopeMenuWrapper2>
     </>
   );
 };
@@ -163,80 +162,90 @@ const ContentWrapper = styled.div`
 `;
 
 const ScopeMenuWrapper = styled.div`
-  position: relative;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   width: 914px;
   margin: 0 auto;
   background-color: #eeeeee;
-  border-bottom: 2px dotted #ced1d3;
-`;
-
-const ScopeMenuWrapper2 = styled.div`
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  width: 914px;
-  margin: 0 auto;
-  background-color: #eeeeee;
   margin-bottom: 57px;
-`;
-
-const ScopeMenuBox = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 181.8px;
-  height: 80px;
-  cursor: pointer;
-  background-color: #eeeeee;
-  transition: background-color 0.3s;
-  color: #84949d;
-  font-weight: 600;
-  transition: background-color 0.3s;
-  text-align: center;
-  font-size: 19px;
-
-  &:hover {
-    background-color: #b3babd;
-  }
-
+  z-index: 0;
   &::after {
     content: "";
     position: absolute;
-    top: 50%;
-    right: -2px;
-    height: 68%;
-    width: 2px;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: 2px;
     background-color: #ced1d3;
-    transform: translateY(-50%);
   }
 `;
-
-const ScopeMenuBox2 = styled.div`
+const ScopeMenuBox = styled.div<{ showafter: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 182.8px;
+  width: 228px;
   height: 80px;
   cursor: pointer;
   background-color: #eeeeee;
-  transition: background-color 0.3s;
   color: #84949d;
   font-weight: 600;
   transition: background-color 0.3s;
   text-align: center;
   font-size: 19px;
+  z-index: 0;
 
   &:hover {
     background-color: #b3babd;
   }
-`;
 
+  ${(props) =>
+    props.showafter &&
+    `
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0px;
+        height: 68%;
+        width: 2px;
+        background-color:  #b3babd;
+        transform: translateY(-50%);
+      }
+    `}
+`;
+const EmptyScopeMenuBox = styled.div<{ showafter: boolean }>`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 228px;
+  height: 80px;
+  background-color: #eeeeee;
+  color: #84949d;
+  font-weight: 600;
+  text-align: center;
+  font-size: 19px;
+  z-index: 0;
+
+  ${(props) =>
+    props.showafter &&
+    `
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0px;
+        height: 68%;
+        width: 2px;
+        background-color:  #b3babd;
+        transform: translateY(-50%);
+      }
+    `}
+`;
 const EstimateBox = styled.div<{ $hovered: boolean }>`
   width: 170px;
   height: ${(props) => (props.$hovered ? "140px" : "100px")};
