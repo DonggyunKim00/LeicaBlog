@@ -1,35 +1,107 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 
-const CategoryModifyModal = () => {
+const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
+  categoryId,
+}) => {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [isModifyVisible, setIsModifyVisible] = useState(false);
+  const [modifyValue, setModifyValue] = useState("");
 
   const handleDeleteClick = () => {
     setIsConfirmVisible(true);
   };
 
-  const handleConfirmDelete = () => {
-    setIsConfirmVisible(false);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("카테고리가 삭제되었습니다");
+        setIsConfirmVisible(false);
+      } else {
+        console.error("카테고리 삭제 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
 
   const handleCancelDelete = () => {
     setIsConfirmVisible(false);
   };
 
+  const handleModifyClick = () => {
+    setIsModifyVisible(true);
+  };
+  const handleCancleModify = () => {
+    setIsModifyVisible(false);
+  };
+
+  const handleConfirmModify = async () => {
+    try {
+      console.log(modifyValue);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({modifyValue }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("카테고리 수정 성공");
+      } else {
+        console.error("카테고리 수정 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  };
   return (
     <>
       <Wrapper>
         <DeleteBtn onClick={handleDeleteClick}>삭제</DeleteBtn>
-        <ModifyBtn>수정</ModifyBtn>
-    
+        <ModifyBtn onClick={handleModifyClick}>수정</ModifyBtn>
       </Wrapper>
       {isConfirmVisible && (
         <ModalOverlay>
           <ConfirmModal>
-            <ConfirmMessage>정말로 삭제하시겠습니까? 카테고리 안에 있는 게시물이 모두 삭제됩니다!</ConfirmMessage>
+            <ConfirmMessage>
+              정말로 삭제하시겠습니까? 카테고리 안에 있는 게시물이 모두
+              삭제됩니다!
+            </ConfirmMessage>
             <ConfirmButtons>
               <ConfirmButton onClick={handleConfirmDelete}>확인</ConfirmButton>
               <ConfirmButton onClick={handleCancelDelete}>취소</ConfirmButton>
+            </ConfirmButtons>
+          </ConfirmModal>
+        </ModalOverlay>
+      )}
+      {isModifyVisible && (
+        <ModalOverlay>
+          <ConfirmModal>
+            <ConfirmMessage>수정할 이름을 작성해주세요.</ConfirmMessage>
+            <ModifyInput
+              type="text"
+              value={modifyValue}
+              onChange={(e: any) => setModifyValue(e.target.value)}
+            />
+            <ConfirmButtons>
+              <ConfirmButton onClick={handleConfirmModify}>수정</ConfirmButton>
+              <ConfirmButton onClick={handleCancleModify}>취소</ConfirmButton>
             </ConfirmButtons>
           </ConfirmModal>
         </ModalOverlay>
@@ -61,7 +133,7 @@ const DeleteBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
@@ -80,7 +152,6 @@ const ModifyBtn = styled.div`
     background-color: rgb(199, 199, 199);
   }
 `;
-
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -121,3 +192,4 @@ const ConfirmButton = styled.button`
   color: white;
   cursor: pointer;
 `;
+const ModifyInput = styled.input``;
