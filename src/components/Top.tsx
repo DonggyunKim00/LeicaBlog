@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import leicaTypo from "../../public/img/main/ntsrow.png";
-import leicaTypo2 from "../../public/img/main/leicalogo.png";
+import NtsLogo from "../../public/img/main/ntsrow.png";
+import LeicaLogo from "../../public/img/main/leicalogo.png";
 import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import BusinessInfoBox from "./BusinessInfoBox";
-import NtsProfile from "./NtsProfile";
 import axios from "axios";
 
 interface Category {
@@ -16,16 +14,7 @@ interface Category {
 }
 
 const Top: React.FC = () => {
-  const [hovered, sethovered] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-
-  const handleMouseEnter = () => {
-    sethovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    sethovered(false);
-  };
 
   const handleCategoryClick = (categoryName: string) => {
     Router.push({
@@ -48,7 +37,9 @@ const Top: React.FC = () => {
     fetchCategories();
   }, []);
 
-  const emptyBoxes: Array<{ showafter: boolean }> = new Array(8-categories.length)
+  const emptyBoxes: Array<{ showafter: boolean }> = new Array(
+    8 - categories.length
+  )
     .fill("")
     .map((_, index, array) => ({
       showafter: index === array.length - 1 ? false : true,
@@ -62,12 +53,12 @@ const Top: React.FC = () => {
             Router.push(pathName.MAIN);
           }}
         >
-          <Image width={300} height={50} alt={""} src={leicaTypo} />
+          <Image width={300} height={50} alt={""} src={NtsLogo} />
         </LeicaTypo>
       </LeicaTypoBox>
       <ContentWrapper>
         <Image width={917} height={500} alt={""} src={topPicture} />
-        <AbsoluteImg width={220} height={100} alt={""} src={leicaTypo2} />
+        <AbsoluteImg width={160} height={80} alt={""} src={LeicaLogo} />
       </ContentWrapper>
       <ScopeMenuWrapper>
         {categories.map((category, index) => (
@@ -78,7 +69,7 @@ const Top: React.FC = () => {
           >
             {category.name}
           </ScopeMenuBox>
-        ))}{" "}
+        ))}
         {emptyBoxes.map((emptyBox, index) => (
           <EmptyScopeMenuBox key={index} showafter={emptyBox.showafter} />
         ))}
@@ -91,8 +82,8 @@ export default Top;
 
 const AbsoluteImg = styled(Image)`
   position: absolute;
-  right: -40px;
-  top: -5px;
+  right: 5px;
+  top: 5px;
 `;
 const LeicaTypoBox = styled.div`
   display: flex;
