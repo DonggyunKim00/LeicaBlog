@@ -12,11 +12,11 @@ export interface BoardProps {
   parentName: string;
   childName: string;
   content: string;
-  createTime?: string;
+  createdAt?: string;
 }
 const Board = ({ ...props }: BoardProps) => {
   const router = useRouter();
-  const { id, thumbnail, title, childName, content, createTime, parentName } =
+  const { id, thumbnail, title, childName, content, createdAt, parentName } =
     props;
 
   const [titleRegData, setTitleRegData] = useState<string>("");
@@ -56,7 +56,7 @@ const Board = ({ ...props }: BoardProps) => {
           <MainText dangerouslySetInnerHTML={{ __html: mainRegData }} />
         </TextContent>
       </RightCont>
-      <CreateTime>{createTime}</CreateTime>
+      <CreateTime>{createdAt}</CreateTime>
     </Container>
   );
 };
@@ -94,7 +94,7 @@ const Top = styled.div`
   gap: 3px;
 `;
 const Title = styled(Link)`
-  max-width: 650px;
+  max-width: 550px;
   color: rgb(26, 53, 136);
   text-decoration: underline;
   overflow: hidden;
@@ -112,4 +112,5 @@ const MainText = styled.div`
 `;
 const CreateTime = styled.div`
   color: #666666;
+  margin-right: 20px;
 `;
