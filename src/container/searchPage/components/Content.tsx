@@ -56,7 +56,7 @@ const Content = () => {
                   parentName={item.parentName}
                   childName={item.childName}
                   content={item.content}
-                  createTime={item.createTime}
+                  createdAt={item.createdAt}
                   subTitle={item.subTitle}
                   key={idx}
                 />
