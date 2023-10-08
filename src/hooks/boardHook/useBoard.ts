@@ -51,7 +51,7 @@ export const useDetailBoard = (boardId: number) => {
 };
 
 interface searchChildListType {
-  size: number; // totalElement 로 변경예정
+  totalElement: number; // totalElement 로 변경예정
   lastPage: boolean;
   totalPage: number;
   childList: [
@@ -77,7 +77,7 @@ export const useSearchBoardData = ({
   page,
 }: SearchBoardContent) => {
   const [findBoard, setFindBoard] = useState<searchChildListType>({
-    size: 0, // totalElement로 바뀔예정
+    totalElement: 0,
     lastPage: false,
     totalPage: 1,
     childList: [

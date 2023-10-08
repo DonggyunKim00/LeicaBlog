@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // 실제 apiData를 호출하는 훅에서 아래의 interface extends하여 childList 추가해야함!
 export interface PagingContent {
   apiData: {
-    size: number; // totalElement 로 변경예정
+    totalElement: number; // totalElement 로 변경예정
     lastPage: boolean;
     totalPage: number;
     childList: any[];

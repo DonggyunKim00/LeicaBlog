@@ -38,12 +38,14 @@ const Content = () => {
       <Header>
         <Result>
           <span>검색 결과</span>
-          {findBoard && <span className="orange">{findBoard.size}</span>}
+          {findBoard && (
+            <span className="orange">{findBoard.totalElement}</span>
+          )}
         </Result>
         <Line />
       </Header>
       <BoardList>
-        {findBoard && findBoard.size == 0 ? (
+        {findBoard && findBoard.totalElement == 0 ? (
           <NoDataBoard>{` "${router.query.keyword}" 검색결과가 없습니다.`}</NoDataBoard>
         ) : (
           <>
