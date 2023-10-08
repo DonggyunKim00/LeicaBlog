@@ -48,7 +48,7 @@ const Board = ({ ...props }: BoardProps) => {
         <TextContent>
           <Top>
             <Title
-              href={`/${id}`}
+              href={`/Detail?id=${id}`}
               dangerouslySetInnerHTML={{ __html: titleRegData }}
             />
             <SubCategory>{"| " + parentName + " - " + childName}</SubCategory>
@@ -94,8 +94,12 @@ const Top = styled.div`
   gap: 3px;
 `;
 const Title = styled(Link)`
+  max-width: 650px;
   color: rgb(26, 53, 136);
   text-decoration: underline;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 const SubCategory = styled.span`
   color: #999999;
