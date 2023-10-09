@@ -29,6 +29,7 @@ interface ChildrenList {
   thumbnail: string;
   parentName: string;
   childName: string;
+  createdAt : string;
 }
 interface ItemNameProps {
   $hoveredItem: boolean;
@@ -81,15 +82,15 @@ const MicroContents = () => {
           .then((data) => {
             setMainItems(data);
             setPageItems(data);
+            
           })
           .catch((error) => {
             console.error("게시물을 가져오는 중 오류 발생:", error);
           });
       }
     }
-  }, [category, page, subCategory]);
+  }, [category, page,  subCategory]);
 
-  
 
   return (
     <div>
@@ -115,9 +116,9 @@ const MicroContents = () => {
                     />
                   </MainItemImg>
                   <MainItemName $hoveredItem={hoveredItem === item.id}>
-                    {item.subTitle}
+                    {item.title}
                   </MainItemName>
-                  <MainItemDate>date of item</MainItemDate>
+                  <MainItemDate>{item.createdAt}</MainItemDate>
                 </MainItemBox>
               ))
             )}
