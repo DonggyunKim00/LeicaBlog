@@ -3,7 +3,10 @@ import { Editor, EditorContent } from "@tiptap/react";
 import styled, { css } from "styled-components";
 import { ToolBarDivider } from "../Toolbar/ToolbarDivider";
 import { BsCardImage } from "react-icons/bs";
-import { useGetCategory } from "@/hooks/categoryHook/useCategory";
+import {
+  useGetCategory,
+  useGetParentCategory,
+} from "@/hooks/categoryHook/useCategory";
 import { uploadImage } from "../../../../../pages/api/image";
 import { ErrorMessage } from "@hookform/error-message";
 import { useRouter } from "next/router";
@@ -42,8 +45,12 @@ const ContentBox = ({
   const [titleValue, setTitleValue] = useState<string>("");
   const [subTitleValue, setSubTitleValue] = useState<string>("");
 
+  // update페이지 ? post : null
   const { post } = useIsUpdateBoard(boardId);
 
+  // 부모 카테고리 get
+  const { data: categories } = useGetParentCategory();
+  // 자식 카테고리 get
   const { data, refetch } = useGetCategory(mainCate, {
     refetchOnWindowFocus: false,
   });
@@ -74,6 +81,7 @@ const ContentBox = ({
   useEffect(() => {
     setValue("thumbnail", preRenderThumbnail);
   }, [setValue, preRenderThumbnail]);
+
   return (
     <Container>
       <ImageWrapper
@@ -90,33 +98,30 @@ const ContentBox = ({
             name="mainFolder"
             render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
           />
-          <SelectBoard
-            value={mainCate}
-            {...register("mainFolder", {
-              required: {
-                value: true,
-                message: "메인 카테고리를 선택해주세요",
-              },
-              onChange: async (e: any) => {
-                await setMainCate(e.target.value);
-                await refetch();
-              },
-            })}
-          >
-            <option value="">메인 카테고리를 선택해주세요</option>
-            <option value="광학 현미경">광학 현미경</option>
-            <option value="공초점레이저 현미경">공초점레이저 현미경</option>
-            <option value="디지털 현미경">디지털 현미경</option>
-            <option value="현미경 카메라">현미경 카메라</option>
-            <option value="수술용 현미경">수술용 현미경</option>
-            <option value="수퍼해상도 현미경">수퍼해상도 현미경</option>
-            <option value="실체현미경 마크로 현미경">
-              실체현미경 마크로 현미경
-            </option>
-            <option value="현미경 소프트웨어">현미경 소프트웨어</option>
-            <option value="전자현미경 시료전처리">전자현미경 시료전처리</option>
-            <option value="교육용 현미경">교육용 현미경</option>
-          </SelectBoard>
+          {categories && (
+            <SelectBoard
+              value={mainCate}
+              {...register("mainFolder", {
+                required: {
+                  value: true,
+                  message: "메인 카테고리를 선택해주세요",
+                },
+                onChange: async (e: any) => {
+                  await setMainCate(e.target.value);
+                  await refetch();
+                },
+              })}
+            >
+              <option value="">메인 카테고리를 선택해주세요</option>
+              {categories.data.map((item: any) => {
+                return (
+                  <option value={item.name} key={item.id}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </SelectBoard>
+          )}
         </ErrorMessageDiv>
         <ToolBarDivider />
 
@@ -126,7 +131,7 @@ const ContentBox = ({
             name="subFolder"
             render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
           />
-          {data ? (
+          {data && (
             <SelectBoard
               value={subCate}
               {...register("subFolder", {
@@ -148,8 +153,6 @@ const ContentBox = ({
                 );
               })}
             </SelectBoard>
-          ) : (
-            <></>
           )}
         </ErrorMessageDiv>
 
