@@ -6,9 +6,9 @@ import type { NextPage } from "next";
 const MicroScope: NextPage = () => {
   return (
     <Layout>
-      <AdminProvider>
+   
         <MicroScopePage />
-      </AdminProvider>
+      
     </Layout>
   );
 };

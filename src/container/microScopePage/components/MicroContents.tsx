@@ -15,7 +15,7 @@ interface PageButtonProps {
 }
 
 interface ResponseDataItem {
-  size: number;
+  totalElement: number;
   lastPage: boolean;
   totalPage: number;
   childList: any[];
@@ -29,6 +29,7 @@ interface ChildrenList {
   thumbnail: string;
   parentName: string;
   childName: string;
+  createdAt : string;
 }
 interface ItemNameProps {
   $hoveredItem: boolean;
@@ -39,7 +40,7 @@ const MicroContents = () => {
   const { category, subCategory } = router.query;
   const [mainItems, setMainItems] = useState<ChildrenList[]>([]);
   const [pageItems, setPageItems] = useState<ResponseDataItem>({
-    size: 0, // totalElement로 바뀔예정
+    totalElement: 0, // totalElement로 바뀔예정
     lastPage: false,
     totalPage: 1,
     childList: [],
@@ -81,15 +82,15 @@ const MicroContents = () => {
           .then((data) => {
             setMainItems(data);
             setPageItems(data);
+            
           })
           .catch((error) => {
             console.error("게시물을 가져오는 중 오류 발생:", error);
           });
       }
     }
-  }, [category, page, subCategory]);
+  }, [category, page,  subCategory]);
 
-  
 
   return (
     <div>
@@ -115,9 +116,9 @@ const MicroContents = () => {
                     />
                   </MainItemImg>
                   <MainItemName $hoveredItem={hoveredItem === item.id}>
-                    {item.subTitle}
+                    {item.title}
                   </MainItemName>
-                  <MainItemDate>date of item</MainItemDate>
+                  <MainItemDate>{item.createdAt}</MainItemDate>
                 </MainItemBox>
               ))
             )}

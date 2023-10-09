@@ -42,29 +42,33 @@ const SubCategoryList: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (category) {
-          const categoryResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
+
+
+  const fetchData = async (category : any) => {
+    try {
+      if (category) {
+        const categoryResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
+        );
+        if (categoryResponse.ok) {
+          const categoryData = await categoryResponse.json();
+          setCategories(categoryData);
+        } else {
+          console.error(
+            "API request for category failed with status:",
+            categoryResponse.status
           );
-          if (categoryResponse.ok) {
-            const categoryData = await categoryResponse.json();
-            setCategories(categoryData);
-          } else {
-            console.error(
-              "API request for category failed with status:",
-              categoryResponse.status
-            );
-          }
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
-  }, [category,categories]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   
+  useEffect(() => {
+    fetchData(category);
+  }, [category, router.query.category, subCategory]);
+
 
   return (
     <ListWrapper $expanded={showList}>

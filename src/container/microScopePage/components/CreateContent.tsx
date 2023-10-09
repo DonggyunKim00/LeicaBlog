@@ -1,6 +1,8 @@
+import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
+import { getChildCategory } from "../../../../pages/api/category";
 
 interface Category {
   name: string;
@@ -11,25 +13,21 @@ const CreateContent: React.FC = () => {
   const router = useRouter();
   const { category } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
-
   const handleCreate = async () => {
     if (subcategoryName) {
       try {
-        const response = await fetch(
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              parentName: category,
-              childName: subcategoryName,
-            }),
+            parentName: category,
+            childName: subcategoryName,
+          },
+          {
+            withCredentials: true,
           }
         );
 
-        if (response.ok) {
+        if (response.status === 200) {
           alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
           setSubcategoryName("");
         } else {

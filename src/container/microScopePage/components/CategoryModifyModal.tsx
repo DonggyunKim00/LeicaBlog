@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { styled } from "styled-components";
 
@@ -11,21 +12,14 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   const handleDeleteClick = () => {
     setIsConfirmVisible(true);
   };
-
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            credentials: "include",
-          },
-        }
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/child/${categoryId}`,
+        { withCredentials: true }
       );
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert("카테고리가 삭제되었습니다");
         setIsConfirmVisible(false);
       } else {
@@ -35,7 +29,6 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       console.error("오류 발생:", error);
     }
   };
-
   const handleCancelDelete = () => {
     setIsConfirmVisible(false);
   };
@@ -50,19 +43,19 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   const handleConfirmModify = async () => {
     try {
       console.log(modifyValue);
-      const response = await fetch(
+      const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({modifyValue }),
+          categoryName: modifyValue,
+        },
+        {
+          withCredentials: true,
         }
       );
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log("카테고리 수정 성공");
+        setIsModifyVisible(false);
       } else {
         console.error("카테고리 수정 실패:", response);
       }
