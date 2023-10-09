@@ -6,8 +6,6 @@ import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import BusinessInfoBox from "./BusinessInfoBox";
-import NtsProfile from "./NtsProfile";
 import axios from "axios";
 
 interface Category {
@@ -16,18 +14,11 @@ interface Category {
 }
 
 const Top: React.FC = () => {
-  const [hovered, sethovered] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-
-  const handleMouseEnter = () => {
-    sethovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    sethovered(false);
-  };
+  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
 
   const handleCategoryClick = (categoryName: string) => {
+    setCurrentCategory(categoryName);
     Router.push({
       pathname: pathName.MICROSCOPE,
       query: { category: categoryName },
@@ -48,10 +39,12 @@ const Top: React.FC = () => {
     fetchCategories();
   }, []);
 
-  const emptyBoxes: Array<{ showafter: boolean }> = new Array(8-categories.length)
+  const emptyBoxes: Array<{ $showafter: boolean }> = new Array(
+    8 - categories.length
+  )
     .fill("")
     .map((_, index, array) => ({
-      showafter: index === array.length - 1 ? false : true,
+      $showafter: index === array.length - 1 ? false : true,
     }));
 
   return (
@@ -74,13 +67,13 @@ const Top: React.FC = () => {
           <ScopeMenuBox
             key={index}
             onClick={() => handleCategoryClick(category.name)}
-            showafter={index === 3 || index === 7 ? false : true}
+            $showafter={index === 3 || index === 7 ? false : true}
           >
             {category.name}
           </ScopeMenuBox>
         ))}{" "}
         {emptyBoxes.map((emptyBox, index) => (
-          <EmptyScopeMenuBox key={index} showafter={emptyBox.showafter} />
+          <EmptyScopeMenuBox key={index} $showafter={emptyBox.$showafter} />
         ))}
       </ScopeMenuWrapper>
     </>
@@ -138,7 +131,7 @@ const ScopeMenuWrapper = styled.div`
     background-color: #ced1d3;
   }
 `;
-const ScopeMenuBox = styled.div<{ showafter: boolean }>`
+const ScopeMenuBox = styled.div<{ $showafter: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -160,7 +153,7 @@ const ScopeMenuBox = styled.div<{ showafter: boolean }>`
   }
 
   ${(props) =>
-    props.showafter &&
+    props.$showafter &&
     `
       &::after {
         content: "";
@@ -174,7 +167,7 @@ const ScopeMenuBox = styled.div<{ showafter: boolean }>`
       }
     `}
 `;
-const EmptyScopeMenuBox = styled.div<{ showafter: boolean }>`
+const EmptyScopeMenuBox = styled.div<{ $showafter: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -190,7 +183,7 @@ const EmptyScopeMenuBox = styled.div<{ showafter: boolean }>`
   z-index: 0;
 
   ${(props) =>
-    props.showafter &&
+    props.$showafter &&
     `
       &::after {
         content: "";
