@@ -18,7 +18,7 @@
     parentCategory: string;
   }
   interface ResponseDataItem {
-    size: number;
+    totalElement: number;
     lastPage: boolean;
     totalPage: number;
     childList: any[];
@@ -35,7 +35,7 @@
       null
     );
     const [pageItems, setPageItems] = useState<ResponseDataItem>({
-      size: 0, // totalElement로 바뀔예정
+      totalElement: 0, // totalElement로 바뀔예정
       lastPage: false,
       totalPage: 1,
       childList: [],
@@ -104,7 +104,7 @@
             {post ? (
               <>
                 <ListTitle>{post.parentCategory} - {post.category}</ListTitle>
-                <ListAmount>{childrenPost?.size || 0}개의 글</ListAmount>
+                <ListAmount>{childrenPost?.totalElement || 0}개의 글</ListAmount>
               </>
             ) : (
               <div>Loading...</div>

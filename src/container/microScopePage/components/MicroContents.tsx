@@ -15,7 +15,7 @@ interface PageButtonProps {
 }
 
 interface ResponseDataItem {
-  size: number;
+  totalElement: number;
   lastPage: boolean;
   totalPage: number;
   childList: any[];
@@ -40,7 +40,7 @@ const MicroContents = () => {
   const { category, subCategory } = router.query;
   const [mainItems, setMainItems] = useState<ChildrenList[]>([]);
   const [pageItems, setPageItems] = useState<ResponseDataItem>({
-    size: 0, // totalElement로 바뀔예정
+    totalElement: 0, // totalElement로 바뀔예정
     lastPage: false,
     totalPage: 1,
     childList: [],
