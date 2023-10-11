@@ -1,6 +1,8 @@
 import { AnyARecord } from "dns";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 const EstimateForm = () => {
   const [agreePrivacyPolicy, setAgreePrivacyPolicy] = useState("");
@@ -27,6 +29,10 @@ const EstimateForm = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
+    if (userData.agreePrivacyPolicy !== "yes") {
+      alert("개인정보 수집 및 활용에 동의해야 메일을 전송할 수 있습니다.");
+      return;
+    }
     const emailData = {
       mailTo: "sdzx0719@naver.com",
       content: `
@@ -58,7 +64,7 @@ const EstimateForm = () => {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/send`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/mail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +73,7 @@ const EstimateForm = () => {
       });
 
       if (response.ok) {
-        alert("이메일이 성공적으로 전송되었습니다")
+        alert("이메일이 성공적으로 전송되었습니다");
         setUserData({
           name: "",
           surname: "",
@@ -80,6 +86,7 @@ const EstimateForm = () => {
           request: "",
           agreePrivacyPolicy: "",
         });
+        Router.push(pathName.MAIN);
       } else {
         console.error("이메일 전송 실패:", response);
       }
@@ -89,6 +96,7 @@ const EstimateForm = () => {
   };
 
   return (
+    <form onSubmit={handleSubmit}>
     <EstimateBox>
       <ContactWrapper>
         <ContactBox>CONTACT US</ContactBox>
@@ -101,6 +109,7 @@ const EstimateForm = () => {
             name="name"
             value={userData.name}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
         <Wrapper>
@@ -110,6 +119,7 @@ const EstimateForm = () => {
             name="surname"
             value={userData.surname}
             onChange={handleInputChange}
+            required={true}
           />
         </Wrapper>
       </Line>
@@ -121,6 +131,7 @@ const EstimateForm = () => {
             name="email"
             value={userData.email}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
         <Wrapper>
@@ -130,6 +141,7 @@ const EstimateForm = () => {
             name="phone"
             value={userData.phone}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
       </Line>
@@ -141,6 +153,7 @@ const EstimateForm = () => {
             name="company"
             value={userData.company}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
         <Wrapper>
@@ -150,6 +163,7 @@ const EstimateForm = () => {
             name="position"
             value={userData.position}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
       </Line>
@@ -161,15 +175,17 @@ const EstimateForm = () => {
             name="region"
             value={userData.region}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
         <Wrapper>
-          <Label htmlFor="country">국가 혹은 지역을 선택해주십시요 *</Label>
+          <Label htmlFor="country">국가 *</Label>
           <Input
             id="country"
             name="country"
             value={userData.country}
             onChange={handleInputChange}
+            required
           />
         </Wrapper>
       </Line>
@@ -201,6 +217,7 @@ const EstimateForm = () => {
             value="yes"
             checked={userData.agreePrivacyPolicy === "yes"}
             onChange={handleInputChange}
+            required
           />
           <RadioLabel htmlFor="agreeYes">예</RadioLabel>
         </RadioBox>
@@ -225,8 +242,9 @@ const EstimateForm = () => {
         <br />
         <RedText>개인정보 취급방침</RedText>에 따라 처리하는것에 동의합니다.
       </AgreeDiv>
-      <SubmitButton onClick={handleSubmit}>지금 전송</SubmitButton>
+      <SubmitButton type="submit">지금 전송</SubmitButton>
     </EstimateBox>
+    </form>
   );
 };
 
