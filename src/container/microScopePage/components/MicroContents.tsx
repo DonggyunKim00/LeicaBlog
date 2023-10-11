@@ -28,14 +28,16 @@ interface ChildrenList {
   subTitle: string | null;
   thumbnail: string;
   parentName: string;
+  category: string;
   childName: string;
-  createdAt : string;
+  createdAt: string;
 }
 interface ItemNameProps {
   $hoveredItem: boolean;
 }
 
 const MicroContents = () => {
+  console.log('컴포넌트 함수가 실행되었습니다.');
   const router = useRouter();
   const { category, subCategory } = router.query;
   const [mainItems, setMainItems] = useState<ChildrenList[]>([]);
@@ -48,7 +50,7 @@ const MicroContents = () => {
   const [hoveredItem, setHoveredItem] = useState<Number | null>();
 
   const page = Number(router.query.page) || 1;
-  
+
   const {
     currentPage,
     handlePageChange,
@@ -58,10 +60,9 @@ const MicroContents = () => {
     lastPageGroup,
     pageGroups,
   } = useSearchBoard({
-    apiData:  pageItems ,
+    apiData: pageItems,
   });
 
- 
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
@@ -70,11 +71,17 @@ const MicroContents = () => {
   };
 
   useEffect(() => {
+
+    console.log('컴포넌트가 렌더링되었습니다.');
     if (category) {
       {
-        let apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/${category}?size=16&page=${page-1}`;
+        let apiUrl = `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/post/${category}?size=16&page=${page - 1}`;
         if (subCategory) {
-          apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/${category}/${subCategory}?size=16&page=${page-1}`;
+          apiUrl = `${
+            process.env.NEXT_PUBLIC_API_URL
+          }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
         }
 
         const response = fetch(apiUrl)
@@ -82,23 +89,25 @@ const MicroContents = () => {
           .then((data) => {
             setMainItems(data);
             setPageItems(data);
-            
           })
           .catch((error) => {
             console.error("게시물을 가져오는 중 오류 발생:", error);
           });
       }
     }
-  }, [category, page,  subCategory]);
-
+  }, [category, page, subCategory, pages]);
 
   return (
     <div>
       <Box>
         <Wrapper>
           <MainItemWrapper>
-            {mainItems.length === 0 ? (
-              <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
+            {pageItems.childList.length === 0 ? (
+              <NoPostsMessage>
+                {subCategory
+                  ? `${category} - ${subCategory}에 게시물이 없습니다.`
+                  : `${category}에 게시물이 없습니다.`}
+              </NoPostsMessage>
             ) : (
               pageItems?.childList.map((item: ChildrenList) => (
                 <MainItemBox
@@ -261,4 +270,9 @@ const PageButton = styled.button<PageButtonProps>`
     border: 2px solid #d3d3d3;
   }
 `;
-const NoPostsMessage = styled.div``;
+const NoPostsMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
