@@ -22,6 +22,7 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       if (response.status === 200) {
         alert("카테고리가 삭제되었습니다");
         setIsConfirmVisible(false);
+        window.location.reload();
       } else {
         console.error("카테고리 삭제 실패:", response);
       }
@@ -56,6 +57,8 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       if (response.status === 200) {
         console.log("카테고리 수정 성공");
         setIsModifyVisible(false);
+        alert("카테고리가 수정되었습니다")
+        window.location.reload();
       } else {
         console.error("카테고리 수정 실패:", response);
       }
@@ -168,7 +171,7 @@ const ConfirmModal = styled.div`
 `;
 
 const ConfirmMessage = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `;
 
 const ConfirmButtons = styled.div`
@@ -185,4 +188,8 @@ const ConfirmButton = styled.button`
   color: white;
   cursor: pointer;
 `;
-const ModifyInput = styled.input``;
+const ModifyInput = styled.input`
+width : 260px;
+margin-bottom : 10px;
+
+`;

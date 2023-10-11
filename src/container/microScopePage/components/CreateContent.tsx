@@ -30,6 +30,7 @@ const CreateContent: React.FC = () => {
         if (response.status === 200) {
           alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
           setSubcategoryName("");
+          window.location.reload();
         } else {
           console.error("Failed to create subcategory");
         }
