@@ -3,6 +3,9 @@ import React, { useState, useEffect, use, useContext } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 import { AdminContext } from "@/components/AdminProvider";
+import Router from "next/router";
+import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
+import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -11,16 +14,31 @@ interface CategoryTitleProp {
   $isActive: boolean;
 }
 
-interface Category {
+interface CategoryItem {
+  totalElement: number;
+  lastPage: boolean;
+  totalPage: number;
+  childCategoryDtos: ItemList[];
+}
+
+interface ItemList {
+  id: number;
   childName: string;
   size: number;
-  id: number;
+}
+interface PageButtonProps {
+  $isactive: boolean;
 }
 
 const SubCategoryList: React.FC = () => {
   const { isAdmin } = useContext(AdminContext);
   const [showList, setShowList] = useState<boolean>(true);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryItem>({
+    totalElement: 0,
+    lastPage: false,
+    totalPage: 1,
+    childCategoryDtos: [],
+  });
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
   const [subCategory, setSubCategory] = useState<string | null>(null);
 
@@ -34,6 +52,7 @@ const SubCategoryList: React.FC = () => {
 
   const router = useRouter();
   const { category } = router.query;
+  const page = Number(router.query.page) || 1;
 
   const handleCategoryClick = (childName: string) => {
     setSubCategory(childName);
@@ -42,13 +61,13 @@ const SubCategoryList: React.FC = () => {
     });
   };
 
-
-
-  const fetchData = async (category : any) => {
+  const fetchData = async (category: any) => {
     try {
       if (category) {
         const categoryResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
+          `${
+            process.env.NEXT_PUBLIC_API_URL
+          }/category/${category}?size=5&page=${page - 1}`
         );
         if (categoryResponse.ok) {
           const categoryData = await categoryResponse.json();
@@ -64,18 +83,29 @@ const SubCategoryList: React.FC = () => {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchData(category);
   }, [category, router.query.category, subCategory]);
 
+  const {
+    currentPage,
+    handlePageChange,
+    pages,
+    handleNextGroup,
+    handlePrevGroup,
+    lastPageGroup,
+    pageGroups,
+  } = useSearchBoard({
+    apiData: categories,
+  });
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
         <ListTitle>{category}</ListTitle>
 
-        <ListAmount>{categories.length}개의 카테고리</ListAmount>
+        <ListAmount>{categories.totalElement}개의 카테고리</ListAmount>
 
         <ListToggleBtn onClick={toggleList}>
           {showList ? "목록닫기" : "목록열기"}
@@ -88,7 +118,7 @@ const SubCategoryList: React.FC = () => {
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
 
-          {categories.map((category, index) => (
+          {categories.childCategoryDtos.map((category: any, index: any) => (
             <ContentBox key={category.childName}>
               <CategoryTitle
                 onClick={() => handleCategoryClick(category.childName)}
@@ -120,6 +150,43 @@ const SubCategoryList: React.FC = () => {
           ))}
         </ListContents>
       )}
+      
+      <Page>
+                {pageGroups !== 0 && (
+                  <div
+                    onClick={() => {
+                      handlePrevGroup(pageGroups);
+                    }}
+                  >
+                    <span>이전</span>
+                    <BiSolidLeftArrow size="5" />
+                  </div>
+                )}
+                {pages ? (
+                  pages.map((item: number) => (
+                    <PageButton
+                      key={item}
+                      $isactive={currentPage === item}
+                      onClick={() => handlePageChange(item)}
+                      value={currentPage}
+                    >
+                      {item}
+                    </PageButton>
+                  ))
+                ) : (
+                  <></>
+                )}
+                {pageGroups !== lastPageGroup && (
+                  <div
+                    onClick={() => {
+                      handleNextGroup(pageGroups);
+                    }}
+                  >
+                    <span>다음</span>
+                    <BiSolidRightArrow size="5" />
+                  </div>
+                )}
+              </Page>
     </ListWrapper>
   );
 };
@@ -215,8 +282,8 @@ const CategoryAmount = styled.div`
   color: rgb(146, 146, 146);
   width: 100px;
   display: flex;
-  justify-content: flex-end; 
-  align-items: center; 
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const DetailBtn = styled.div`
@@ -233,4 +300,44 @@ const Modal = styled.div`
   padding: 15px;
   position: absolute;
   right: 100px;
+`;
+
+const PageBox = styled.div`
+  width: 966px;
+  height: 60px;
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const PageBoxContainer = styled.div`
+  margin-top: 8px;
+`;
+
+const Page = styled.div`
+  width: 926px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PageButton = styled.button<PageButtonProps>`
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  background-color: white;
+  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
+  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
+  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    border: 2px solid #d3d3d3;
+  }
 `;
