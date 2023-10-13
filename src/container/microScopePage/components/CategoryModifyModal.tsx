@@ -57,7 +57,7 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       if (response.status === 200) {
         console.log("카테고리 수정 성공");
         setIsModifyVisible(false);
-        alert("카테고리가 수정되었습니다")
+        alert("카테고리가 수정되었습니다");
         window.location.reload();
       } else {
         console.error("카테고리 수정 실패:", response);
@@ -112,9 +112,8 @@ const Wrapper = styled.div`
   width: 110px;
   height: 36px;
   border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  position: absolute;
-  right: 140px;
+  border-radius: 20px;
+  border-top-left-radius: 0px;
   z-index: 1;
   background-color: white;
   display: flex;
@@ -189,7 +188,6 @@ const ConfirmButton = styled.button`
   cursor: pointer;
 `;
 const ModifyInput = styled.input`
-width : 260px;
-margin-bottom : 10px;
-
+  width: 260px;
+  margin-bottom: 10px;
 `;

@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, use, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 import { AdminContext } from "@/components/AdminProvider";
-import Router from "next/router";
 import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
+import {MdKeyboardArrowDown,MdKeyboardArrowUp} from "react-icons/md";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -15,17 +15,11 @@ interface CategoryTitleProp {
 }
 
 interface CategoryItem {
-  totalElement: number;
-  lastPage: boolean;
-  totalPage: number;
-  childCategoryDtos: ItemList[];
-}
-
-interface ItemList {
   id: number;
   childName: string;
   size: number;
 }
+
 interface PageButtonProps {
   $isactive: boolean;
 }
@@ -33,14 +27,12 @@ interface PageButtonProps {
 const SubCategoryList: React.FC = () => {
   const { isAdmin } = useContext(AdminContext);
   const [showList, setShowList] = useState<boolean>(true);
-  const [categories, setCategories] = useState<CategoryItem>({
-    totalElement: 0,
-    lastPage: false,
-    totalPage: 1,
-    childCategoryDtos: [],
-  });
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
   const [subCategory, setSubCategory] = useState<string | null>(null);
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const toggleList = () => {
     setShowList((prevState) => !prevState);
@@ -52,7 +44,6 @@ const SubCategoryList: React.FC = () => {
 
   const router = useRouter();
   const { category } = router.query;
-  const page = Number(router.query.page) || 1;
 
   const handleCategoryClick = (childName: string) => {
     setSubCategory(childName);
@@ -65,9 +56,7 @@ const SubCategoryList: React.FC = () => {
     try {
       if (category) {
         const categoryResponse = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_API_URL
-          }/category/${category}?size=5&page=${page - 1}`
+          `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
         );
         if (categoryResponse.ok) {
           const categoryData = await categoryResponse.json();
@@ -88,24 +77,42 @@ const SubCategoryList: React.FC = () => {
     fetchData(category);
   }, [category, router.query.category, subCategory]);
 
-  const {
-    currentPage,
-    handlePageChange,
-    pages,
-    handleNextGroup,
-    handlePrevGroup,
-    lastPageGroup,
-    pageGroups,
-  } = useSearchBoard({
-    apiData: categories,
-  });
+  useEffect(() => {
+    if (category) {
+      const newTotalPages = Math.max(
+        Math.ceil(categories.length / itemsPerPage),
+        1
+      );
+      setTotalPages(newTotalPages);
+
+      setCurrentPage(1);
+    }
+  }, [category, categories, subCategory]);
+
+  const getPaginatedData = (data: any) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return data.slice(startIndex, endIndex);
+  };
+
+  const currentItems = getPaginatedData(categories || []);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages, category]);
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
         <ListTitle>{category}</ListTitle>
 
-        <ListAmount>{categories.totalElement}개의 카테고리</ListAmount>
+        <ListAmount>{categories.length}개의 카테고리</ListAmount>
 
         <ListToggleBtn onClick={toggleList}>
           {showList ? "목록닫기" : "목록열기"}
@@ -118,7 +125,7 @@ const SubCategoryList: React.FC = () => {
             <ContentsAmountSpan>글 갯수</ContentsAmountSpan>
           </ContentsTitleBox>
 
-          {categories.childCategoryDtos.map((category: any, index: any) => (
+          {currentItems.map((category: any, index: any) => (
             <ContentBox key={category.childName}>
               <CategoryTitle
                 onClick={() => handleCategoryClick(category.childName)}
@@ -128,7 +135,7 @@ const SubCategoryList: React.FC = () => {
               </CategoryTitle>
               <CategoryAmount>{category.size}개의 글</CategoryAmount>
               {isAdmin && (
-                <>
+                <ToogleBtnSet>
                   <DetailBtn>
                     <svg
                       focusable="false"
@@ -142,57 +149,34 @@ const SubCategoryList: React.FC = () => {
                     </svg>
                   </DetailBtn>
                   {activeModalIndex === index && (
-                    <CategoryModifyModal categoryId={category.id} />
+                    <BtnModal>
+                      <CategoryModifyModal categoryId={category.id} />
+                    </BtnModal>
                   )}
-                </>
+                </ToogleBtnSet>
               )}
             </ContentBox>
           ))}
+          {currentItems.length > 0 && (
+            <Page>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <PageButton
+                  key={index + 1}
+                  $isactive={currentPage === index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </PageButton>
+              ))}
+            </Page>
+          )}
         </ListContents>
       )}
-      
-      <Page>
-                {pageGroups !== 0 && (
-                  <div
-                    onClick={() => {
-                      handlePrevGroup(pageGroups);
-                    }}
-                  >
-                    <span>이전</span>
-                    <BiSolidLeftArrow size="5" />
-                  </div>
-                )}
-                {pages ? (
-                  pages.map((item: number) => (
-                    <PageButton
-                      key={item}
-                      $isactive={currentPage === item}
-                      onClick={() => handlePageChange(item)}
-                      value={currentPage}
-                    >
-                      {item}
-                    </PageButton>
-                  ))
-                ) : (
-                  <></>
-                )}
-                {pageGroups !== lastPageGroup && (
-                  <div
-                    onClick={() => {
-                      handleNextGroup(pageGroups);
-                    }}
-                  >
-                    <span>다음</span>
-                    <BiSolidRightArrow size="5" />
-                  </div>
-                )}
-              </Page>
     </ListWrapper>
   );
 };
 
 export default SubCategoryList;
-
 const ListWrapper = styled.div<ListWrapperProps>`
   width: 966px;
   margin: auto;
@@ -203,7 +187,6 @@ const ListWrapper = styled.div<ListWrapperProps>`
   flex-direction: column;
   align-items: stretch;
   margin-bottom: 8px;
-  overflow: hidden;
 `;
 
 const ListTitleBox = styled.div`
@@ -292,28 +275,16 @@ const DetailBtn = styled.div`
   width: 20px;
   height: 20px;
 `;
-const Modal = styled.div`
-  width: 100px;
-  height: 20px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  padding: 15px;
-  position: absolute;
-  right: 100px;
-`;
-
-const PageBox = styled.div`
-  width: 966px;
-  height: 60px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  margin: auto;
+const ToogleBtnSet = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  position: relative;
 `;
-const PageBoxContainer = styled.div`
-  margin-top: 8px;
+const BtnModal = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  left: 35px;
 `;
 
 const Page = styled.div`
@@ -322,6 +293,7 @@ const Page = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 `;
 
 const PageButton = styled.button<PageButtonProps>`
@@ -340,4 +312,17 @@ const PageButton = styled.button<PageButtonProps>`
   &:hover {
     border: 2px solid #d3d3d3;
   }
+`;
+const PageBox = styled.div`
+  width: 966px;
+  height: 60px;
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const PageBoxContainer = styled.div`
+  margin-top: 8px;
 `;
