@@ -29,10 +29,11 @@ const Contents = () => {
         if (Array.isArray(responseData.childList)) {
           const sortedData = responseData.childList.slice();
           const mainData = sortedData.slice(0, 5);
-          const subData = sortedData.slice(5, 11);
+          const subData = sortedData.slice(5,11);
 
           setMainItems(mainData);
           setSubItems(subData);
+
         } else {
           // 데이터가 배열이 아닌 경우 처리
         }
@@ -43,12 +44,14 @@ const Contents = () => {
     fetchData();
   }, []);
 
+
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
       query: { id: itemId },
     });
   };
+
 
   return (
     <Wrapper>
