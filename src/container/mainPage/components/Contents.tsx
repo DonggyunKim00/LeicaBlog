@@ -24,8 +24,8 @@ const Contents = () => {
         const responseData = await response.json();
 
         if (Array.isArray(responseData.childList)) {
-          const sortedData = responseData.childList.slice().reverse();
-          const mainData = sortedData.slice(0, 5);
+          const sortedData = responseData.childList;
+          const mainData = sortedData;
           setMainItems(mainData);
         } else {
         }
@@ -43,7 +43,7 @@ const Contents = () => {
       const response = fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          setSubItems(data.childList.reverse());
+          setSubItems(data.childList);
           console.log(data);
         })
         .catch((error) => {
