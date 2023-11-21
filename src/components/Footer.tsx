@@ -22,7 +22,7 @@ const Footer = () => {
     <Wrapper>
       <FixedRight>
         <NtsProfile />
-        <EstimateBox
+        {/* <EstimateBox
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           $hovered={hovered}
@@ -41,7 +41,7 @@ const Footer = () => {
               클릭해주세요!
             </EstimateMessage>
           )}
-        </EstimateBox>
+        </EstimateBox> */}
         <YoutubeDiv>
           <a
             href="https://www.youtube.com/user/LeicaMicrosystems"

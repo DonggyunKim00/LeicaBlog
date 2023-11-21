@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import NtsLogo from "../../../../public/img/main/ntsLogo.png";
+import NtsLogo from "../../../../public/img/main/ntsrow.png";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
@@ -14,26 +14,22 @@ const Header = () => {
             Router.push(pathName.MAIN);
           }}
         >
-          <Image width={160} height={100} alt={""} src={NtsLogo} />
+          <Image width={300} height={60} alt={""} src={NtsLogo} />
         </LeicaBox>
       </LeicaBar>
     </div>
   );
 };
 
-
 export default Header;
 
 const LeicaBar = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: 100px;
-
-  margin-bottom: 100px;
-  position: sticky;
-  padding-left: 100px;
+  margin: 30px auto;
 `;
 const LeicaBox = styled.div`
-  width: 160px;
   &:hover {
     cursor: pointer;
   }
