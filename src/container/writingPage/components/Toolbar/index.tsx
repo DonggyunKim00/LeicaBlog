@@ -17,28 +17,41 @@ import { ToolBarDivider } from "./ToolbarDivider";
 import { FieldValues } from "react-hook-form";
 import ToolbarSelectors from "./ToolbarSelectors";
 import { uploadImage } from "../../../../../pages/api/image";
-import { postBoard } from "../../../../../pages/api/board";
+import { postBoard, putBoard } from "../../../../../pages/api/board";
 import Preview, { PreviewData } from "../Preview";
+import { useRouter } from "next/router";
+
 export interface ToolBarProps {
   editor?: Editor | null;
   handleSubmit: any;
   thumbnailUrl: string;
+  preRenderThumbnail: string;
+  preRenderCreatedAt: string;
 }
 
-const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
+const Toolbar = ({
+  editor,
+  handleSubmit,
+  thumbnailUrl,
+  preRenderThumbnail,
+  preRenderCreatedAt,
+}: ToolBarProps) => {
+  const router = useRouter();
   const [onPreview, setOnPreview] = useState<boolean>(false);
   const [previewProps, setPreviewProps] = useState<PreviewData>({
     title: "",
     subTitle: "",
     thumbnail: "",
+    parentCategory: "",
     subCategory: "",
     content: "",
+    createdAt: "",
   });
 
   const submit = (data: FieldValues) => {
     const title = data.title;
     const content = editor && JSON.stringify(editor.getJSON());
-    const thumbnail = thumbnailUrl;
+    const thumbnail = preRenderThumbnail || thumbnailUrl;
     const mainCategory = data.mainFolder;
     const subCategory = data.subFolder;
     const subTitle = data.subTitle;
@@ -60,15 +73,29 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
     if (!searchContent) {
       alert("내용을 작성해 주세요.");
     } else {
-      postBoard({
-        searchContent,
-        title,
-        content,
-        thumbnail,
-        mainCategory,
-        subCategory,
-        subTitle,
-      });
+      if (router.pathname == "/update") {
+        putBoard({
+          searchContent,
+          title,
+          content,
+          thumbnail,
+          mainCategory,
+          subCategory,
+          subTitle,
+          boardId: Number(router.query.id),
+        });
+        return;
+      } else {
+        postBoard({
+          searchContent,
+          title,
+          content,
+          thumbnail,
+          mainCategory,
+          subCategory,
+          subTitle,
+        });
+      }
     }
   };
   const setPreview = (data: FieldValues) => {
@@ -78,9 +105,11 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
       setPreviewProps({
         title: data.title,
         subTitle: data.subTitle,
-        thumbnail: thumbnailUrl,
+        thumbnail: preRenderThumbnail || thumbnailUrl,
+        parentCategory: data.mainFolder,
         subCategory: data.subFolder,
         content: content,
+        createdAt: preRenderCreatedAt,
       });
     }
   };
@@ -118,8 +147,10 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
           title={previewProps.title}
           subTitle={previewProps.subTitle}
           thumbnail={previewProps.thumbnail}
+          parentCategory={previewProps.parentCategory}
           subCategory={previewProps.subCategory}
           content={previewProps.content}
+          createdAt={previewProps.createdAt}
         />
       ) : (
         <></>
@@ -133,7 +164,11 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
           ) : (
             <PreviewBtn onClick={handleSubmit(setPreview)}>미리보기</PreviewBtn>
           )}
-          <SubmitBtn onClick={handleSubmit(submit)}>발행하기</SubmitBtn>
+          {router.pathname == "/update" ? (
+            <SubmitBtn onClick={handleSubmit(submit)}>수정하기</SubmitBtn>
+          ) : (
+            <SubmitBtn onClick={handleSubmit(submit)}>발행하기</SubmitBtn>
+          )}
         </SubmitLine>
 
         <ExtraLine>
@@ -281,11 +316,12 @@ const Toolbar = ({ editor, handleSubmit, thumbnailUrl }: ToolBarProps) => {
                   const url = await uploadImage({
                     image: file,
                   });
-                  editor
-                    ?.chain()
-                    .focus()
-                    .setImage({ src: url.toString(), id: value })
-                    .run();
+                  if (url)
+                    editor
+                      ?.chain()
+                      .focus()
+                      .setImage({ src: url.toString(), id: value })
+                      .run();
                 });
               };
               input.click();

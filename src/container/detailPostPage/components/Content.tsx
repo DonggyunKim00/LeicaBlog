@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { generateHTML } from "@tiptap/react";
 import { extension } from "@/utils/editorExtension";
 import Image from "next/image";
+import { useDetailBoard } from "@/hooks/boardHook/useBoard";
 
-interface Post {
+export interface Post {
   id: number;
   title: string;
   subTitle: string;
@@ -13,27 +14,16 @@ interface Post {
   thumbnail: string;
   writer: string;
   category: string;
-  createDate: string;
+  parentCategory: string;
+  modified_at: string;
+  createdAt: string;
 }
 
 const Content = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const [post, setPost] = useState<Post | null>(null);
+  const boardId = Number(router.query.id);
 
-  useEffect(() => {
-    if (id) {
-      // API 호출
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setPost(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
-    }
-  }, [id]);
+  const { post } = useDetailBoard(boardId);
 
   const [context, setContext] = useState("");
   useEffect(() => {
@@ -43,37 +33,36 @@ const Content = () => {
     }
   }, [post]);
 
-  console.log(post);
   return (
     <Box>
       {post ? (
         <>
           <BoardTitle>
-            <Category>{post.category}</Category>
+            <Category>{`${post.parentCategory} - ${post.category}`}</Category>
             <Title>{post.title}</Title>
             <InfoDiv>
               <RoundImage>
                 <Image
-                  src="/img/main/ntsLogo.png"
-                  width={20}
-                  height={20}
+                  src="/img/main/ntsSymbol.png"
+                  width={30}
+                  height={15}
                   alt=""
                 />
               </RoundImage>
-              <Nick>{post.writer}</Nick>
-              <PublishDate>2023. 3. 8. 8:50</PublishDate>
+              <Nick>엔티에스</Nick>
+              <PublishDate>{post.createdAt}</PublishDate>
             </InfoDiv>
           </BoardTitle>
           <ThumbnailDiv>
             <ThumbnailImg src={post.thumbnail} alt="" />
           </ThumbnailDiv>
           <HrDiv></HrDiv>
-          <SubTitle>{post.subTitle}</SubTitle>
+          {post.subTitle && <SubTitle>{post.subTitle}</SubTitle>}
           <HtmlCont dangerouslySetInnerHTML={{ __html: context }} />
         </>
       ) : (
         // id가 없거나 게시물을 아직 불러오지 못한 경우
-        <p>게시물을 불러오는 중...</p>
+        <Load>게시물을 불러오는 중...</Load>
       )}
     </Box>
   );
@@ -81,6 +70,12 @@ const Content = () => {
 
 export default Content;
 
+const Load = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0px;
+`;
 const Box = styled.div`
   display: flex;
   flex-direction: column;
@@ -107,8 +102,8 @@ const RoundImage = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid #dedede;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 100%;
 `;
 const ThumbnailDiv = styled.div`
@@ -159,7 +154,7 @@ const Title = styled.h1`
 const InfoDiv = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 `;
 const Nick = styled.span`
   font-size: 14px;

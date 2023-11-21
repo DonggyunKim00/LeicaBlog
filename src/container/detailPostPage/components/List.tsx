@@ -1,6 +1,9 @@
+import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
 import { Router, useRouter } from "next/router";
 import React, { useState, useEffect, use } from "react";
 import styled from "styled-components";
+import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -15,17 +18,11 @@ interface Post {
   category: string;
   parentCategory: string;
 }
-interface childrenPost {
-  size: number;
-  childList: ChildrenList[];
-}
-interface ChildrenList {
-  id: number;
-  title: string;
-  subTitle: string;
-  thumbnail: string;
-  category: string;
-  created_at: string;
+interface ResponseDataItem {
+  totalElement: number;
+  lastPage: boolean;
+  totalPage: number;
+  childList: any[];
 }
 interface PageButtonProps {
   $isactive: boolean;
@@ -35,8 +32,19 @@ const ContentsList: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [post, setPost] = useState<Post | null>(null);
-  const [childrenPost, setChildrenPost] = useState<childrenPost | null>(null);
-  const [Items, setItems] = useState<childrenPost[]>([]);
+  const [childrenPost, setChildrenPost] = useState<ResponseDataItem | null>(
+    null
+  );
+  const [pageItems, setPageItems] = useState<ResponseDataItem>({
+    totalElement: 0, // totalElement로 바뀔예정
+    lastPage: false,
+    totalPage: 1,
+    childList: [],
+  });
+  const page = Number(router.query.page) || 1;
+  const [size, setSize] = useState(5);
+  const [controllerToggle, setControllerToggle] = useState(false);
+  const sizeOptions = [5, 10, 15, 20, 30];
 
   const toggleList = () => {
     setShowList((prevState) => !prevState);
@@ -44,7 +52,7 @@ const ContentsList: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/find/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/find/${id}`)
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
@@ -59,57 +67,56 @@ const ContentsList: React.FC = () => {
     if (id && post) {
       const { parentCategory, category } = post;
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${parentCategory}/${category}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/post/${parentCategory}/${category}?size=${size}&page=${page - 1}`
       )
         .then((response) => response.json())
         .then((data) => {
           setChildrenPost(data);
-          setItems(data);
+          setPageItems(data);
         })
         .catch((error) => {
           console.error("자식 카테고리 게시물을 가져오는 중 오류 발생:", error);
         });
     }
-  }, [id, post]);
+  }, [id, page, post, size]);
+
+  const {
+    currentPage,
+    handlePageChange,
+    pages,
+    handleNextGroup,
+    handlePrevGroup,
+    lastPageGroup,
+    pageGroups,
+  } = useSearchBoard({
+    apiData: pageItems,
+  });
 
   const handleTitleClick = (postId: number) => {
     router.push({
       query: { id: postId },
     });
   };
-
-  const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = childrenPost
-    ? Math.max(Math.ceil(childrenPost.childList.length / itemsPerPage), 1)
-    : 1;
-
-  const getPaginatedData = (data: any) => {
-    if (!data) return [];
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return data.childList.slice(startIndex, endIndex);
+  const handleControler = () => {
+    setControllerToggle(!controllerToggle);
+  };
+  const handleSizeChange = (newSize: number) => {
+    setSize(newSize);
+    setControllerToggle(false);
   };
 
-  const currentItems = getPaginatedData(childrenPost);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
   return (
     <>
       <ListWrapper $expanded={showList}>
         <ListTitleBox>
           {post ? (
             <>
-              <ListTitle>{post.category}</ListTitle>
-              <ListAmount>{childrenPost?.size || 0}개의 글</ListAmount>
+              <ListTitle>
+                {post.parentCategory} - {post.category}
+              </ListTitle>
+              <ListAmount>{childrenPost?.totalElement || 0}개의 글</ListAmount>
             </>
           ) : (
             <div>Loading...</div>
@@ -124,30 +131,77 @@ const ContentsList: React.FC = () => {
               <ContentsTitleSpan>글 제목</ContentsTitleSpan>
               <ContentsAmountSpan>작성일</ContentsAmountSpan>
             </ContentsTitleBox>
-            {currentItems ? (
-              currentItems.map((post: any) => (
+            {pageItems ? (
+              pageItems.childList.map((post: any) => (
                 <ContentBox
                   key={post.id}
                   onClick={() => handleTitleClick(post.id)}
                 >
                   <CategoryTitle>{post.title}</CategoryTitle>
-                  <CategoryAmount>작성일 {post.created_at}</CategoryAmount>
+                  <CategoryAmount>{post.createdAt}</CategoryAmount>
                 </ContentBox>
               ))
             ) : (
               <div>Loading...</div>
             )}
-
+            <PageControlerLine>
+              <PageControlerBox onClick={handleControler}>
+                {size}줄 보기
+                {controllerToggle ? (
+                  <MdKeyboardArrowUp />
+                ) : (
+                  <MdKeyboardArrowDown />
+                )}
+              </PageControlerBox>
+              {controllerToggle && (
+                <PageControlerExpand>
+                  {sizeOptions.map((option) => (
+                    <ExpandLine
+                      key={option}
+                      $isSelected={size === option}
+                      onClick={() => handleSizeChange(option)}
+                    >
+                      {option}줄 보기
+                    </ExpandLine>
+                  ))}
+                </PageControlerExpand>
+              )}
+            </PageControlerLine>
             <Page>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <PageButton
-                  key={index + 1}
-                  $isactive={currentPage === index + 1}
-                  onClick={() => handlePageChange(index + 1)}
+              {pageGroups !== 0 && (
+                <div
+                  onClick={() => {
+                    handlePrevGroup(pageGroups);
+                  }}
                 >
-                  {index + 1}
-                </PageButton>
-              ))}
+                  <span>이전</span>
+                  <BiSolidLeftArrow size="5" />
+                </div>
+              )}
+              {pages ? (
+                pages.map((item: number) => (
+                  <PageButton
+                    key={item}
+                    $isactive={currentPage === item}
+                    onClick={() => handlePageChange(item)}
+                    value={currentPage}
+                  >
+                    {item}
+                  </PageButton>
+                ))
+              ) : (
+                <></>
+              )}
+              {pageGroups !== lastPageGroup && (
+                <div
+                  onClick={() => {
+                    handleNextGroup(pageGroups);
+                  }}
+                >
+                  <span>다음</span>
+                  <BiSolidRightArrow size="5" />
+                </div>
+              )}
             </Page>
           </ListContents>
         )}
@@ -245,13 +299,12 @@ const CategoryTitle = styled.div`
 `;
 
 const CategoryAmount = styled.div`
-  margin-left: 0px;
   font-size: 12px;
   color: rgb(146, 146, 146);
 `;
 
 const Page = styled.div`
-  width: 926px;
+  width: 936px;
   height: 27px;
   display: flex;
   align-items: center;
@@ -275,4 +328,45 @@ const PageButton = styled.button<PageButtonProps>`
   &:hover {
     border: 2px solid #d3d3d3;
   }
+`;
+
+const PageControlerLine = styled.div`
+  margin: 10px 0px 10px 0px;
+  display: flex;
+  justify-content: flex-end;
+  width: 936px;
+`;
+const PageControlerBox = styled.div`
+  width: 97px;
+  height: 28px;
+  border: 1px solid rgb(221, 221, 221);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 12px;
+  color: rgb(37, 37, 37);
+  cursor: pointer;
+`;
+const PageControlerExpand = styled.div`
+  width: 97px;
+  height: 139px;
+  border: 1px solid rgb(221, 221, 221);
+  position: absolute;
+  margin-top: 28px;
+  background-color: white;
+  border-top: none;
+`;
+const ExpandLine = styled.div<{ $isSelected: boolean }>`
+  width: 97px;
+  height: 27px;
+  color: rgb(37, 37, 37);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+  font-weight: ${(props) => (props.$isSelected ? "bold" : "normal")};
 `;

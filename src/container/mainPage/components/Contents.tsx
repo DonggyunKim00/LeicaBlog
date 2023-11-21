@@ -11,36 +11,45 @@ interface Item {
   content: string;
   createdAt: number;
 }
-interface MainItemNameProps {
-  $isHovered: boolean;
-}
+
 
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
-  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`);
         const responseData = await response.json();
 
         if (Array.isArray(responseData.childList)) {
-          const sortedData = responseData.childList.slice().reverse();
-          const mainData = sortedData.slice(0, 5);
-          const subData = sortedData.slice(5, 11);
-
+          const sortedData = responseData.childList;
+          const mainData = sortedData;
           setMainItems(mainData);
-          setSubItems(subData);
         } else {
-          // 데이터가 배열이 아닌 경우 처리
         }
       } catch (error) {
         console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/소식 및 프로모션?size=6&page=0`;
+
+      const response = fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setSubItems(data.childList);
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
   }, []);
 
   const handleDetailClick = (itemId: number) => {
@@ -57,8 +66,6 @@ const Contents = () => {
           <MainItemBox
             onClick={() => handleDetailClick(item.id)}
             key={item.id}
-            onMouseEnter={() => setHoveredItem(item.id)}
-            onMouseLeave={() => setHoveredItem(null)}
           >
             <MainItemImg>
               {item.thumbnail && item.thumbnail !== "none" ? (
@@ -72,7 +79,7 @@ const Contents = () => {
                 />
               )}
             </MainItemImg>
-            <MainItemName $isHovered={hoveredItem === item.id}>
+            <MainItemName>
               {item.title}
             </MainItemName>
             <MainItemDate>
@@ -88,8 +95,6 @@ const Contents = () => {
         {subItems.map((subItem) => (
           <SubItemBox
             key={subItem.id}
-            onMouseEnter={() => setHoveredItem(subItem.id)}
-            onMouseLeave={() => setHoveredItem(null)}
             onClick={() => handleDetailClick(subItem.id)}
           >
             <SubItemImg>
@@ -105,10 +110,10 @@ const Contents = () => {
               )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName $isHovered={hoveredItem === subItem.id}>
+              <SubItemName >
                 {subItem.title}
               </SubItemName>
-              <SubItemContent $isHovered={hoveredItem === subItem.id}>
+              <SubItemContent >
                 {subItem.content}
               </SubItemContent>
               <SubItemDate>
@@ -148,7 +153,7 @@ const MainItemBox = styled.div`
 const MainItemImg = styled.div`
   margin-bottom: 12px;
 `;
-const MainItemName = styled.div<MainItemNameProps>`
+const MainItemName = styled.div`
   width: 180px;
   height: 16px;
   align-items: center;
@@ -158,7 +163,9 @@ const MainItemName = styled.div<MainItemNameProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
+ &:hover{
+  text-decoration: underline;
+ }
 `;
 const MainItemDate = styled.div`
   width: 180px;
@@ -221,7 +228,7 @@ const SubItemSpan = styled.div`
   padding: 5px 15px 6px 0px;
 `;
 
-const SubItemName = styled.div<MainItemNameProps>`
+const SubItemName = styled.div`
   width: 193px;
   height: 20px;
   margin-bottom: 6px;
@@ -231,10 +238,12 @@ const SubItemName = styled.div<MainItemNameProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
+  &:hover{
+    text-decoration : underline;
+  }
 `;
 
-const SubItemContent = styled.div<MainItemNameProps>`
+const SubItemContent = styled.div`
   width: 193px;
   height: 48px;
   font-size: 12px;
@@ -242,7 +251,9 @@ const SubItemContent = styled.div<MainItemNameProps>`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-  text-decoration: ${(props) => (props.$isHovered ? "underline" : "none")};
+&:hover{
+  text-decoration : underline;
+}
 `;
 
 const SubItemDate = styled.div`

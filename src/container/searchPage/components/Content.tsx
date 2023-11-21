@@ -1,103 +1,116 @@
+import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import React from "react";
+import { css, styled } from "styled-components";
 import Board, { BoardProps } from "./Board";
+import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
+import { useSearchBoardData } from "@/hooks/boardHook/useBoard";
 
 interface PageButtonProps {
   $isactive: boolean;
 }
+
 const Content = () => {
   const router = useRouter();
+  const keyword = router.query.keyword?.toString() || "";
+  const page = Number(router.query.page) || 1;
 
-  const { keyword } = router.query;
-  const [findBoard, setFindBoard] = useState<any>(null);
+  const { findBoard } = useSearchBoardData({
+    keyword: keyword,
+    size: 10,
+    page: page,
+  });
 
-  useEffect(() => {
-    if (keyword) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/post?keyword=${keyword}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFindBoard(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
-    }
-  }, [keyword]);
-  console.log(findBoard);
-
-  const itemsPerPage = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = findBoard && Math.ceil(findBoard.size / itemsPerPage);
-
-  // 페이지가 변경될 때마다 새로운 데이터 계산
-  const getPaginatedData = () => {
-    if (findBoard) {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      return findBoard.childList.slice(startIndex, endIndex);
-    }
-  };
-
-  const currentItems = getPaginatedData();
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  console.log(currentItems);
-  // 페이지가 마지막 페이지보다 크다면 마지막 페이지로 설정
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
+  const {
+    currentPage,
+    handlePageChange,
+    pages,
+    handleNextGroup,
+    handlePrevGroup,
+    lastPageGroup,
+    pageGroups,
+  } = useSearchBoard({
+    apiData: findBoard,
+  });
 
   return (
     <Container>
       <Header>
         <Result>
           <span>검색 결과</span>
-          {findBoard && <span className="orange">{findBoard.size}</span>}
+          {findBoard && (
+            <span className="orange">{findBoard.totalElement}</span>
+          )}
         </Result>
         <Line />
       </Header>
       <BoardList>
-        {findBoard && findBoard.size != 0 ? (
-          findBoard.childList.map((item: BoardProps, idx: number) => {
-            return (
-              <Board
-                id={item.id}
-                thumbnail={item.thumbnail}
-                title={item.title}
-                childName={item.childName}
-                content={item.content}
-                createTime={item.createTime}
-                subTitle={item.subTitle}
-                key={idx}
-              />
-            );
-          })
-        ) : (
+        {findBoard && findBoard.totalElement == 0 ? (
           <NoDataBoard>{` "${router.query.keyword}" 검색결과가 없습니다.`}</NoDataBoard>
+        ) : (
+          <>
+            {findBoard.childList.map((item: BoardProps, idx: number) => {
+              return (
+                <Board
+                  id={item.id}
+                  thumbnail={item.thumbnail}
+                  title={item.title}
+                  parentName={item.parentName}
+                  childName={item.childName}
+                  content={item.content}
+                  createdAt={item.createdAt}
+                  subTitle={item.subTitle}
+                  key={idx}
+                />
+              );
+            })}
+          </>
         )}
       </BoardList>
-      <PageBoxContainer>
-        <PageBox>
-          <Page>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <PageButton
-                key={index + 1}
-                $isactive={currentPage === index + 1}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </PageButton>
-            ))}
-          </Page>
-        </PageBox>
-      </PageBoxContainer>
+      {findBoard.childList[0] && (
+        <PageBoxContainer>
+          <PageBox>
+            <Page>
+              {pageGroups !== 0 && (
+                <PrevBtn
+                  onClick={() => {
+                    handlePrevGroup(pageGroups);
+                  }}
+                >
+                  <BiSolidLeftArrow size="5" />
+                  <span>이전</span>
+                </PrevBtn>
+              )}
+              {pages ? (
+                pages.map((item: number) => {
+                  return (
+                    <PageButton
+                      key={item}
+                      $isactive={currentPage === item}
+                      onClick={() => handlePageChange(item)}
+                      value={currentPage}
+                    >
+                      {item}
+                    </PageButton>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+              {pageGroups !== lastPageGroup && (
+                <NextBtn
+                  onClick={() => {
+                    handleNextGroup(pageGroups);
+                  }}
+                >
+                  <span>다음</span>
+                  <BiSolidRightArrow size="5" />
+                </NextBtn>
+              )}
+            </Page>
+          </PageBox>
+        </PageBoxContainer>
+      )}
     </Container>
   );
 };
@@ -167,4 +180,19 @@ const PageButton = styled.button<PageButtonProps>`
   &:hover {
     background-color: #eeeeee; /* 호버 시 보더 스타일 정의 */
   }
+`;
+const pagingBtn = css`
+  width: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 0px 8px;
+`;
+
+const NextBtn = styled.button`
+  ${pagingBtn}
+`;
+const PrevBtn = styled.button`
+  ${pagingBtn}
 `;

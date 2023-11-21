@@ -1,35 +1,103 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { styled } from "styled-components";
 
-const CategoryModifyModal = () => {
+const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
+  categoryId,
+}) => {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [isModifyVisible, setIsModifyVisible] = useState(false);
+  const [modifyValue, setModifyValue] = useState("");
 
   const handleDeleteClick = () => {
     setIsConfirmVisible(true);
   };
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/child/${categoryId}`,
+        { withCredentials: true }
+      );
 
-  const handleConfirmDelete = () => {
-    setIsConfirmVisible(false);
+      if (response.status === 200) {
+        alert("카테고리가 삭제되었습니다");
+        setIsConfirmVisible(false);
+        window.location.reload();
+      } else {
+        console.error("카테고리 삭제 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
-
   const handleCancelDelete = () => {
     setIsConfirmVisible(false);
   };
 
+  const handleModifyClick = () => {
+    setIsModifyVisible(true);
+  };
+  const handleCancleModify = () => {
+    setIsModifyVisible(false);
+  };
+
+  const handleConfirmModify = async () => {
+    try {
+      console.log(modifyValue);
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
+        {
+          categoryName: modifyValue,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("카테고리 수정 성공");
+        setIsModifyVisible(false);
+        alert("카테고리가 수정되었습니다");
+        window.location.reload();
+      } else {
+        console.error("카테고리 수정 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  };
   return (
     <>
       <Wrapper>
         <DeleteBtn onClick={handleDeleteClick}>삭제</DeleteBtn>
-        <ModifyBtn>수정</ModifyBtn>
-    
+        <ModifyBtn onClick={handleModifyClick}>수정</ModifyBtn>
       </Wrapper>
       {isConfirmVisible && (
         <ModalOverlay>
           <ConfirmModal>
-            <ConfirmMessage>정말로 삭제하시겠습니까? 카테고리 안에 있는 게시물이 모두 삭제됩니다!</ConfirmMessage>
+            <ConfirmMessage>
+              정말로 삭제하시겠습니까? 카테고리 안에 있는 게시물이 모두
+              삭제됩니다!
+            </ConfirmMessage>
             <ConfirmButtons>
               <ConfirmButton onClick={handleConfirmDelete}>확인</ConfirmButton>
               <ConfirmButton onClick={handleCancelDelete}>취소</ConfirmButton>
+            </ConfirmButtons>
+          </ConfirmModal>
+        </ModalOverlay>
+      )}
+      {isModifyVisible && (
+        <ModalOverlay>
+          <ConfirmModal>
+            <ConfirmMessage>수정할 이름을 작성해주세요.</ConfirmMessage>
+            <ModifyInput
+              type="text"
+              value={modifyValue}
+              onChange={(e: any) => setModifyValue(e.target.value)}
+            />
+            <ConfirmButtons>
+              <ConfirmButton onClick={handleConfirmModify}>수정</ConfirmButton>
+              <ConfirmButton onClick={handleCancleModify}>취소</ConfirmButton>
             </ConfirmButtons>
           </ConfirmModal>
         </ModalOverlay>
@@ -44,9 +112,8 @@ const Wrapper = styled.div`
   width: 110px;
   height: 36px;
   border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  position: absolute;
-  right: 140px;
+  border-radius: 20px;
+  border-top-left-radius: 0px;
   z-index: 1;
   background-color: white;
   display: flex;
@@ -61,7 +128,7 @@ const DeleteBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
@@ -80,7 +147,6 @@ const ModifyBtn = styled.div`
     background-color: rgb(199, 199, 199);
   }
 `;
-
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -104,7 +170,7 @@ const ConfirmModal = styled.div`
 `;
 
 const ConfirmMessage = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `;
 
 const ConfirmButtons = styled.div`
@@ -120,4 +186,8 @@ const ConfirmButton = styled.button`
   background-color: #007bff;
   color: white;
   cursor: pointer;
+`;
+const ModifyInput = styled.input`
+  width: 260px;
+  margin-bottom: 10px;
 `;

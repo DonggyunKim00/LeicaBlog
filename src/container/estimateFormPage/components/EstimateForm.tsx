@@ -1,6 +1,8 @@
 import { AnyARecord } from "dns";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
+import Router from "next/router";
+import { pathName } from "@/config/pathName";
 
 const EstimateForm = () => {
   const [agreePrivacyPolicy, setAgreePrivacyPolicy] = useState("");
@@ -24,177 +26,226 @@ const EstimateForm = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    const emailBody = `
-견적 요청
-
-이름: ${userData.name}
-성: ${userData.surname}
-이메일: ${userData.email}
-휴대폰번호: ${userData.phone}
-회사/기관: ${userData.company}
-직책: ${userData.position}
-지역: ${userData.region}
-국가 혹은 지역: ${userData.country}
-
-기타 요청사항이나 문의 사항:
-${userData.request}
-
-개인정보 수집 및 활용에 대한 동의:
-- 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를 통해 제공
-- 서비스 개선/개발을 위한 만족도조사 및 통계처리
-
-동의 여부: ${
-      userData.agreePrivacyPolicy === "yes"
-        ? "예 (동의함)"
-        : "아니오 (동의하지 않음)"
+    if (userData.agreePrivacyPolicy !== "yes") {
+      alert("개인정보 수집 및 활용에 동의해야 메일을 전송할 수 있습니다.");
+      return;
     }
-    `;
+    const emailData = {
+      mailTo: "sdzx0719@naver.com",
+      content: `
+  견적 요청
+  
+  이름: ${userData.name}
+  성: ${userData.surname}
+  이메일: ${userData.email}
+  휴대폰번호: ${userData.phone}
+  회사/기관: ${userData.company}
+  직책: ${userData.position}
+  지역: ${userData.region}
+  국가 혹은 지역: ${userData.country}
+  
+  기타 요청사항이나 문의 사항:
+  ${userData.request}
+  
+  개인정보 수집 및 활용에 대한 동의:
+  - 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를 통해 제공
+  - 서비스 개선/개발을 위한 만족도조사 및 통계처리
+  
+  동의 여부: ${
+    userData.agreePrivacyPolicy === "yes"
+      ? "예 (동의함)"
+      : "아니오 (동의하지 않음)"
+  }
+      `,
+      subject: "Test Sending Mail",
+    };
 
-    // emailBody를 서버로 보내거나 필요한 곳에 사용
-    console.log(emailBody); // 이 부분을 실제로 서버로 전송하는 로직으로 변경해야 합니다.
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/mail`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (response.ok) {
+        alert("이메일이 성공적으로 전송되었습니다");
+        setUserData({
+          name: "",
+          surname: "",
+          email: "",
+          phone: "",
+          company: "",
+          position: "",
+          region: "",
+          country: "",
+          request: "",
+          agreePrivacyPolicy: "",
+        });
+        Router.push(pathName.MAIN);
+      } else {
+        console.error("이메일 전송 실패:", response);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
+
   return (
-    <EstimateBox>
-      <ContactWrapper>
-        <ContactBox>CONTACT US</ContactBox>
-      </ContactWrapper>
-      <Line>
-        <Wrapper>
-          <Label htmlFor="name">이름 *</Label>
-          <Input
-            id="name"
-            name="name"
-            value={userData.name}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-        <Wrapper>
-          <Label htmlFor="surname">성 *</Label>
-          <Input
-            id="surname"
-            name="surname"
-            value={userData.surname}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-      </Line>
-      <Line>
-        <Wrapper>
-          <Label htmlFor="email">이메일 *</Label>
-          <Input
-            id="email"
-            name="email"
-            value={userData.email}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-        <Wrapper>
-          <Label htmlFor="phone">휴대폰번호 *</Label>
-          <Input
-            id="phone"
-            name="phone"
-            value={userData.phone}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-      </Line>
-      <Line>
-        <Wrapper>
-          <Label htmlFor="company">회사/기관 *</Label>
-          <Input
-            id="company"
-            name="company"
-            value={userData.company}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-        <Wrapper>
-          <Label htmlFor="position">직책 *</Label>
-          <Input
-            id="position"
-            name="position"
-            value={userData.position}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-      </Line>
-      <Line>
-        <Wrapper>
-          <Label htmlFor="region">지역 *</Label>
-          <Input
-            id="region"
-            name="region"
-            value={userData.region}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-        <Wrapper>
-          <Label htmlFor="country">국가 혹은 지역을 선택해주십시요 *</Label>
-          <Input
-            id="country"
-            name="country"
-            value={userData.country}
-            onChange={handleInputChange}
-          />
-        </Wrapper>
-      </Line>
+    <form onSubmit={handleSubmit}>
+      <EstimateBox>
+        <ContactWrapper>
+          <ContactBox>CONTACT US</ContactBox>
+        </ContactWrapper>
+        <Line>
+          <Wrapper>
+            <Label htmlFor="name">이름 *</Label>
+            <Input
+              id="name"
+              name="name"
+              value={userData.name}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+          <Wrapper>
+            <Label htmlFor="surname">성 *</Label>
+            <Input
+              id="surname"
+              name="surname"
+              value={userData.surname}
+              onChange={handleInputChange}
+              required={true}
+            />
+          </Wrapper>
+        </Line>
+        <Line>
+          <Wrapper>
+            <Label htmlFor="email">이메일 *</Label>
+            <Input
+              id="email"
+              name="email"
+              value={userData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+          <Wrapper>
+            <Label htmlFor="phone">휴대폰번호 *</Label>
+            <Input
+              id="phone"
+              name="phone"
+              value={userData.phone}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+        </Line>
+        <Line>
+          <Wrapper>
+            <Label htmlFor="company">회사/기관 *</Label>
+            <Input
+              id="company"
+              name="company"
+              value={userData.company}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+          <Wrapper>
+            <Label htmlFor="position">직책 *</Label>
+            <Input
+              id="position"
+              name="position"
+              value={userData.position}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+        </Line>
+        <Line>
+          <Wrapper>
+            <Label htmlFor="region">지역 *</Label>
+            <Input
+              id="region"
+              name="region"
+              value={userData.region}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+          <Wrapper>
+            <Label htmlFor="country">국가 *</Label>
+            <Input
+              id="country"
+              name="country"
+              value={userData.country}
+              onChange={handleInputChange}
+              required
+            />
+          </Wrapper>
+        </Line>
 
-      <Label htmlFor="request">
-        기타 요청사항이나 문의 사항이 있으면 기재해주세요.
-      </Label>
-      <RequestBox>
-        <RequestInput
-          id="request"
-          name="request"
-          value={userData.request}
-          onChange={handleInputChange}
-        />
-      </RequestBox>
-      <PrivacyLabel>
-        상기의 개인정보(이메일,연락처)를 라이카마이크로시스템즈에서 아래와 같은
-        목적으로 수집/활용하는 것에 동의합니다. <br />
-        - 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를
-        통해 제공
-        <br />- 서비스 개선/개발을 위한 만족도조사 및 통계처리 *
-      </PrivacyLabel>
-      <RadioButtonGroup>
-        <RadioBox>
-          <RadioButton
-            type="radio"
-            id="agreeYes"
-            name="agreePrivacyPolicy"
-            value="yes"
-            checked={userData.agreePrivacyPolicy === "yes"}
+        <Label htmlFor="request">
+          기타 요청사항이나 문의 사항이 있으면 기재해주세요.
+        </Label>
+        <RequestBox>
+          <RequestInput
+            id="request"
+            name="request"
+            value={userData.request}
             onChange={handleInputChange}
           />
-          <RadioLabel htmlFor="agreeYes">예</RadioLabel>
-        </RadioBox>
+        </RequestBox>
+        <PrivacyLabel>
+          상기의 개인정보(이메일,연락처)를 엔티에스에서 아래와 같은 목적으로
+          수집/활용하는 것에
+          <br /> 동의합니다. <br />
+          - 관련 제품, 서비스, 워크샵 등에 대한 정보를 전화/이메일/문자메시지를
+          통해 제공
+          <br />- 서비스 개선/개발을 위한 만족도조사 및 통계처리 *
+        </PrivacyLabel>
+        <RadioButtonGroup>
+          <RadioBox>
+            <RadioButton
+              type="radio"
+              id="agreeYes"
+              name="agreePrivacyPolicy"
+              value="yes"
+              checked={userData.agreePrivacyPolicy === "yes"}
+              onChange={handleInputChange}
+              required
+            />
+            <RadioLabel htmlFor="agreeYes">예</RadioLabel>
+          </RadioBox>
 
-        <RadioBox>
-          <RadioButton
-            type="radio"
-            id="agreeNo"
-            name="agreePrivacyPolicy"
-            value="no"
-            checked={userData.agreePrivacyPolicy === "no"}
-            onChange={handleInputChange}
-          />
-          <RadioLabel htmlFor="agreeNo">아니오</RadioLabel>
-        </RadioBox>
-      </RadioButtonGroup>
-      <AgreeDiv>
-        아래의 (지금 전송) 버튼 클릭함으로써 라이카마이크로시스템즈의 <br />
-        <RedText>이용약관과 개인정보 취급방침</RedText>을 검토하고 동의하였음을
-        확인합니다. <br />
-        또한 본인의 개인정보에 대한 선택을 라이카마이크로시스템즈의
-        <br />
-        <RedText>개인정보 취급방침</RedText>에 따라 처리하는것에 동의합니다.
-      </AgreeDiv>
-      <SubmitButton onClick={handleSubmit}>지금 전송</SubmitButton>
-    </EstimateBox>
+          <RadioBox>
+            <RadioButton
+              type="radio"
+              id="agreeNo"
+              name="agreePrivacyPolicy"
+              value="no"
+              checked={userData.agreePrivacyPolicy === "no"}
+              onChange={handleInputChange}
+            />
+            <RadioLabel htmlFor="agreeNo">아니오</RadioLabel>
+          </RadioBox>
+        </RadioButtonGroup>
+        <AgreeDiv>
+          아래의 (지금 전송) 버튼 클릭함으로써 엔티에스의 <br />
+          <RedText>이용약관과 개인정보 취급방침</RedText>을 검토하고
+          동의하였음을 확인합니다. <br />
+          또한 본인의 개인정보에 대한 선택을 엔티에스의
+          <br />
+          <RedText>개인정보 취급방침</RedText>에 따라 처리하는것에 동의합니다.
+        </AgreeDiv>
+        <SubmitButton type="submit">지금 전송</SubmitButton>
+      </EstimateBox>
+    </form>
   );
 };
 

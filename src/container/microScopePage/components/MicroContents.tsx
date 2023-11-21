@@ -4,69 +4,62 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
+import { useSearchBoard } from "../../../hooks/pagenateHook/usePagenate";
+import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 
 interface PageButtonProps {
   $isactive: boolean;
 }
+
 interface ResponseDataItem {
-  size: number;
-  childList: ChildrenList[];
+  totalElement: number;
+  lastPage: boolean;
+  totalPage: number;
+  childList: any[];
 }
+
 interface ChildrenList {
   id: number;
   title: string;
-  subTitle: string;
+  content: string;
+  subTitle: string | null;
   thumbnail: string;
+  parentName: string;
   category: string;
+  childName: string;
+  createdAt: string;
+}
+interface ItemNameProps {
+  $hoveredItem: boolean;
 }
 
 const MicroContents = () => {
   const router = useRouter();
-  const { category } = router.query;
-  const [mainItems, setMainItems] = useState<ResponseDataItem[]>([]);
+  const { category, subCategory } = router.query;
 
-  const fetchCategoryData = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/find/post/${category}`
-      );
-      const responseData = await response.json();
+  const [pageItems, setPageItems] = useState<ResponseDataItem>({
+    totalElement: 0,
+    lastPage: false,
+    totalPage: 1,
+    childList: [],
+  });
+  const [hoveredItem, setHoveredItem] = useState<Number | null>();
 
-      setMainItems(responseData.childList);
-      console.log(responseData.childList);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const page = Number(router.query.page) || 1;
 
-  useEffect(() => {
-    if (category) {
-      fetchCategoryData();
-    }
-  }, [category]);
+  const {
+    currentPage,
+    handlePageChange,
+    pages,
+    handleNextGroup,
+    handlePrevGroup,
+    lastPageGroup,
+    pageGroups,
+  } = useSearchBoard({
+    apiData: pageItems,
+  });
 
-  const itemsPerPage = 16;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(Math.ceil(mainItems.length / itemsPerPage), 1);
-
-  const getPaginatedData = (data: any) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return data.slice(startIndex, endIndex);
-  };
-
-  const currentItems = getPaginatedData(mainItems).reverse();
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
+  console.log(pageItems);
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
@@ -74,20 +67,48 @@ const MicroContents = () => {
     });
   };
 
+  useEffect(() => {
+    if (category) {
+      console.log(category);
+      let apiUrl = `${
+        process.env.NEXT_PUBLIC_API_URL
+      }/post/${category}?size=16&page=${page - 1}`;
+
+      if (subCategory) {
+        apiUrl = `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
+      }
+
+      const response = fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setPageItems(data);
+        })
+        .catch((error) => {
+          console.error("게시물을 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [category, page, subCategory]);
+
   return (
     <div>
       <Box>
         <Wrapper>
           <MainItemWrapper>
-            {currentItems.length === 0 ? (
-              <NoPostsMessage>게시물이 없습니다.</NoPostsMessage>
+            {pageItems.childList.length === 0 ? (
+              <NoPostsMessage>
+                {subCategory
+                  ? `${category} - ${subCategory}에 게시물이 없습니다.`
+                  : `${category}에 게시물이 없습니다.`}
+              </NoPostsMessage>
             ) : (
-              currentItems.map((item: ChildrenList) => (
+              pageItems?.childList.map((item: ChildrenList) => (
                 <MainItemBox
                   key={item.id}
                   onClick={() => handleDetailClick(item.id)}
-                  // onMouseEnter={() => setHoveredItem(true)}
-                  // onMouseLeave={() => setHoveredItem(false)}
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   <MainItemImg>
                     <Image
@@ -97,29 +118,56 @@ const MicroContents = () => {
                       height={200}
                     />
                   </MainItemImg>
-                  <MainItemName>{item.title}</MainItemName>
-                  <MainItemDate>{item.subTitle}</MainItemDate>
+                  <MainItemName $hoveredItem={hoveredItem === item.id}>
+                    {item.title}
+                  </MainItemName>
+                  <MainItemDate>{item.createdAt}</MainItemDate>
                 </MainItemBox>
               ))
             )}
           </MainItemWrapper>
         </Wrapper>
       </Box>
-      <PageBoxContainer>
-        <PageBox>
-          <Page>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <PageButton
-                key={index + 1}
-                $isactive={currentPage === index + 1}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </PageButton>
-            ))}
-          </Page>
-        </PageBox>
-      </PageBoxContainer>
+      {pageItems.totalElement !== 0 && (
+        <PageBoxContainer>
+          <PageBox>
+            <Page>
+              {pageGroups !== 0 && (
+                <div
+                  onClick={() => {
+                    handlePrevGroup(pageGroups);
+                  }}
+                >
+                  <BiSolidLeftArrow size="5" />
+                </div>
+              )}
+              {pages ? (
+                pages.map((item: number) => (
+                  <PageButton
+                    key={item}
+                    $isactive={currentPage === item}
+                    onClick={() => handlePageChange(item)}
+                    value={currentPage}
+                  >
+                    {item}
+                  </PageButton>
+                ))
+              ) : (
+                <></>
+              )}
+              {pageGroups !== lastPageGroup && (
+                <div
+                  onClick={() => {
+                    handleNextGroup(pageGroups);
+                  }}
+                >
+                  <BiSolidRightArrow size="5" />
+                </div>
+              )}
+            </Page>
+          </PageBox>
+        </PageBoxContainer>
+      )}
     </div>
   );
 };
@@ -132,28 +180,30 @@ const Box = styled.div`
   border-radius: 5px;
   margin: auto;
   justify-content: center;
+  padding: 40px 35px;
 `;
 
 const Wrapper = styled.div`
   height: auto;
-  padding: 0px 15px 38px 38px;
 `;
 
 const MainItemWrapper = styled.div`
-  width: 936px;
+  width: 100%;
   height: auto;
   display: flex;
   flex-wrap: wrap;
+  gap: 30px 30px;
 `;
 const MainItemBox = styled.div`
   width: 200px;
   height: 299px;
-  margin: 39px 30px 0px 0px;
+  /* margin: 39px 30px 0px 0px; */
+  cursor: pointer;
 `;
 const MainItemImg = styled.div`
   margin-bottom: 12px;
 `;
-const MainItemName = styled.div`
+const MainItemName = styled.div<ItemNameProps>`
   width: 200px;
   height: 63px;
   margin-bottom: 12px;
@@ -167,9 +217,7 @@ const MainItemName = styled.div`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: ${(props) => (props.$hoveredItem ? "underline" : "none")};
 `;
 
 const MainItemDate = styled.div`
@@ -180,43 +228,45 @@ const MainItemDate = styled.div`
   color: rgb(146, 146, 146);
 `;
 
-const PageBox = styled.div`
-  width: 966px;
-  height: 60px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const PageBoxContainer = styled.div`
-  margin-top: 8px;
-`;
+  const PageBox = styled.div`
+    width: 966px;
+    height: 60px;
+    border: 3px solid rgb(199, 199, 199);
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  const PageBoxContainer = styled.div`
+    margin-top: 8px;
+  `;
 
-const Page = styled.div`
-  width: 926px;
-  height: 27px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+  const Page = styled.div`
+    width: 926px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
 
-const PageButton = styled.button<PageButtonProps>`
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  background-color: white;
-  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
-  cursor: pointer;
-  outline: none;
-  &:hover {
-    border: 2px solid #d3d3d3;
-  }
+  const PageButton = styled.button<PageButtonProps>`
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    background-color: white;
+    color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
+    border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
+    font-weight: ${(props) => (props.$isactive ? "600" : "400")};
+    cursor: pointer;
+    outline: none;
+    &:hover {
+      border: 2px solid #d3d3d3;
+    }
+  `;
+const NoPostsMessage = styled.div`
+  margin: 50px auto;
 `;
-const NoPostsMessage = styled.div``;
