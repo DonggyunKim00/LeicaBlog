@@ -1,7 +1,7 @@
 import React from "react";
 import EstimateFormPage from "@/container/estimateFormPage/EstimateFormPage";
 const writing = () => {
-  return <>{/* <EstimateFormPage /> */}</>;
+  return <></>;
 };
 
 export default writing;
