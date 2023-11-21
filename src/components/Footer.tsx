@@ -22,26 +22,6 @@ const Footer = () => {
     <Wrapper>
       <FixedRight>
         <NtsProfile />
-        {/* <EstimateBox
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          $hovered={hovered}
-          onClick={() => {
-            router.push(pathName.ESTIMATE);
-          }}
-        >
-          <EstimateImage>
-            <Image width={30} height={30} alt={""} src={microScope} />
-          </EstimateImage>
-          <EstimateSpan>견적 및 서비스 문의</EstimateSpan>
-          {hovered && (
-            <EstimateMessage>
-              문의 사항이 있으신가요?
-              <br />
-              클릭해주세요!
-            </EstimateMessage>
-          )}
-        </EstimateBox> */}
         <YoutubeDiv>
           <a
             href="https://www.youtube.com/user/LeicaMicrosystems"
@@ -64,43 +44,6 @@ const Wrapper = styled.div`
     width: 966px;
     margin: 30px auto 0px;
   }
-`;
-const EstimateBox = styled.div<{ $hovered: boolean }>`
-  width: 170px;
-  height: ${(props) => (props.$hovered ? "140px" : "100px")};
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  background-color: white;
-  transition: height 0.3s;
-  &:hover {
-    height: 140px;
-    cursor: pointer;
-  }
-`;
-const EstimateImage = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 20px 0px 10px 0px;
-`;
-
-const EstimateSpan = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 10x;
-  font-weight: 600;
-  white-space: nowrap;
-  letter-spacing: -1.4px;
-  color: #686868;
-  margin-top: 10px;
-  margin-bottom: 14px;
-`;
-
-const EstimateMessage = styled.div`
-  font-size: 14px;
-  color: #686868;
-  display: flex;
-  justify-content: center;
 `;
 const FixedRight = styled.div`
   display: flex;
