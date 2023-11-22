@@ -10,10 +10,10 @@ export const adminLoginApi = async (form: InputForm) => {
       withCredentials: true,
     });
 
-    // 로그인 성공할시 kimyounggil이라는 string을 Buffer로 암호화하여 세션스토리지에 저장
+    // 로그인 성공할시 ntsLogin이라는 string을 Buffer로 암호화하여 세션스토리지에 저장
     if (res.status == 200) {
       alert("관리자 로그인 성공");
-      secureLocalStorage.setItem("adminKey", "kimyounggil");
+      secureLocalStorage.setItem("adminKey", "ntsLogin");
       window.location.replace("/");
     }
     return res;

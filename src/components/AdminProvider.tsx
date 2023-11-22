@@ -10,7 +10,7 @@ export const AdminProvider: React.FC<React.PropsWithChildren> = (props) => {
 
   useEffect(() => {
     const adminKey = secureLocalStorage.getItem("adminKey");
-    setIsAdmin("kimyounggil" === adminKey);
+    setIsAdmin("ntsLogin" === adminKey);
   }, []);
 
   return (
