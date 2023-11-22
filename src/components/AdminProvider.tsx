@@ -1,5 +1,5 @@
+import { decrypt } from "@/utils/crypto";
 import React, { createContext, useEffect, useState } from "react";
-import secureLocalStorage from "react-secure-storage";
 
 export const AdminContext = createContext({
   isAdmin: false,
@@ -9,8 +9,11 @@ export const AdminProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const adminKey = secureLocalStorage.getItem("adminKey");
-    setIsAdmin("ntsLogin" === adminKey);
+    const encryptedValue = sessionStorage.getItem("nts-microscope");
+    if (encryptedValue) {
+      const sessionValue = decrypt(encryptedValue);
+      setIsAdmin("Nts-Leica-Login" === sessionValue);
+    }
   }, []);
 
   return (
