@@ -59,7 +59,6 @@ const MicroContents = () => {
     apiData: pageItems,
   });
 
-  console.log(pageItems);
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
@@ -69,7 +68,6 @@ const MicroContents = () => {
 
   useEffect(() => {
     if (category) {
-      console.log(category);
       let apiUrl = `${
         process.env.NEXT_PUBLIC_API_URL
       }/post/${category}?size=16&page=${page - 1}`;
@@ -228,45 +226,45 @@ const MainItemDate = styled.div`
   color: rgb(146, 146, 146);
 `;
 
-  const PageBox = styled.div`
-    width: 966px;
-    height: 60px;
-    border: 3px solid rgb(199, 199, 199);
-    border-radius: 5px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
-  const PageBoxContainer = styled.div`
-    margin-top: 8px;
-  `;
+const PageBox = styled.div`
+  width: 966px;
+  height: 60px;
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const PageBoxContainer = styled.div`
+  margin-top: 8px;
+`;
 
-  const Page = styled.div`
-    width: 926px;
-    height: 27px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
+const Page = styled.div`
+  width: 926px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  const PageButton = styled.button<PageButtonProps>`
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 5px;
-    background-color: white;
-    color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-    border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-    font-weight: ${(props) => (props.$isactive ? "600" : "400")};
-    cursor: pointer;
-    outline: none;
-    &:hover {
-      border: 2px solid #d3d3d3;
-    }
-  `;
+const PageButton = styled.button<PageButtonProps>`
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  background-color: white;
+  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
+  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
+  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    border: 2px solid #d3d3d3;
+  }
+`;
 const NoPostsMessage = styled.div`
   margin: 50px auto;
 `;

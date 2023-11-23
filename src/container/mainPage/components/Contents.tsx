@@ -12,7 +12,6 @@ interface Item {
   createdAt: number;
 }
 
-
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
@@ -44,7 +43,6 @@ const Contents = () => {
         .then((response) => response.json())
         .then((data) => {
           setSubItems(data.childList);
-          console.log(data);
         })
         .catch((error) => {
           console.error("게시물을 가져오는 중 오류 발생:", error);
@@ -63,10 +61,7 @@ const Contents = () => {
     <Wrapper>
       <MainItemWrapper>
         {mainItems.map((item) => (
-          <MainItemBox
-            onClick={() => handleDetailClick(item.id)}
-            key={item.id}
-          >
+          <MainItemBox onClick={() => handleDetailClick(item.id)} key={item.id}>
             <MainItemImg>
               {item.thumbnail && item.thumbnail !== "none" ? (
                 <Image src={item.thumbnail} alt="" width={180} height={185} />
@@ -79,9 +74,7 @@ const Contents = () => {
                 />
               )}
             </MainItemImg>
-            <MainItemName>
-              {item.title}
-            </MainItemName>
+            <MainItemName>{item.title}</MainItemName>
             <MainItemDate>
               {new Date(item.createdAt).toLocaleDateString()}
             </MainItemDate>
@@ -110,12 +103,8 @@ const Contents = () => {
               )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName >
-                {subItem.title}
-              </SubItemName>
-              <SubItemContent >
-                {subItem.content}
-              </SubItemContent>
+              <SubItemName>{subItem.title}</SubItemName>
+              <SubItemContent>{subItem.content}</SubItemContent>
               <SubItemDate>
                 {new Date(subItem.createdAt).toLocaleDateString()}
               </SubItemDate>
@@ -163,9 +152,9 @@ const MainItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
- &:hover{
-  text-decoration: underline;
- }
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 const MainItemDate = styled.div`
   width: 180px;
@@ -238,8 +227,8 @@ const SubItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  &:hover{
-    text-decoration : underline;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
@@ -251,9 +240,9 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-&:hover{
-  text-decoration : underline;
-}
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const SubItemDate = styled.div`

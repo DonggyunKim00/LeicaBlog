@@ -43,7 +43,6 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
 
   const handleConfirmModify = async () => {
     try {
-      console.log(modifyValue);
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
         {
@@ -55,7 +54,6 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       );
 
       if (response.status === 200) {
-        console.log("카테고리 수정 성공");
         setIsModifyVisible(false);
         alert("카테고리가 수정되었습니다");
         window.location.reload();
