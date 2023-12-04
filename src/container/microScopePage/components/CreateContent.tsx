@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../../../pages/api/axiosInstance";
 import { getChildCategory } from "../../../../pages/api/category";
 
 interface Category {
@@ -16,16 +16,10 @@ const CreateContent: React.FC = () => {
   const handleCreate = async () => {
     if (subcategoryName) {
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
-          {
-            parentName: category,
-            childName: subcategoryName,
-          },
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.post(`/category/child`, {
+          parentName: category,
+          childName: subcategoryName,
+        });
 
         if (response.status === 200) {
           alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");

@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import axiosInstance from "../../../../pages/api/axiosInstance";
 
 const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   categoryId,
@@ -14,9 +14,8 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   };
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/child/${categoryId}`,
-        { withCredentials: true }
+      const response = await axiosInstance.delete(
+        `/category/child/${categoryId}`
       );
 
       if (response.status === 200) {
@@ -43,15 +42,9 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
 
   const handleConfirmModify = async () => {
     try {
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
-        {
-          categoryName: modifyValue,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axiosInstance.put(`/category/${categoryId}`, {
+        categoryName: modifyValue,
+      });
 
       if (response.status === 200) {
         setIsModifyVisible(false);

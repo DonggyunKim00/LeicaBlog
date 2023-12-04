@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 // 게시물 post
 export interface boardPostType {
@@ -20,23 +20,17 @@ export async function postBoard({
   subTitle,
 }: boardPostType) {
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/post`,
-      {
-        searchContent: searchContent,
-        post: {
-          title: title,
-          thumbnail: thumbnail,
-          subTitle: subTitle,
-          content: content,
-          parentName: mainCategory,
-          childName: subCategory,
-        },
+    const res = await axiosInstance.post(`/post`, {
+      searchContent: searchContent,
+      post: {
+        title: title,
+        thumbnail: thumbnail,
+        subTitle: subTitle,
+        content: content,
+        parentName: mainCategory,
+        childName: subCategory,
       },
-      {
-        withCredentials: true,
-      }
-    );
+    });
     if (res.status == 200) {
       alert("게시물 생성 완료");
       window.location.href = "/";
@@ -66,23 +60,17 @@ export async function putBoard({
   boardId,
 }: boardPutType) {
   try {
-    const res = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}/post/${boardId}`,
-      {
-        searchContent: searchContent,
-        post: {
-          title: title,
-          thumbnail: thumbnail,
-          subTitle: subTitle,
-          content: content,
-          parentName: mainCategory,
-          childName: subCategory,
-        },
+    const res = await axiosInstance.put(`/post/${boardId}`, {
+      searchContent: searchContent,
+      post: {
+        title: title,
+        thumbnail: thumbnail,
+        subTitle: subTitle,
+        content: content,
+        parentName: mainCategory,
+        childName: subCategory,
       },
-      {
-        withCredentials: true,
-      }
-    );
+    });
     if (res.status == 200) {
       alert("게시물 수정 완료");
       window.location.href = "/";
@@ -101,12 +89,7 @@ export async function putBoard({
 // 게시물 삭제
 export async function deleteBoard(boardId: number) {
   try {
-    const res = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/post/${boardId}`,
-      {
-        withCredentials: true,
-      }
-    );
+    const res = await axiosInstance.delete(`/post/${boardId}`);
     if (res.status == 200) {
       alert("게시물 삭제 완료");
       window.location.href = "/";

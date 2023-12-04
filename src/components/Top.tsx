@@ -6,7 +6,7 @@ import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import axios from "axios";
+import axiosInstance from "../../pages/api/axiosInstance";
 
 interface Category {
   id: number;
@@ -28,8 +28,8 @@ const Top: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get<Category[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+        const response = await axiosInstance.get<Category[]>(
+          `/category/parent`
         );
         setCategories(response.data);
       } catch (error) {

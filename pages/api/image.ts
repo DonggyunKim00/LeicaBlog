@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 export interface IUploadImage {
   image: File;
@@ -10,16 +10,11 @@ export async function uploadImage({ image }: IUploadImage) {
 
     formData.append("file", image);
 
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/upload`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      }
-    );
+    const res = await axiosInstance.post(`/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res.data as string;
   } catch (err: any) {
     // 로그인 안되어있을때 401 에러

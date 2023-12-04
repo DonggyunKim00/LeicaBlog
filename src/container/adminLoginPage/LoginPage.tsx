@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { adminLoginApi } from "../../../pages/api/login";
