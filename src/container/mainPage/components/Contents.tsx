@@ -145,6 +145,7 @@ const MainItemImg = styled.div`
 const MainItemName = styled.div`
   width: 180px;
   height: 16px;
+  display: flex;
   align-items: center;
   font-size: 13px;
   font-weight: 600;
