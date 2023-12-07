@@ -110,7 +110,11 @@ const MicroContents = () => {
                 >
                   <MainItemImg>
                     <Image
-                      src={item.thumbnail}
+                      src={
+                        item.thumbnail && item.thumbnail !== "none"
+                          ? item.thumbnail
+                          : "/img/LeicaDefaultImage.png"
+                      }
                       alt=""
                       width={200}
                       height={200}
