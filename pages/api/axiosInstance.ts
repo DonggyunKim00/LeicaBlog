@@ -1,16 +1,16 @@
 import axios from "axios";
-// import { getAtByRT } from "./getPrintCode";
+import { getNewToken } from "./login";
 
 const axiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   // timeout: 1000,
 });
 
-// req 요청 시 토큰 인증이 들어간다면, 사용될 로직 -> ex) 헤더에 값을 넣어주는것
+// 요청을 보내기 전, 수행할 일
 axiosInstance.interceptors.request.use(
-  //요청을 보내기 전에 수행할 일
   async (config) => {
     config.headers = config.headers ?? {};
+    // 요청의 컨텐츠타입에 따라 변경
     if (config.data instanceof FormData) {
       config.headers["Content-Type"] = "multipart/form-data";
     } else {
@@ -31,47 +31,43 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// get 요청 시 토큰 인증이 들어간다면, 사용될 로직
+// 요청 보낸 후, 수행할 일
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
+  },
+  async (error) => {
+    console.log(error);
+    const exception = error.response?.data.status;
+    console.log(exception);
+
+    if (exception === 500) {
+      // accessToken이 만료되었을때, refreshToken으로 jwt토큰 재발급
+      const refreshToken = sessionStorage.getItem("refresh");
+      const newAt = await getNewToken(refreshToken);
+      sessionStorage.setItem("access", newAt.headers.get("Authorization"));
+      sessionStorage.setItem("refresh", newAt.headers.get("Refreshtoken"));
+
+      // 새로 발급받은 accessToken 으로 재요청
+      const accessToken = sessionStorage.getItem("access");
+      if (error.config.data instanceof FormData) {
+        error.config.headers = {
+          "Content-Type": "multipart/form-data", // 이 설정이 있어야 바디로 넘어가는 데이터가 form-data로 제대로 넘어감
+          Authorization: `${accessToken}`,
+        };
+      } else {
+        error.config.headers = {
+          "Content-Type": "application/json", // 이 설정이 있어야 바디로 넘어가는 데이터가 json으로 제대로 넘어감
+          Authorization: `${accessToken}`,
+        };
+      }
+
+      const response = await axios.request(error.config);
+      return response;
+    } else {
+      return Promise.reject(error);
+    }
   }
-  // async (error) => {
-  //   console.log(error);
-  //   const exception = error.response?.data.code;
-  //   console.log(exception);
-
-  //   if (exception === 101) {
-  //     const refreshToken = sessionStorage.getItem("refresh");
-  //     const newAt = await getAtByRT(refreshToken);
-  //     await sessionStorage.setItem("access", newAt.headers.authorization);
-  //     const accessToken = await sessionStorage.getItem("access");
-  //     error.config.headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `${accessToken}`,
-  //     };
-
-  //     const response = await axios.request(error.config);
-  //     return response;
-  //   } else if (exception == 102) {
-  //     alert("사용자 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-  //     sessionStorage.removeItem("refresh");
-  //     sessionStorage.removeItem("access");
-  //     window.location.href = "/";
-  //     return;
-  //   } else if (exception == 103) {
-  //     alert("사용자 토큰 값이 변경되었습니다. 다시 로그인 해주세요.");
-  //     sessionStorage.removeItem("refresh");
-  //     sessionStorage.removeItem("access");
-  //     return;
-  //   } else if (exception == 104) {
-  //     alert("로그인 해주세요");
-  //     window.location.href = "/login";
-  //     return;
-  //   } else {
-  //     return Promise.reject(error);
-  //   }
-  // }
 );
 
 export default axiosInstance;
