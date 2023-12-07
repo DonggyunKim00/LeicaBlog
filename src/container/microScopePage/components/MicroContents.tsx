@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -6,6 +6,8 @@ import Router from "next/router";
 import { pathName } from "@/config/pathName";
 import { useSearchBoard } from "../../../hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
+import { AdminContext } from "@/components/AdminProvider";
+import Link from "next/link";
 
 interface PageButtonProps {
   $isactive: boolean;
@@ -32,9 +34,9 @@ interface ChildrenList {
 interface ItemNameProps {
   $hoveredItem: boolean;
 }
-
 const MicroContents = () => {
   const router = useRouter();
+  const { isAdmin } = useContext(AdminContext);
   const { category, subCategory } = router.query;
 
   const [pageItems, setPageItems] = useState<ResponseDataItem>({
@@ -90,7 +92,12 @@ const MicroContents = () => {
   }, [category, page, subCategory]);
 
   return (
-    <div>
+    <Container>
+      {isAdmin && (
+        <Link href={`/writing`}>
+          <WritingBtn>작성하기</WritingBtn>
+        </Link>
+      )}
       <Box>
         <Wrapper>
           <MainItemWrapper>
@@ -170,17 +177,23 @@ const MicroContents = () => {
           </PageBox>
         </PageBoxContainer>
       )}
-    </div>
+    </Container>
   );
 };
 
 export default MicroContents;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 966px;
+  margin: auto;
+`;
 const Box = styled.div`
   width: 966px;
   height: auto;
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
-  margin: auto;
   justify-content: center;
   padding: 40px 35px;
 `;
@@ -271,4 +284,16 @@ const PageButton = styled.button<PageButtonProps>`
 `;
 const NoPostsMessage = styled.div`
   margin: 50px auto;
+`;
+const WritingBtn = styled.button`
+  border: 3px solid #dedede;
+  padding: 10px;
+  border-radius: 10px;
+  color: #000;
+  background-color: white;
+  margin-bottom: 7px;
+  &:hover {
+    transition: all ease-out 200ms;
+    box-shadow: 0px 0px 0px 4px #dedede;
+  }
 `;
