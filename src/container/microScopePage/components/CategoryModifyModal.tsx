@@ -123,6 +123,7 @@ const DeleteBtn = styled.div`
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
+    border-bottom-left-radius: 17px;
   }
 `;
 
@@ -136,6 +137,8 @@ const ModifyBtn = styled.div`
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
   }
 `;
 
