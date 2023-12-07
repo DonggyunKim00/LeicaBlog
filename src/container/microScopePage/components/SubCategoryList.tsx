@@ -5,7 +5,7 @@ import CategoryModifyModal from "./CategoryModifyModal";
 import { AdminContext } from "@/components/AdminProvider";
 import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
-import {MdKeyboardArrowDown,MdKeyboardArrowUp} from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -237,7 +237,7 @@ const ContentsTitleSpan = styled.div`
   color: rgb(146, 146, 146);
 `;
 const ContentsAmountSpan = styled.div`
-  margin-left: 785px;
+  margin-left: 800px;
   font-size: 12px;
   padding: 6px 0px 6px 0px;
   color: rgb(146, 146, 146);

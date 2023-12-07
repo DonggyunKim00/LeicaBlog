@@ -6,7 +6,7 @@ import Image from "next/image";
 import topPicture from "../../public/img/main/topPicture.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import axiosInstance from "../../pages/api/axiosInstance";
+import axios from "axios";
 
 interface Category {
   id: number;
@@ -24,28 +24,27 @@ const Top: React.FC = () => {
       query: { category: categoryName },
     });
   };
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get<Category[]>(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+      );
+      const filledCategories = [
+        ...response.data,
+        ...Array.from(
+          { length: Math.max(8 - response.data.length, 0) },
+          () => ({ id: -1, name: "" })
+        ),
+      ];
+      setCategories(filledCategories);
+    } catch (error) {
+      console.error("API 요청 실패:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axiosInstance.get<Category[]>(
-          `/category/parent`
-        );
-        setCategories(response.data);
-      } catch (error) {
-        console.error("API 요청 실패:", error);
-      }
-    };
     fetchCategories();
   }, []);
-
-  const emptyBoxes: Array<{ $showafter: boolean }> = new Array(
-    8 - categories.length
-  )
-    .fill("")
-    .map((_, index, array) => ({
-      $showafter: index === array.length - 1 ? false : true,
-    }));
 
   return (
     <>
@@ -66,14 +65,14 @@ const Top: React.FC = () => {
         {categories.map((category, index) => (
           <ScopeMenuBox
             key={index}
-            onClick={() => handleCategoryClick(category.name)}
+            onClick={() =>
+              category.name == "" ? null : handleCategoryClick(category.name)
+            }
             $showafter={index === 3 || index === 7 ? false : true}
+            $isEmpty={categories[index]?.name === ""}
           >
             {category.name}
           </ScopeMenuBox>
-        ))}
-        {emptyBoxes.map((emptyBox, index) => (
-          <EmptyScopeMenuBox key={index} $showafter={emptyBox.$showafter} />
         ))}
       </ScopeMenuWrapper>
     </>
@@ -131,7 +130,7 @@ const ScopeMenuWrapper = styled.div`
     background-color: #ced1d3;
   }
 `;
-const ScopeMenuBox = styled.div<{ $showafter: boolean }>`
+const ScopeMenuBox = styled.div<{ $showafter: boolean; $isEmpty?: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -139,7 +138,6 @@ const ScopeMenuBox = styled.div<{ $showafter: boolean }>`
   align-items: center;
   width: 228px;
   height: 80px;
-  cursor: pointer;
   background-color: #eeeeee;
   color: #84949d;
   font-weight: 600;
@@ -149,7 +147,8 @@ const ScopeMenuBox = styled.div<{ $showafter: boolean }>`
   z-index: 0;
 
   &:hover {
-    background-color: #b3babd;
+    background-color: ${(props) => (props.$isEmpty ? "inherit" : "#b3babd")};
+    cursor: ${(props) => (props.$isEmpty ? "" : "pointer")};
   }
 
   ${(props) =>

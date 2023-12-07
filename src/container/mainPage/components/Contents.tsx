@@ -63,16 +63,16 @@ const Contents = () => {
         {mainItems.map((item) => (
           <MainItemBox onClick={() => handleDetailClick(item.id)} key={item.id}>
             <MainItemImg>
-              {item.thumbnail && item.thumbnail !== "none" ? (
-                <Image src={item.thumbnail} alt="" width={180} height={185} />
-              ) : (
-                <Image
-                  src={"/img/main/header.png"}
-                  alt=""
-                  width={180}
-                  height={185}
-                />
-              )}
+              <Image
+                src={
+                  item.thumbnail && item.thumbnail !== "none"
+                    ? item.thumbnail
+                    : "/img/LeicaDefaultImage.png"
+                }
+                alt=""
+                width={180}
+                height={185}
+              />
             </MainItemImg>
             <MainItemName>{item.title}</MainItemName>
             <MainItemDate>
@@ -95,7 +95,7 @@ const Contents = () => {
                 <Image src={subItem.thumbnail} alt="" width={90} height={90} />
               ) : (
                 <Image
-                  src={"/img/main/header.png"}
+                  src={"/img/LeciaDefaultImage.png"}
                   alt=""
                   width={90}
                   height={90}
