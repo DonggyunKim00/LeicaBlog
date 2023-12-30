@@ -35,6 +35,8 @@ export async function getNewToken(refreshToken: string | null) {
     });
     return res;
   } catch (error: any) {
+    sessionStorage.removeItem("access");
+    sessionStorage.removeItem("refresh");
     return error.response;
   }
 }
