@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import axiosInstance from "../../../../pages/api/axiosInstance";
+import { putChildCategory } from "../../../../pages/api/category";
 
 const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   categoryId,
@@ -12,6 +13,7 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   const handleDeleteClick = () => {
     setIsConfirmVisible(true);
   };
+
   const handleConfirmDelete = async () => {
     try {
       const response = await axiosInstance.delete(
@@ -29,6 +31,7 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
       console.error("오류 발생:", error);
     }
   };
+
   const handleCancelDelete = () => {
     setIsConfirmVisible(false);
   };
@@ -41,22 +44,22 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   };
 
   const handleConfirmModify = async () => {
-    try {
-      const response = await axiosInstance.put(`/category/${categoryId}`, {
-        categoryName: modifyValue,
-      });
-
-      if (response.status === 200) {
-        setIsModifyVisible(false);
-        alert("카테고리가 수정되었습니다");
-        window.location.reload();
-      } else {
-        console.error("카테고리 수정 실패:", response);
-      }
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
+    // try {
+    //   const response = await axiosInstance.put(`/category/${categoryId}`, {
+    //     categoryName: modifyValue,
+    //   });
+    //   if (response.status === 200) {
+    //     setIsModifyVisible(false);
+    //     alert("카테고리가 수정되었습니다");
+    //     window.location.reload();
+    //   } else {
+    //     console.error("카테고리 수정 실패:", response);
+    //   }
+    // } catch (error) {
+    //   console.error("오류 발생:", error);
+    // }
   };
+
   return (
     <>
       <Wrapper>
