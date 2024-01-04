@@ -8,6 +8,10 @@ import { useSearchBoard } from "../../../hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 import { AdminContext } from "@/components/AdminProvider";
 import Link from "next/link";
+import {
+  getMicroContent,
+  getSubMicroContent,
+} from "../../../../pages/api/subContents";
 
 interface PageButtonProps {
   $isactive: boolean;
@@ -68,29 +72,42 @@ const MicroContents = () => {
     });
   };
 
+  // useEffect(() => {
+  //   if (category) {
+  //     let apiUrl = `${
+  //       process.env.NEXT_PUBLIC_API_URL
+  //     }/post/${category}?size=16&page=${page - 1}`;
+
+  //     if (subCategory) {
+  //       apiUrl = `${
+  //         process.env.NEXT_PUBLIC_API_URL
+  //       }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
+  //     }
+
+  //     const response = fetch(apiUrl)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setPageItems(data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("게시물을 가져오는 중 오류 발생:", error);
+  //       });
+  //   }
+  // }, [category, page, subCategory]);
+
   useEffect(() => {
-    if (category) {
-      let apiUrl = `${
-        process.env.NEXT_PUBLIC_API_URL
-      }/post/${category}?size=16&page=${page - 1}`;
-
-      if (subCategory) {
-        apiUrl = `${
-          process.env.NEXT_PUBLIC_API_URL
-        }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
+    async function fetchData() {
+      if (category) {
+        const data = await getMicroContent(category, page);
+        setPageItems(data.data);
       }
-
-      const response = fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setPageItems(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
+      if (subCategory) {
+        const subData = await getSubMicroContent(category, subCategory, page);
+        setPageItems(subData.data);
+      }
     }
-  }, [category, page, subCategory]);
-
+    fetchData();
+  }, [category, subCategory, page]);
   return (
     <Container>
       {isAdmin && (
