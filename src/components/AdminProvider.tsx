@@ -9,16 +9,16 @@ export const AdminProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const userRole = async () => {
-      const res = await getUserInfo();
-      if (res.data === "ADMIN") {
-        setIsAdmin(true);
-      }
-    };
-    userRole();
+    if (sessionStorage.getItem("access")) {
+      const userRole = async () => {
+        const res = await getUserInfo();
+        if (res.data === "ADMIN") {
+          setIsAdmin(true);
+        }
+      };
+      userRole();
+    }
   }, []);
-
-  console.log(isAdmin);
 
   return (
     <AdminContext.Provider value={{ isAdmin }}>
