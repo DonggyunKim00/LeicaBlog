@@ -6,6 +6,7 @@ import { AdminContext } from "@/components/AdminProvider";
 import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { getSubCategory } from "../../../../pages/api/subCategory";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -29,7 +30,7 @@ const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
-  const [subCategory, setSubCategory] = useState<string | null>(null);
+  const [subCategory, setSubCategory] = useState<string | null>("");
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -52,31 +53,14 @@ const SubCategoryList: React.FC = () => {
     });
   };
 
-  const fetchData = async (category: any) => {
-    try {
-      if (category) {
-        const categoryResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
-        );
-        if (categoryResponse.ok) {
-          const categoryData = await categoryResponse.json();
-          setCategories(categoryData);
-        } else {
-          console.error(
-            "API request for category failed with status:",
-            categoryResponse.status
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData(category);
+    const fetchCategories = async () => {
+      const data = await getSubCategory(category);
+      setCategories(data);
+    };
+    fetchCategories();
   }, [category, router.query.category, subCategory]);
-
+  3;
   useEffect(() => {
     if (category) {
       const newTotalPages = Math.max(
@@ -84,7 +68,6 @@ const SubCategoryList: React.FC = () => {
         1
       );
       setTotalPages(newTotalPages);
-
       setCurrentPage(1);
     }
   }, [category, categories, subCategory]);
@@ -126,7 +109,7 @@ const SubCategoryList: React.FC = () => {
           </ContentsTitleBox>
 
           {currentItems.map((category: any, index: any) => (
-            <ContentBox key={category.childName}>
+            <ContentBox key={category.id}>
               <CategoryTitle
                 onClick={() => handleCategoryClick(category.childName)}
                 $isActive={category.childName === subCategory}
