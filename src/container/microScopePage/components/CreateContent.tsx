@@ -2,7 +2,10 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../../../pages/api/axiosInstance";
-import { getChildCategory } from "../../../../pages/api/category";
+import {
+  getChildCategory,
+  postChildCategory,
+} from "../../../../pages/api/category";
 
 interface Category {
   name: string;
@@ -14,24 +17,24 @@ const CreateContent: React.FC = () => {
   const { category } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
   const handleCreate = async () => {
-    if (subcategoryName) {
-      try {
-        const response = await axiosInstance.post(`/category/child`, {
-          parentName: category,
-          childName: subcategoryName,
-        });
+    // try {
+    //   const response = await axiosInstance.post(`/category/child`, {
+    //     parentName: category,
+    //     childName: subcategoryName,
+    //   });
 
-        if (response.status === 200) {
-          alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
-          setSubcategoryName("");
-          window.location.reload();
-        } else {
-          console.error("Failed to create subcategory");
-        }
-      } catch (error) {
-        console.error("Error creating subcategory:", error);
-      }
-    }
+    //   if (response.status === 200) {
+    //     alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
+    //     setSubcategoryName("");
+    //     window.location.reload();
+    //   } else {
+    //     console.error("Failed to create subcategory");
+    //   }
+    // } catch (error) {
+    //   console.error("Error creating subcategory:", error);
+    // }
+    postChildCategory(category, subcategoryName);
+    setSubcategoryName("");
   };
 
   return (

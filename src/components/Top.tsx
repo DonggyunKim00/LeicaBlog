@@ -7,6 +7,7 @@ import topPicture from "../../public/img/main/topPicture.png";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
 import axios from "axios";
+import { getParentCategory } from "../../pages/api/category";
 
 interface Category {
   id: number;
@@ -24,25 +25,44 @@ const Top: React.FC = () => {
       query: { category: categoryName },
     });
   };
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get<Category[]>(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
-      );
+  // const fetchCategories = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+  //     );
+  //     const filledCategories = [
+  //       ...response.data,
+  //       ...Array.from(
+  //         { length: Math.max(8 - response.data.length, 0) },
+  //         () => ({ id: -1, name: "" })
+  //       ),
+  //     ];
+  //     setCategories(filledCategories);
+  //   } catch (error) {
+  //     console.error("API 요청 실패:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getParentCategory();
       const filledCategories = [
         ...response.data,
         ...Array.from(
           { length: Math.max(8 - response.data.length, 0) },
-          () => ({ id: -1, name: "" })
+          () => ({
+            id: -1,
+            name: "",
+          })
         ),
       ];
       setCategories(filledCategories);
-    } catch (error) {
-      console.error("API 요청 실패:", error);
-    }
-  };
+    };
 
-  useEffect(() => {
     fetchCategories();
   }, []);
 
