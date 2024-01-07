@@ -3,11 +3,7 @@ import axiosInstance from "./axiosInstance";
 
 export const getUserInfo = async () => {
   try {
-    const res: any = await axiosInstance.get(`/info`, {
-      headers: {
-        Authorization: sessionStorage.getItem("access"),
-      },
-    });
+    const res: any = await axiosInstance.get(`/info`);
     return res;
   } catch (err) {
     return err;

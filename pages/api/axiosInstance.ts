@@ -9,8 +9,8 @@ const axiosInstance = axios.create({
 // 요청을 보내기 전, 수행할 일
 axiosInstance.interceptors.request.use(
   async (config) => {
-    console.log(config);
     config.headers = config.headers ?? {};
+
     // 요청의 컨텐츠타입에 따라 변경
     if (config.data instanceof FormData) {
       config.headers["Content-Type"] = "multipart/form-data";
@@ -22,28 +22,22 @@ axiosInstance.interceptors.request.use(
     if (accessToken) {
       const res = await checkJwt();
       if (res?.status === 200) config.headers.Authorization = accessToken;
-      else if (res === "1002") {
+      else if (res === "1007") {
         // accessToken이 만료되었을때, refreshToken으로 jwt토큰 재발급
         const refreshToken = sessionStorage.getItem("refresh");
-        const newAt = await getNewToken(refreshToken);
-        sessionStorage.setItem("access", newAt.headers.get("Authorization"));
-        sessionStorage.setItem("refresh", newAt.headers.get("Refreshtoken"));
-
+        const newToken = await getNewToken(refreshToken);
+        sessionStorage.setItem("access", newToken.headers.get("Authorization"));
+        sessionStorage.setItem("refresh", newToken.headers.get("Refreshtoken"));
         config.headers.Authorization = sessionStorage.getItem("access");
-      } else if (res === "1006") {
-        sessionStorage.removeItem("access");
-        sessionStorage.removeItem("refresh");
-        alert("로그인이 만료되었습니다. 다시 로그인 해주세요.");
       } else if (res === "1001" || res === "1003" || res === "1004") {
         sessionStorage.removeItem("access");
         sessionStorage.removeItem("refresh");
-        alert(`유효하지않은 토큰입니다 다시 로그인해주세요. ErrorCode ${res}`);
       } else if (res === "1005") {
         sessionStorage.removeItem("access");
         sessionStorage.removeItem("refresh");
-        alert("알 수 없는 오류입니다. 다시 로그인해주세요.");
       } else {
-        alert("알 수 없는 오류입니다.");
+        alert("알 수 없는 오류가 발생하였습니다.");
+        window.location.reload();
       }
     }
     return config;

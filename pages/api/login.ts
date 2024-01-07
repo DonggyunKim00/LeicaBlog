@@ -35,8 +35,12 @@ export async function getNewToken(refreshToken: string | null) {
     });
     return res;
   } catch (error: any) {
-    sessionStorage.removeItem("access");
-    sessionStorage.removeItem("refresh");
+    if (error.response.data.code === "1006") {
+      sessionStorage.removeItem("access");
+      sessionStorage.removeItem("refresh");
+      alert("로그인이 만료되었습니다. 다시 로그인 해주세요.");
+    }
+
     return error.response;
   }
 }
