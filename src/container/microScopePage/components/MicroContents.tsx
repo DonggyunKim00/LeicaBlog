@@ -72,29 +72,6 @@ const MicroContents = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (category) {
-  //     let apiUrl = `${
-  //       process.env.NEXT_PUBLIC_API_URL
-  //     }/post/${category}?size=16&page=${page - 1}`;
-
-  //     if (subCategory) {
-  //       apiUrl = `${
-  //         process.env.NEXT_PUBLIC_API_URL
-  //       }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
-  //     }
-
-  //     const response = fetch(apiUrl)
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setPageItems(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("게시물을 가져오는 중 오류 발생:", error);
-  //       });
-  //   }
-  // }, [category, page, subCategory]);
-
   useEffect(() => {
     async function fetchData() {
       if (category) {

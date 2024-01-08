@@ -3,9 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 import { AdminContext } from "@/components/AdminProvider";
-import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
-import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { getSubCategory } from "../../../../pages/api/subCategory";
 
 interface ListWrapperProps {
@@ -54,13 +51,15 @@ const SubCategoryList: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await getSubCategory(category);
-      setCategories(data);
-    };
-    fetchCategories();
+    if (category) {
+      const fetchCategories = async () => {
+        const data = await getSubCategory(category);
+        setCategories(data);
+      };
+      fetchCategories();
+    }
   }, [category, router.query.category, subCategory]);
-  3;
+
   useEffect(() => {
     if (category) {
       const newTotalPages = Math.max(
