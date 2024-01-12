@@ -70,6 +70,10 @@ export async function putBoard({
         parentName: mainCategory,
         childName: subCategory,
       },
+      category: {
+        parentName: mainCategory,
+        childName: subCategory,
+      },
     });
     if (res.status == 200) {
       alert("게시물 수정 완료");

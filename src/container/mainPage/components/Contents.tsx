@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
+import useMainContents from "@/hooks/contentHook/useMainContent";
+import axios from "axios";
 
 interface Item {
   id: number;
@@ -15,6 +17,11 @@ interface Item {
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
+  // const mainContents = useMainContents();
+  // console.log("메인", mainContents);
+  // useEffect(() => {
+  //   setMainItems(mainContents);
+  // }, [mainContents]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +44,7 @@ const Contents = () => {
 
   useEffect(() => {
     {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/소식 및 프로모션?size=6&page=0`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/1?size=6&page=0`;
 
       const response = fetch(apiUrl)
         .then((response) => response.json())
