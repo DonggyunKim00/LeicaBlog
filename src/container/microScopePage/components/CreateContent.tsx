@@ -11,17 +11,17 @@ interface Category {
 
 const CreateContent: React.FC = () => {
   const router = useRouter();
-  const { category } = router.query;
+  const { categoryName } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
   const handleCreate = async () => {
-    postChildCategory(category, subcategoryName);
+    postChildCategory(categoryName, subcategoryName);
     setSubcategoryName("");
   };
 
   return (
     <ListWrapper>
       <ListTitleBox>
-        <ListTitle>{category}의</ListTitle>
+        <ListTitle>{categoryName}의</ListTitle>
         <ListAmount>세부 카테고리 만들기</ListAmount>
       </ListTitleBox>
       <ListContents>

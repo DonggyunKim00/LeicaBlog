@@ -27,7 +27,7 @@ const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
-  const [subCategory, setSubCategory] = useState<string | null>("");
+  const [subCategory, setSubCategory] = useState<number | null>();
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -41,27 +41,37 @@ const SubCategoryList: React.FC = () => {
   };
 
   const router = useRouter();
-  const { category } = router.query;
+  const { categoryName, categoryId } = router.query;
 
-  const handleCategoryClick = (childName: string) => {
-    setSubCategory(childName);
+  const handleCategoryClick = (
+    subCategoryName: string,
+    subCategoryId: number,
+    categoryId: any,
+    categoryName: any
+  ) => {
+    setSubCategory(subCategory);
     router.push({
-      query: { category, subCategory: childName },
+      query: {
+        subCategoryId: subCategoryId,
+        subCategoryName: subCategoryName,
+        categoryId: categoryId,
+        categoryName: categoryName,
+      },
     });
   };
 
   useEffect(() => {
-    if (category) {
+    if (categoryId) {
       const fetchCategories = async () => {
-        const data = await getSubCategory(category);
+        const data = await getSubCategory(categoryId);
         setCategories(data);
       };
       fetchCategories();
     }
-  }, [category, router.query.category, subCategory]);
+  }, [categoryId, router.query.category, subCategory]);
 
   useEffect(() => {
-    if (category) {
+    if (categoryId) {
       const newTotalPages = Math.max(
         Math.ceil(categories.length / itemsPerPage),
         1
@@ -69,7 +79,7 @@ const SubCategoryList: React.FC = () => {
       setTotalPages(newTotalPages);
       setCurrentPage(1);
     }
-  }, [category, categories, subCategory]);
+  }, [categoryId, categories, subCategory]);
 
   const getPaginatedData = (data: any) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -87,12 +97,12 @@ const SubCategoryList: React.FC = () => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
     }
-  }, [currentPage, totalPages, category]);
+  }, [currentPage, totalPages, categoryId]);
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
-        <ListTitle>{category}</ListTitle>
+        <ListTitle>{categoryName}</ListTitle>
 
         <ListAmount>{categories.length}개의 카테고리</ListAmount>
 
@@ -110,7 +120,14 @@ const SubCategoryList: React.FC = () => {
           {currentItems.map((category: any, index: any) => (
             <ContentBox key={category.id}>
               <CategoryTitle
-                onClick={() => handleCategoryClick(category.childName)}
+                onClick={() =>
+                  handleCategoryClick(
+                    category.childName,
+                    category.id,
+                    categoryId,
+                    categoryName
+                  )
+                }
                 $isActive={category.childName === subCategory}
               >
                 {category.childName}

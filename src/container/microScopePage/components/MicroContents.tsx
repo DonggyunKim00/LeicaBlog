@@ -41,7 +41,8 @@ interface ItemNameProps {
 const MicroContents = () => {
   const router = useRouter();
   const { isAdmin } = useContext(AdminContext);
-  const { category, subCategory } = router.query;
+  const { categoryName, categoryId, subCategoryName, subCategoryId } =
+    router.query;
 
   const [pageItems, setPageItems] = useState<ResponseDataItem>({
     totalElement: 0,
@@ -74,17 +75,21 @@ const MicroContents = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (category) {
-        const data = await getMicroContent(category, page);
+      if (categoryId) {
+        const data = await getMicroContent(categoryId, page);
         setPageItems(data.data);
       }
-      if (subCategory) {
-        const subData = await getSubMicroContent(category, subCategory, page);
+      if (subCategoryId) {
+        const subData = await getSubMicroContent(
+          categoryId,
+          subCategoryId,
+          page
+        );
         setPageItems(subData.data);
       }
     }
     fetchData();
-  }, [category, subCategory, page]);
+  }, [categoryId, subCategoryId, page]);
   return (
     <Container>
       {isAdmin && (
@@ -97,9 +102,9 @@ const MicroContents = () => {
           <MainItemWrapper>
             {pageItems.childList.length === 0 ? (
               <NoPostsMessage>
-                {subCategory
-                  ? `${category} - ${subCategory}에 게시물이 없습니다.`
-                  : `${category}에 게시물이 없습니다.`}
+                {subCategoryId
+                  ? `${categoryName} - ${subCategoryName}에 게시물이 없습니다.`
+                  : `${categoryName}에 게시물이 없습니다.`}
               </NoPostsMessage>
             ) : (
               pageItems?.childList.map((item: ChildrenList) => (

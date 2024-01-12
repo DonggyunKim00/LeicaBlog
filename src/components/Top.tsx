@@ -16,13 +16,13 @@ interface Category {
 
 const Top: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<number | null>(null);
 
-  const handleCategoryClick = (categoryName: string) => {
-    setCurrentCategory(categoryName);
+  const handleCategoryClick = (categoryId: number, categoryName: string) => {
+    setCurrentCategory(categoryId);
     Router.push({
       pathname: pathName.MICROSCOPE,
-      query: { category: categoryName },
+      query: { categoryId: categoryId, categoryName: categoryName },
     });
   };
   // const fetchCategories = async () => {
@@ -86,7 +86,9 @@ const Top: React.FC = () => {
           <ScopeMenuBox
             key={index}
             onClick={() =>
-              category.name == "" ? null : handleCategoryClick(category.name)
+              category.name == ""
+                ? null
+                : handleCategoryClick(category.id, category.name)
             }
             $showafter={index === 3 || index === 7 ? false : true}
             $isEmpty={categories[index]?.name === ""}
