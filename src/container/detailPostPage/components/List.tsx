@@ -17,6 +17,8 @@ interface Post {
   writer: string;
   category: string;
   parentCategory: string;
+  parentCategoryId: number;
+  childCategoryId: number;
 }
 interface ResponseDataItem {
   totalElement: number;
@@ -65,11 +67,13 @@ const ContentsList: React.FC = () => {
 
   useEffect(() => {
     if (id && post) {
-      const { parentCategory, category } = post;
+      const { parentCategoryId, childCategoryId } = post;
       fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/post/${parentCategory}/${category}?size=${size}&page=${page - 1}`
+        }/post/${parentCategoryId}/${childCategoryId}?size=${size}&page=${
+          page - 1
+        }`
       )
         .then((response) => response.json())
         .then((data) => {
