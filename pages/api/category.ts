@@ -12,11 +12,11 @@ export async function getParentCategory() {
   }
 }
 
-export async function getChildCategory(categoryName: string) {
+export async function getChildCategory(categoryId: number) {
   try {
-    if (categoryName) {
+    if (categoryId) {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryName}`
+        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`
       );
       return res;
     } else return { data: [] };
@@ -27,11 +27,12 @@ export async function getChildCategory(categoryName: string) {
 
 export const postChildCategory = async (
   parentName: string | string[] | undefined,
-  childName: string
+  childName: string,
+  parentId: string | string[] | undefined
 ) => {
   try {
     const response = await axiosInstance.post(`/category/child`, {
-      parentName: parentName,
+      parentId: parentId,
       childName: childName,
     });
     if (response.status === 200) {

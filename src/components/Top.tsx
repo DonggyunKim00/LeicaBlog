@@ -10,8 +10,8 @@ import axios from "axios";
 import { getParentCategory } from "../../pages/api/category";
 
 interface Category {
-  id: number;
-  name: string;
+  parentId: number;
+  parentName: string;
 }
 
 const Top: React.FC = () => {
@@ -86,14 +86,14 @@ const Top: React.FC = () => {
           <ScopeMenuBox
             key={index}
             onClick={() =>
-              category.name == ""
+              category.parentName == ""
                 ? null
-                : handleCategoryClick(category.id, category.name)
+                : handleCategoryClick(category.parentId, category.parentName)
             }
             $showafter={index === 3 || index === 7 ? false : true}
-            $isEmpty={categories[index]?.name === ""}
+            $isEmpty={categories[index]?.parentName === ""}
           >
-            {category.name}
+            {category.parentName}
           </ScopeMenuBox>
         ))}
       </ScopeMenuWrapper>

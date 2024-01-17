@@ -11,10 +11,10 @@ interface Category {
 
 const CreateContent: React.FC = () => {
   const router = useRouter();
-  const { categoryName } = router.query;
+  const { categoryId, categoryName } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
   const handleCreate = async () => {
-    postChildCategory(categoryName, subcategoryName);
+    postChildCategory(categoryName, subcategoryName, categoryId);
     setSubcategoryName("");
   };
 

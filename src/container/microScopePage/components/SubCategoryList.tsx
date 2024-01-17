@@ -41,7 +41,7 @@ const SubCategoryList: React.FC = () => {
   };
 
   const router = useRouter();
-  const { categoryName, categoryId } = router.query;
+  const { categoryName, categoryId, subCategoryName } = router.query;
 
   const handleCategoryClick = (
     subCategoryName: string,
@@ -118,17 +118,17 @@ const SubCategoryList: React.FC = () => {
           </ContentsTitleBox>
 
           {currentItems.map((category: any, index: any) => (
-            <ContentBox key={category.id}>
+            <ContentBox key={category.childId}>
               <CategoryTitle
                 onClick={() =>
                   handleCategoryClick(
                     category.childName,
-                    category.id,
+                    category.childId,
                     categoryId,
                     categoryName
                   )
                 }
-                $isActive={category.childName === subCategory}
+                $isActive={category.childName === subCategoryName}
               >
                 {category.childName}
               </CategoryTitle>
@@ -149,7 +149,7 @@ const SubCategoryList: React.FC = () => {
                   </DetailBtn>
                   {activeModalIndex === index && (
                     <BtnModal>
-                      <CategoryModifyModal categoryId={category.id} />
+                      <CategoryModifyModal categoryId={category.childId} />
                     </BtnModal>
                   )}
                 </ToogleBtnSet>
