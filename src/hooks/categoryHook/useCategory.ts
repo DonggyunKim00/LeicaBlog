@@ -15,10 +15,11 @@ export const useGetParentCategory = (options?: any) => {
   return { data, refetch };
 };
 
-export const useGetCategory = (categoryName: string, options?: any) => {
+export const useGetChildCategory = (parentId: number, options?: any) => {
+  console.log(parentId);
   const { data, refetch } = useQuery(
-    "childCategory",
-    () => getChildCategory(categoryName),
+    ["childCategory", parentId],
+    () => getChildCategory(parentId),
     {
       ...options,
     }

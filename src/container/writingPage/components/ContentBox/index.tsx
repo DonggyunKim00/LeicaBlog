@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { ToolBarDivider } from "../Toolbar/ToolbarDivider";
 import { BsCardImage } from "react-icons/bs";
 import {
-  useGetCategory,
+  useGetChildCategory,
   useGetParentCategory,
 } from "@/hooks/categoryHook/useCategory";
 import { uploadImage } from "../../../../../pages/api/image";
@@ -40,8 +40,9 @@ const ContentBox = ({
   // 초기값 설정을 위한 state
   // update페이지가 아닐때는 기본값이 ""
   // update일때는 기본값이 post에 의존(아래의 useEffect 참조)
-  const [mainCate, setMainCate] = useState<string>("");
-  const [subCate, setSubCate] = useState<string>("");
+  const [mainCateName, setMainCateName] = useState<string>("");
+  const [mainCateId, setMainCateId] = useState<number>(0);
+  const [subCateName, setSubCateName] = useState<string>("");
   const [titleValue, setTitleValue] = useState<string>("");
   const [subTitleValue, setSubTitleValue] = useState<string>("");
 
@@ -51,19 +52,20 @@ const ContentBox = ({
   // 부모 카테고리 get
   const { data: categories } = useGetParentCategory();
   // 자식 카테고리 get
-  const { data, refetch } = useGetCategory(mainCate, {
+  const { data, refetch } = useGetChildCategory(mainCateId, {
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
     // update페이지 일때 post를 이용하여 초기값 설정
     if (post) {
-      setMainCate(post.parentCategory);
-      setSubCate(post.category);
+      setMainCateName(post.parentName);
+      setSubCateName(post.childName);
       setTitleValue(post.title);
       setSubTitleValue(post.subTitle);
       setPreRenderThumbnail(post.thumbnail || "");
       setPreRenderCreatedAt(post.createdAt || "");
+      setMainCateId(post.parentId);
     }
   }, [post, setPreRenderThumbnail, setPreRenderCreatedAt]);
 
@@ -71,9 +73,9 @@ const ContentBox = ({
     // 마운트 이후에 react-hook-form의 value값 초기화.
     // post가 있을때는 초기값이 post값, 없을때는 state 기본값
     refetch();
-    setValue("mainFolder", mainCate);
-    setValue("subFolder", subCate);
-  }, [refetch, setValue, mainCate, subCate]);
+    setValue("mainFolder", mainCateName);
+    setValue("subFolder", subCateName);
+  }, [refetch, setValue, mainCateName, subCateName, mainCateId]);
   useEffect(() => {
     setValue("title", titleValue);
     setValue("subTitle", subTitleValue);
@@ -100,23 +102,30 @@ const ContentBox = ({
           />
           {categories && (
             <SelectBoard
-              value={mainCate}
+              value={mainCateName}
               {...register("mainFolder", {
                 required: {
                   value: true,
                   message: "메인 카테고리를 선택해주세요",
                 },
                 onChange: async (e: any) => {
-                  await setMainCate(e.target.value);
-                  await refetch();
+                  const selectedOption =
+                    e.currentTarget.options[e.target.selectedIndex];
+                  setMainCateName(selectedOption.value);
+                  setMainCateId(Number(selectedOption.dataset.id));
+                  refetch();
                 },
               })}
             >
               <option value="">메인 카테고리를 선택해주세요</option>
               {categories.data.map((item: any) => {
                 return (
-                  <option value={item.name} key={item.id}>
-                    {item.name}
+                  <option
+                    value={item.parentName}
+                    key={item.parentId}
+                    data-id={item.parentId}
+                  >
+                    {item.parentName}
                   </option>
                 );
               })}
@@ -131,29 +140,28 @@ const ContentBox = ({
             name="subFolder"
             render={({ message }) => <ErrorSpan>{message}</ErrorSpan>}
           />
-          {data && (
-            <SelectBoard
-              value={subCate}
-              {...register("subFolder", {
-                required: {
-                  value: true,
-                  message: "하위 카테고리를 선택해주세요.",
-                },
-                onChange: async (e: any) => {
-                  await setSubCate(e.target.value);
-                },
-              })}
-            >
-              <option value="">하위 카테고리를 선택해주세요</option>
-              {data.data.map((item: any) => {
+          <SelectBoard
+            value={subCateName}
+            {...register("subFolder", {
+              required: {
+                value: true,
+                message: "하위 카테고리를 선택해주세요.",
+              },
+              onChange: async (e: any) => {
+                await setSubCateName(e.target.value);
+              },
+            })}
+          >
+            <option value="">하위 카테고리를 선택해주세요</option>
+            {data &&
+              data.data.map((item: any) => {
                 return (
-                  <option value={item.childName} key={item.id}>
+                  <option value={item.childName} key={item.childId}>
                     {item.childName}
                   </option>
                 );
               })}
-            </SelectBoard>
-          )}
+          </SelectBoard>
         </ErrorMessageDiv>
 
         <ToolBarDivider />

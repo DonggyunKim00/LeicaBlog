@@ -12,11 +12,12 @@ export interface Post {
   subTitle: string;
   content: string;
   thumbnail: string;
-  writer: string;
-  category: string;
-  parentCategory: string;
+  childName: string;
+  parentName: string;
   modified_at: string;
   createdAt: string;
+  parentId: number;
+  childId: number;
 }
 
 const Content = () => {
@@ -38,7 +39,7 @@ const Content = () => {
       {post ? (
         <>
           <BoardTitle>
-            <Category>{`${post.parentCategory} - ${post.category}`}</Category>
+            <Category>{`${post.parentName} - ${post.childName}`}</Category>
             <Title>{post.title}</Title>
             <InfoDiv>
               <RoundImage>
