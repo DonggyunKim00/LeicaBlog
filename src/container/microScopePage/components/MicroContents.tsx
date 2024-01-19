@@ -75,21 +75,21 @@ const MicroContents = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (categoryId) {
-        const data = await getMicroContent(categoryId, page);
-        setPageItems(data.data);
-      }
-      if (subCategoryId) {
+      if (categoryId && subCategoryId) {
         const subData = await getSubMicroContent(
           categoryId,
           subCategoryId,
           page
         );
         setPageItems(subData.data);
+      } else if (categoryId) {
+        const data = await getMicroContent(categoryId, page);
+        setPageItems(data.data);
       }
     }
     fetchData();
   }, [categoryId, subCategoryId, page]);
+
   return (
     <Container>
       {isAdmin && (
