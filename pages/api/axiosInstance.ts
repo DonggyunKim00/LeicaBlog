@@ -37,7 +37,8 @@ axiosInstance.interceptors.request.use(
         sessionStorage.removeItem("refresh");
       } else {
         alert("알 수 없는 오류가 발생하였습니다.");
-        window.location.reload();
+        sessionStorage.removeItem("access");
+        sessionStorage.removeItem("refresh");
       }
     }
     return config;
