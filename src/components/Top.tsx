@@ -86,12 +86,12 @@ const Top: React.FC = () => {
           <ScopeMenuBox
             key={index}
             onClick={() =>
-              category.parentName == ""
+              category.parentName == undefined
                 ? null
                 : handleCategoryClick(category.parentId, category.parentName)
             }
             $showafter={index === 3 || index === 7 ? false : true}
-            $isEmpty={categories[index]?.parentName === ""}
+            $isEmpty={categories[index]?.parentName === undefined}
           >
             {category.parentName}
           </ScopeMenuBox>
