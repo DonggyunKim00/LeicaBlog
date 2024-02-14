@@ -296,14 +296,13 @@ const Toolbar = ({
           <ToolBarDivider />
           <ToolbarSelector
             optionArr={[
-              { value: "", label: "이미지,동영상 삽입" },
+              { value: "", label: "이미지 위치 선택" },
               { value: "left" },
               { value: "center" },
               { value: "right" },
             ]}
             command={(value) => {
               const input = document.createElement("input");
-
               input.type = "file";
               input.multiple = true;
               input.onchange = (_) => {
@@ -312,15 +311,26 @@ const Toolbar = ({
                 }
 
                 const files = Array.from(input.files);
+
                 files.forEach(async (file) => {
+                  const img = new Image();
+                  const imageUrl = URL.createObjectURL(file);
+                  img.src = imageUrl;
+
                   const url = await uploadImage({
                     image: file,
                   });
+                  const width = img.width > 990 ? 990 : img.width;
                   if (url)
                     editor
                       ?.chain()
                       .focus()
-                      .setImage({ src: url.toString(), id: value })
+                      .setImage({
+                        src: url.toString(),
+                        id: value,
+                        width: `${width}px`,
+                        height: `${img.height}px`,
+                      })
                       .run();
                 });
               };
