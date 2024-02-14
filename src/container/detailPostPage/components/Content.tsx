@@ -487,4 +487,14 @@ const HtmlCont = styled.div`
     margin-left: 18px;
     list-style-position: inherit;
   }
+
+  .iframe-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    embed {
+      width: 500px;
+      height: 300px;
+    }
+  }
 `;

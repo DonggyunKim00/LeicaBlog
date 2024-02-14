@@ -10,6 +10,7 @@ import {
   BsArrowReturnLeft,
   BsArrowReturnRight,
   BsYoutube,
+  BsCameraVideoFill,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
@@ -337,6 +338,37 @@ const Toolbar = ({
               input.click();
             }}
           />
+          <ToolBarDivider />
+          <ToolbarBtn
+            onClick={() => {
+              const input = document.createElement("input");
+              input.type = "file";
+              input.multiple = true;
+              input.onchange = (_) => {
+                if (!input.files) {
+                  return;
+                }
+
+                const files = Array.from(input.files);
+                files.forEach(async (file) => {
+                  const url = await uploadImage({
+                    image: file,
+                  });
+                  if (url)
+                    editor
+                      ?.chain()
+                      .focus()
+                      .setIframe({
+                        src: url.toString(),
+                      })
+                      .run();
+                });
+              };
+              input.click();
+            }}
+          >
+            <BsCameraVideoFill size="20" />
+          </ToolbarBtn>
           <ToolBarDivider />
           <ToolbarBtn onClick={addYoutubeVideo}>
             <BsYoutube size="20" />
