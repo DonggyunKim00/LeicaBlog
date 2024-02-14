@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { adminLoginApi } from "../../../pages/api/login";
-import { useLogin } from "@/hooks/loginHook/uselogin";
+import { useLogin } from "../../hooks/loginHook/useLogin";
 export interface InputForm {
   id: string;
   password: string;
