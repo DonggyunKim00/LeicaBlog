@@ -16,7 +16,6 @@ export const useGetParentCategory = (options?: any) => {
 };
 
 export const useGetChildCategory = (parentId: number, options?: any) => {
-  console.log(parentId);
   const { data, refetch } = useQuery(
     ["childCategory", parentId],
     () => getChildCategory(parentId),
