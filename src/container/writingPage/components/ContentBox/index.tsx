@@ -244,7 +244,7 @@ const ErrorSpan = styled.span`
   position: relative;
   z-index: 3;
   color: red;
-  font-size: 5px;
+  font-size: 10px;
 `;
 const ThumbnailInput = styled.input`
   display: none;

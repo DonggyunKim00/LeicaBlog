@@ -39,8 +39,8 @@ export async function getNewToken(refreshToken: string | null) {
       sessionStorage.removeItem("access");
       sessionStorage.removeItem("refresh");
       alert("로그인이 만료되었습니다. 다시 로그인 해주세요.");
+      window.location.href = "/";
     }
-
     return error.response;
   }
 }
