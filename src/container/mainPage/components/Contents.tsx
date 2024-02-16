@@ -3,8 +3,6 @@ import styled from "styled-components";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import useMainContents from "@/hooks/contentHook/useMainContent";
-import axios from "axios";
 
 interface Item {
   id: number;
@@ -13,44 +11,64 @@ interface Item {
   content: string;
   createdAt: number;
 }
+interface ParentCategory {
+  parentId: number;
+  parentName: string;
+}
 
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
+  const [parentCategories, setParentCategories] = useState<ParentCategory[]>(
+    []
+  );
+  const LASTID =
+    parentCategories.length > 0
+      ? parentCategories[parentCategories.length - 1].parentId
+      : null;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`);
-        const responseData = await response.json();
+        const mainResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/post`
+        );
+        const mainData = await mainResponse.json();
 
-        if (Array.isArray(responseData.childList)) {
-          const sortedData = responseData.childList;
-          const mainData = sortedData;
-          setMainItems(mainData);
-        } else {
+        if (Array.isArray(mainData.childList)) {
+          setMainItems(mainData.childList);
         }
       } catch (error) {
-        console.error("데이터를 가져오는 중 오류 발생:", error);
+        console.error("메인 아이템을 가져오는 중 오류 발생:", error);
+      }
+      if (LASTID !== null)
+        try {
+          const subResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/post/${LASTID}?size=6&page=0`
+          );
+          const subData = await subResponse.json();
+
+          if (Array.isArray(subData.childList)) {
+            setSubItems(subData.childList);
+          }
+        } catch (error) {
+          console.error("서브 아이템을 가져오는 중 오류 발생:", error);
+        }
+
+      try {
+        const parentCategoryResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+        );
+        const parentCategoryData = await parentCategoryResponse.json();
+
+        setParentCategories(parentCategoryData);
+      } catch (error) {
+        console.error("부모 카테고리를 가져오는 중 오류 발생:", error);
       }
     };
+
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/1?size=6&page=0`;
-
-      const response = fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setSubItems(data.childList);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
-    }
-  }, []);
+  }, [LASTID]);
 
   const handleDetailClick = (itemId: number) => {
     Router.push({
@@ -86,7 +104,7 @@ const Contents = () => {
       <Line />
       <SubItemTitle>- 라이카 news</SubItemTitle>
 
-      {/* <SubItemWrapper>
+      <SubItemWrapper>
         {subItems.map((subItem) => (
           <SubItemBox
             key={subItem.id}
@@ -113,7 +131,7 @@ const Contents = () => {
             </SubItemSpan>
           </SubItemBox>
         ))}
-      </SubItemWrapper> */}
+      </SubItemWrapper>
     </Wrapper>
   );
 };
