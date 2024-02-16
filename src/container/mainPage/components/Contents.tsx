@@ -17,11 +17,6 @@ interface Item {
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
-  // const mainContents = useMainContents();
-  // console.log("메인", mainContents);
-  // useEffect(() => {
-  //   setMainItems(mainContents);
-  // }, [mainContents]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,7 +86,7 @@ const Contents = () => {
       <Line />
       <SubItemTitle>- 라이카 news</SubItemTitle>
 
-      <SubItemWrapper>
+      {/* <SubItemWrapper>
         {subItems.map((subItem) => (
           <SubItemBox
             key={subItem.id}
@@ -118,7 +113,7 @@ const Contents = () => {
             </SubItemSpan>
           </SubItemBox>
         ))}
-      </SubItemWrapper>
+      </SubItemWrapper> */}
     </Wrapper>
   );
 };
