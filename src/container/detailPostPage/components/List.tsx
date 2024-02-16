@@ -1,9 +1,8 @@
-import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
-import { Router, useRouter } from "next/router";
-import React, { useState, useEffect, use } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import PagenateBox from "@/components/PagenateBox";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -26,24 +25,16 @@ interface ResponseDataItem {
   totalPage: number;
   childList: any[];
 }
-interface PageButtonProps {
-  $isactive: boolean;
-}
+
 const ContentsList: React.FC = () => {
-  const [showList, setShowList] = useState<boolean>(true);
   const router = useRouter();
   const { id } = router.query;
-  const [post, setPost] = useState<Post | null>(null);
+  const page = Number(router.query.page) || 1;
+
+  const [showList, setShowList] = useState<boolean>(true);
   const [childrenPost, setChildrenPost] = useState<ResponseDataItem | null>(
     null
   );
-  const [pageItems, setPageItems] = useState<ResponseDataItem>({
-    totalElement: 0, // totalElement로 바뀔예정
-    lastPage: false,
-    totalPage: 1,
-    childList: [],
-  });
-  const page = Number(router.query.page) || 1;
   const [size, setSize] = useState(5);
   const [controllerToggle, setControllerToggle] = useState(false);
   const sizeOptions = [5, 10, 15, 20, 30];
@@ -52,6 +43,7 @@ const ContentsList: React.FC = () => {
     setShowList((prevState) => !prevState);
   };
 
+  const [post, setPost] = useState<Post | null>(null);
   useEffect(() => {
     if (id) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/find/${id}`)
@@ -65,6 +57,12 @@ const ContentsList: React.FC = () => {
     }
   }, [id]);
 
+  const [pageItems, setPageItems] = useState<ResponseDataItem>({
+    totalElement: 0,
+    lastPage: false,
+    totalPage: 1,
+    childList: [],
+  });
   useEffect(() => {
     if (id && post) {
       const { parentId, childId } = post;
@@ -83,18 +81,6 @@ const ContentsList: React.FC = () => {
         });
     }
   }, [id, page, post, size]);
-
-  const {
-    currentPage,
-    handlePageChange,
-    pages,
-    handleNextGroup,
-    handlePrevGroup,
-    lastPageGroup,
-    pageGroups,
-  } = useSearchBoard({
-    apiData: pageItems,
-  });
 
   const handleTitleClick = (postId: number) => {
     router.push({
@@ -169,42 +155,7 @@ const ContentsList: React.FC = () => {
                 </PageControlerExpand>
               )}
             </PageControlerLine>
-            <Page>
-              {pageGroups !== 0 && (
-                <div
-                  onClick={() => {
-                    handlePrevGroup(pageGroups);
-                  }}
-                >
-                  <span>이전</span>
-                  <BiSolidLeftArrow size="5" />
-                </div>
-              )}
-              {pages ? (
-                pages.map((item: number) => (
-                  <PageButton
-                    key={item}
-                    $isactive={currentPage === item}
-                    onClick={() => handlePageChange(item)}
-                    value={currentPage}
-                  >
-                    {item}
-                  </PageButton>
-                ))
-              ) : (
-                <></>
-              )}
-              {pageGroups !== lastPageGroup && (
-                <div
-                  onClick={() => {
-                    handleNextGroup(pageGroups);
-                  }}
-                >
-                  <span>다음</span>
-                  <BiSolidRightArrow size="5" />
-                </div>
-              )}
-            </Page>
+            <PagenateBox apiData={pageItems} size={20} />
           </ListContents>
         )}
       </ListWrapper>
@@ -303,33 +254,6 @@ const CategoryTitle = styled.div`
 const CategoryAmount = styled.div`
   font-size: 12px;
   color: rgb(146, 146, 146);
-`;
-
-const Page = styled.div`
-  width: 936px;
-  height: 27px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-const PageButton = styled.button<PageButtonProps>`
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  background-color: white;
-  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
-  cursor: pointer;
-  outline: none;
-  &:hover {
-    border: 2px solid #d3d3d3;
-  }
 `;
 
 const PageControlerLine = styled.div`
