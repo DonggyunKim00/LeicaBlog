@@ -1,6 +1,9 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import {
+  deleteChildCategory,
+  putChildCategory,
+} from "../../../../pages/api/category";
 
 const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   categoryId,
@@ -12,24 +15,12 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   const handleDeleteClick = () => {
     setIsConfirmVisible(true);
   };
-  const handleConfirmDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/child/${categoryId}`,
-        { withCredentials: true }
-      );
 
-      if (response.status === 200) {
-        alert("카테고리가 삭제되었습니다");
-        setIsConfirmVisible(false);
-        window.location.reload();
-      } else {
-        console.error("카테고리 삭제 실패:", response);
-      }
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
+  const handleConfirmDelete = async () => {
+    setIsConfirmVisible(false);
+    deleteChildCategory(categoryId);
   };
+
   const handleCancelDelete = () => {
     setIsConfirmVisible(false);
   };
@@ -42,30 +33,10 @@ const CategoryModifyModal: React.FC<{ categoryId: number | null }> = ({
   };
 
   const handleConfirmModify = async () => {
-    try {
-      console.log(modifyValue);
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`,
-        {
-          categoryName: modifyValue,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("카테고리 수정 성공");
-        setIsModifyVisible(false);
-        alert("카테고리가 수정되었습니다");
-        window.location.reload();
-      } else {
-        console.error("카테고리 수정 실패:", response);
-      }
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
+    putChildCategory(categoryId, modifyValue);
+    setIsModifyVisible(false);
   };
+
   return (
     <>
       <Wrapper>
@@ -132,6 +103,7 @@ const DeleteBtn = styled.div`
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
+    border-bottom-left-radius: 17px;
   }
 `;
 
@@ -145,6 +117,8 @@ const ModifyBtn = styled.div`
   &:hover {
     cursor: pointer;
     background-color: rgb(199, 199, 199);
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
   }
 `;
 

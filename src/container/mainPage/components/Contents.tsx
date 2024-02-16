@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
+import useMainContents from "@/hooks/contentHook/useMainContent";
+import axios from "axios";
 
 interface Item {
   id: number;
@@ -12,10 +14,14 @@ interface Item {
   createdAt: number;
 }
 
-
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
+  // const mainContents = useMainContents();
+  // console.log("메인", mainContents);
+  // useEffect(() => {
+  //   setMainItems(mainContents);
+  // }, [mainContents]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,13 +44,12 @@ const Contents = () => {
 
   useEffect(() => {
     {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/소식 및 프로모션?size=6&page=0`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/1?size=6&page=0`;
 
       const response = fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           setSubItems(data.childList);
-          console.log(data);
         })
         .catch((error) => {
           console.error("게시물을 가져오는 중 오류 발생:", error);
@@ -63,25 +68,20 @@ const Contents = () => {
     <Wrapper>
       <MainItemWrapper>
         {mainItems.map((item) => (
-          <MainItemBox
-            onClick={() => handleDetailClick(item.id)}
-            key={item.id}
-          >
+          <MainItemBox onClick={() => handleDetailClick(item.id)} key={item.id}>
             <MainItemImg>
-              {item.thumbnail && item.thumbnail !== "none" ? (
-                <Image src={item.thumbnail} alt="" width={180} height={185} />
-              ) : (
-                <Image
-                  src={"/img/main/header.png"}
-                  alt=""
-                  width={180}
-                  height={185}
-                />
-              )}
+              <Image
+                src={
+                  item.thumbnail && item.thumbnail !== "none"
+                    ? item.thumbnail
+                    : "/img/LeicaDefaultImage.png"
+                }
+                alt=""
+                width={180}
+                height={185}
+              />
             </MainItemImg>
-            <MainItemName>
-              {item.title}
-            </MainItemName>
+            <MainItemName>{item.title}</MainItemName>
             <MainItemDate>
               {new Date(item.createdAt).toLocaleDateString()}
             </MainItemDate>
@@ -102,7 +102,7 @@ const Contents = () => {
                 <Image src={subItem.thumbnail} alt="" width={90} height={90} />
               ) : (
                 <Image
-                  src={"/img/main/header.png"}
+                  src={"/img/LeciaDefaultImage.png"}
                   alt=""
                   width={90}
                   height={90}
@@ -110,12 +110,8 @@ const Contents = () => {
               )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName >
-                {subItem.title}
-              </SubItemName>
-              <SubItemContent >
-                {subItem.content}
-              </SubItemContent>
+              <SubItemName>{subItem.title}</SubItemName>
+              <SubItemContent>{subItem.content}</SubItemContent>
               <SubItemDate>
                 {new Date(subItem.createdAt).toLocaleDateString()}
               </SubItemDate>
@@ -156,6 +152,7 @@ const MainItemImg = styled.div`
 const MainItemName = styled.div`
   width: 180px;
   height: 16px;
+  display: flex;
   align-items: center;
   font-size: 13px;
   font-weight: 600;
@@ -163,9 +160,9 @@ const MainItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
- &:hover{
-  text-decoration: underline;
- }
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 const MainItemDate = styled.div`
   width: 180px;
@@ -238,8 +235,8 @@ const SubItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  &:hover{
-    text-decoration : underline;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
@@ -251,9 +248,9 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-&:hover{
-  text-decoration : underline;
-}
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const SubItemDate = styled.div`

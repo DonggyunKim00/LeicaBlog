@@ -29,7 +29,6 @@ const Preview = ({ ...props }: PreviewData) => {
   // yyyy.mm.dd. 형식으로 문자열을 만든다.
   const formattedDate = `${year}.${month}.${day}`;
 
-  console.log(props);
   return (
     <Wrapper>
       <Box>

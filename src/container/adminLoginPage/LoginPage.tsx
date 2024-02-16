@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { adminLoginApi } from "../../../pages/api/login";
-
+import { useLogin } from "../../hooks/loginHook/useLogin";
 export interface InputForm {
   id: string;
   password: string;
@@ -11,35 +10,44 @@ export interface InputForm {
 const LoginPage = () => {
   const [form, setForm] = useState<InputForm>({ id: "", password: "" });
 
+  const { mutate, isLoading } = useLogin(form);
   return (
     <Container>
       <Title>관리자 로그인</Title>
       <InputDiv
         onSubmit={async (e: any) => {
           await e.preventDefault();
-          await adminLoginApi(form);
+          await mutate();
         }}
       >
-        <Id
-          placeholder="id를 입력해주세요"
-          value={form.id}
-          onChange={(e: any) => setForm({ ...form, id: e.target.value })}
-        />
-        <Password
-          placeholder="password를 입력해주세요"
-          type="password"
-          value={form.password}
-          onChange={(e: any) => setForm({ ...form, password: e.target.value })}
-        />
-        <LoginBtn
-          type="submit"
-          onClick={(e: any) => {
-            e.preventDefault();
-            adminLoginApi(form);
-          }}
-        >
-          로그인
-        </LoginBtn>
+        {isLoading ? (
+          <span>Loading...</span>
+        ) : (
+          <>
+            <Id
+              placeholder="id를 입력해주세요"
+              value={form.id}
+              onChange={(e: any) => setForm({ ...form, id: e.target.value })}
+            />
+            <Password
+              placeholder="password를 입력해주세요"
+              type="password"
+              value={form.password}
+              onChange={(e: any) =>
+                setForm({ ...form, password: e.target.value })
+              }
+            />
+            <LoginBtn
+              type="submit"
+              onClick={(e: any) => {
+                e.preventDefault();
+                adminLoginApi(form);
+              }}
+            >
+              로그인
+            </LoginBtn>
+          </>
+        )}
       </InputDiv>
     </Container>
   );

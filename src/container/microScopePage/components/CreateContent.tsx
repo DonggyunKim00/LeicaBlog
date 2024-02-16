@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { getChildCategory } from "../../../../pages/api/category";
+
+import { postChildCategory } from "../../../../pages/api/category";
 
 interface Category {
   name: string;
@@ -11,39 +11,17 @@ interface Category {
 
 const CreateContent: React.FC = () => {
   const router = useRouter();
-  const { category } = router.query;
+  const { categoryId, categoryName } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
   const handleCreate = async () => {
-    if (subcategoryName) {
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
-          {
-            parentName: category,
-            childName: subcategoryName,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.status === 200) {
-          alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
-          setSubcategoryName("");
-          window.location.reload();
-        } else {
-          console.error("Failed to create subcategory");
-        }
-      } catch (error) {
-        console.error("Error creating subcategory:", error);
-      }
-    }
+    postChildCategory(categoryName, subcategoryName, categoryId);
+    setSubcategoryName("");
   };
 
   return (
     <ListWrapper>
       <ListTitleBox>
-        <ListTitle>{category}의</ListTitle>
+        <ListTitle>{categoryName}의</ListTitle>
         <ListAmount>세부 카테고리 만들기</ListAmount>
       </ListTitleBox>
       <ListContents>

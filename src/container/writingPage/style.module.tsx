@@ -156,7 +156,7 @@ export const Container = styled.div`
   }
 
   .ProseMirror blockquote.openEndQuoteGray {
-    ::before {
+    &::before {
       content: "";
       display: inline-block;
       margin-right: 30px;
@@ -170,7 +170,7 @@ export const Container = styled.div`
       border-collapse: collapse;
       color: rgb(37, 37, 37);
     }
-    ::after {
+    &::after {
       content: "";
       display: inline-block;
       margin-left: 30px;
@@ -187,7 +187,7 @@ export const Container = styled.div`
   }
 
   .ProseMirror blockquote.openEndQuoteDark {
-    ::before {
+    &::before {
       content: "";
       display: inline-block;
       margin-right: 30px;
@@ -201,7 +201,7 @@ export const Container = styled.div`
       border-collapse: collapse;
       color: rgb(0, 0, 0);
     }
-    ::after {
+    &::after {
       content: "";
       display: inline-block;
       margin-left: 30px;
@@ -222,27 +222,27 @@ export const Container = styled.div`
     margin-bottom: 50px;
     margin: 50px 300px;
     padding: 20px 30px;
-    ::before,
-    ::after {
+    &::before,
+    &::after {
       content: "";
       position: absolute;
       width: 26px;
       height: 26px;
       border: solid #4a4a4a;
     }
-    ::before {
+    &::before {
       top: -30px;
       left: -30px;
       border-width: 6px 0 0 6px;
     }
-    ::after {
+    &::after {
       bottom: -30px;
       right: -30px;
       border-width: 0 6px 6px 0;
     }
   }
 
-  .ProseMirror blockquote.paperBoardQuote {
+  .ProseMirror > blockquote.paperBoardQuote {
     max-width: 460px;
     padding: 33px 33px 0;
     border: solid #d5d5d5;
@@ -251,7 +251,7 @@ export const Container = styled.div`
     position: relative;
     margin: 50px auto;
     box-sizing: border-box;
-    ::before {
+    &::before {
       width: 47px;
       height: 48px;
       content: "";
@@ -263,7 +263,7 @@ export const Container = styled.div`
       background-repeat: no-repeat;
       background-size: 432px 428px;
     }
-    ::after {
+    &::after {
       content: "";
       position: absolute;
       top: 100%;
@@ -290,7 +290,7 @@ export const Container = styled.div`
     position: relative;
     margin: auto;
     margin-bottom: 50px;
-    ::before {
+    &::before {
       content: "";
       position: absolute;
       left: -5px;
@@ -307,7 +307,7 @@ export const Container = styled.div`
         #e4e4e4
       );
     }
-    ::after {
+    &::after {
       content: "";
       position: absolute;
       top: 100%;
@@ -376,5 +376,15 @@ export const Container = styled.div`
   .ProseMirror ol {
     margin-left: 18px;
     list-style-position: inherit;
+  }
+
+  .iframe-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    embed {
+      width: 500px;
+      height: 300px;
+    }
   }
 `;

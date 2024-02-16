@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -6,6 +6,11 @@ import Router from "next/router";
 import { pathName } from "@/config/pathName";
 import { useSearchBoard } from "../../../hooks/pagenateHook/usePagenate";
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
+import { AdminContext } from "@/components/AdminProvider";
+import {
+  getMicroContent,
+  getSubMicroContent,
+} from "../../../../pages/api/subContents";
 
 interface PageButtonProps {
   $isactive: boolean;
@@ -32,10 +37,11 @@ interface ChildrenList {
 interface ItemNameProps {
   $hoveredItem: boolean;
 }
-
 const MicroContents = () => {
   const router = useRouter();
-  const { category, subCategory } = router.query;
+  const { isAdmin } = useContext(AdminContext);
+  const { categoryName, categoryId, subCategoryName, subCategoryId } =
+    router.query;
 
   const [pageItems, setPageItems] = useState<ResponseDataItem>({
     totalElement: 0,
@@ -59,7 +65,6 @@ const MicroContents = () => {
     apiData: pageItems,
   });
 
-  console.log(pageItems);
   const handleDetailClick = (itemId: number) => {
     Router.push({
       pathname: pathName.DETAIL,
@@ -68,39 +73,32 @@ const MicroContents = () => {
   };
 
   useEffect(() => {
-    if (category) {
-      console.log(category);
-      let apiUrl = `${
-        process.env.NEXT_PUBLIC_API_URL
-      }/post/${category}?size=16&page=${page - 1}`;
-
-      if (subCategory) {
-        apiUrl = `${
-          process.env.NEXT_PUBLIC_API_URL
-        }/post/${category}/${subCategory}?size=16&page=${page - 1}`;
+    async function fetchData() {
+      if (categoryId && subCategoryId) {
+        const subData = await getSubMicroContent(
+          categoryId,
+          subCategoryId,
+          page
+        );
+        setPageItems(subData.data);
+      } else if (categoryId) {
+        const data = await getMicroContent(categoryId, page);
+        setPageItems(data.data);
       }
-
-      const response = fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setPageItems(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
     }
-  }, [category, page, subCategory]);
+    fetchData();
+  }, [categoryId, subCategoryId, page]);
 
   return (
-    <div>
+    <Container>
       <Box>
         <Wrapper>
           <MainItemWrapper>
             {pageItems.childList.length === 0 ? (
               <NoPostsMessage>
-                {subCategory
-                  ? `${category} - ${subCategory}에 게시물이 없습니다.`
-                  : `${category}에 게시물이 없습니다.`}
+                {subCategoryId
+                  ? `${categoryName} - ${subCategoryName}에 게시물이 없습니다.`
+                  : `${categoryName}에 게시물이 없습니다.`}
               </NoPostsMessage>
             ) : (
               pageItems?.childList.map((item: ChildrenList) => (
@@ -112,7 +110,11 @@ const MicroContents = () => {
                 >
                   <MainItemImg>
                     <Image
-                      src={item.thumbnail}
+                      src={
+                        item.thumbnail && item.thumbnail !== "none"
+                          ? item.thumbnail
+                          : "/img/LeicaDefaultImage.png"
+                      }
                       alt=""
                       width={200}
                       height={200}
@@ -168,17 +170,23 @@ const MicroContents = () => {
           </PageBox>
         </PageBoxContainer>
       )}
-    </div>
+    </Container>
   );
 };
 
 export default MicroContents;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 966px;
+  margin: auto;
+`;
 const Box = styled.div`
   width: 966px;
   height: auto;
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
-  margin: auto;
   justify-content: center;
   padding: 40px 35px;
 `;
@@ -228,45 +236,45 @@ const MainItemDate = styled.div`
   color: rgb(146, 146, 146);
 `;
 
-  const PageBox = styled.div`
-    width: 966px;
-    height: 60px;
-    border: 3px solid rgb(199, 199, 199);
-    border-radius: 5px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
-  const PageBoxContainer = styled.div`
-    margin-top: 8px;
-  `;
+const PageBox = styled.div`
+  width: 966px;
+  height: 60px;
+  border: 3px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const PageBoxContainer = styled.div`
+  margin-top: 8px;
+`;
 
-  const Page = styled.div`
-    width: 926px;
-    height: 27px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
+const Page = styled.div`
+  width: 926px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  const PageButton = styled.button<PageButtonProps>`
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 5px;
-    background-color: white;
-    color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-    border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-    font-weight: ${(props) => (props.$isactive ? "600" : "400")};
-    cursor: pointer;
-    outline: none;
-    &:hover {
-      border: 2px solid #d3d3d3;
-    }
-  `;
+const PageButton = styled.button<PageButtonProps>`
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  background-color: white;
+  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
+  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
+  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    border: 2px solid #d3d3d3;
+  }
+`;
 const NoPostsMessage = styled.div`
   margin: 50px auto;
 `;

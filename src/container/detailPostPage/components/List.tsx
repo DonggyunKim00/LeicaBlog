@@ -15,8 +15,10 @@ interface Post {
   content: string;
   thumbnail: string;
   writer: string;
-  category: string;
-  parentCategory: string;
+  childName: string;
+  parentName: string;
+  parentId: number;
+  childId: number;
 }
 interface ResponseDataItem {
   totalElement: number;
@@ -65,11 +67,11 @@ const ContentsList: React.FC = () => {
 
   useEffect(() => {
     if (id && post) {
-      const { parentCategory, category } = post;
+      const { parentId, childId } = post;
       fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/post/${parentCategory}/${category}?size=${size}&page=${page - 1}`
+        }/post/${parentId}/${childId}?size=${size}&page=${page - 1}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -114,7 +116,7 @@ const ContentsList: React.FC = () => {
           {post ? (
             <>
               <ListTitle>
-                {post.parentCategory} - {post.category}
+                {post.parentName} - {post.childName}
               </ListTitle>
               <ListAmount>{childrenPost?.totalElement || 0}개의 글</ListAmount>
             </>

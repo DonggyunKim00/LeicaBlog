@@ -10,6 +10,7 @@ import {
   BsArrowReturnLeft,
   BsArrowReturnRight,
   BsYoutube,
+  BsCameraVideoFill,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
@@ -296,14 +297,51 @@ const Toolbar = ({
           <ToolBarDivider />
           <ToolbarSelector
             optionArr={[
-              { value: "", label: "이미지,동영상 삽입" },
+              { value: "", label: "이미지 위치 선택" },
               { value: "left" },
               { value: "center" },
               { value: "right" },
             ]}
             command={(value) => {
               const input = document.createElement("input");
+              input.type = "file";
+              input.multiple = true;
+              input.onchange = (_) => {
+                if (!input.files) {
+                  return;
+                }
 
+                const files = Array.from(input.files);
+
+                files.forEach(async (file) => {
+                  const img = new Image();
+                  const imageUrl = URL.createObjectURL(file);
+                  img.src = imageUrl;
+
+                  const url = await uploadImage({
+                    image: file,
+                  });
+                  const width = img.width > 990 ? 990 : img.width;
+                  if (url)
+                    editor
+                      ?.chain()
+                      .focus()
+                      .setImage({
+                        src: url.toString(),
+                        id: value,
+                        width: `${width}px`,
+                        height: `${img.height}px`,
+                      })
+                      .run();
+                });
+              };
+              input.click();
+            }}
+          />
+          <ToolBarDivider />
+          <ToolbarBtn
+            onClick={() => {
+              const input = document.createElement("input");
               input.type = "file";
               input.multiple = true;
               input.onchange = (_) => {
@@ -320,13 +358,17 @@ const Toolbar = ({
                     editor
                       ?.chain()
                       .focus()
-                      .setImage({ src: url.toString(), id: value })
+                      .setIframe({
+                        src: url.toString(),
+                      })
                       .run();
                 });
               };
               input.click();
             }}
-          />
+          >
+            <BsCameraVideoFill size="20" />
+          </ToolbarBtn>
           <ToolBarDivider />
           <ToolbarBtn onClick={addYoutubeVideo}>
             <BsYoutube size="20" />

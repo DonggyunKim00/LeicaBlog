@@ -1,21 +1,22 @@
-import axios from "axios";
 import { InputForm } from "@/container/adminLoginPage/LoginPage";
-import { encrypt } from "@/utils/crypto";
-// import secureLocalStorage from "react-secure-storage";
+import axios from "axios";
 
 export const adminLoginApi = async (form: InputForm) => {
   try {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-      memberId: form.id,
-      password: form.password,
-      withCredentials: true,
-    });
-
-    // 로그인 성공할시 Nts-Leica-Login 이라는 string을 AES 암호화 알고리즘으로 암호화하여 세션스토리지에 저장
+    const res: any = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/login`,
+      {
+        memberId: form.id,
+        password: form.password,
+      }
+    );
+    // 로그인 성공시 jwt 토큰을 세션스토리지에 저장
     if (res.status == 200) {
       alert("관리자 로그인 성공");
-      const encryptedData = encrypt("Nts-Leica-Login");
-      sessionStorage.setItem("nts-microscope", encryptedData);
+      const accessToken = res.headers.get("Authorization");
+      const refreshToken = res.headers.get("Refreshtoken");
+      sessionStorage.setItem("access", accessToken);
+      sessionStorage.setItem("refresh", refreshToken);
       window.location.replace("/");
     }
     return res;
@@ -24,3 +25,22 @@ export const adminLoginApi = async (form: InputForm) => {
     return null;
   }
 };
+
+export async function getNewToken(refreshToken: string | null) {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/reissue`, {
+      headers: {
+        Refreshtoken: `${refreshToken}`,
+      },
+    });
+    return res;
+  } catch (error: any) {
+    if (error.response.data.code === "1006") {
+      sessionStorage.removeItem("access");
+      sessionStorage.removeItem("refresh");
+      alert("로그인이 만료되었습니다. 다시 로그인 해주세요.");
+      window.location.href = "/";
+    }
+    return error.response;
+  }
+}
