@@ -4,7 +4,8 @@ export interface IUploadImage {
   image: File;
 }
 
-export async function uploadImage({ image }: IUploadImage) {
+export async function uploadImage({ image }: IUploadImage, setLoading: any) {
+  setLoading(true);
   try {
     const formData = new FormData();
 
@@ -15,6 +16,7 @@ export async function uploadImage({ image }: IUploadImage) {
         "Content-Type": "multipart/form-data",
       },
     });
+    setLoading(false);
     return res.data as string;
   } catch (err: any) {
     // 로그인 안되어있을때 401 에러

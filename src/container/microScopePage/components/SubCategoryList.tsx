@@ -254,7 +254,6 @@ const ContentBox = styled.div`
 const CategoryTitle = styled.div<CategoryTitleProp>`
   width: 800px;
   font-size: 12px;
-  font: 나눔고딕;
   cursor: pointer;
   font-weight: ${(props) => (props.$isActive ? "bold" : "normal")};
 `;
@@ -288,7 +287,6 @@ const BtnModal = styled.div`
 
 const Page = styled.div`
   width: 926px;
-  height: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,32 +294,17 @@ const Page = styled.div`
 `;
 
 const PageButton = styled.button<PageButtonProps>`
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 5px;
-  background-color: white;
   color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
   cursor: pointer;
   outline: none;
+  border-right: 1px solid #dddddd;
+  font-size: 17px;
   &:hover {
-    border: 2px solid #d3d3d3;
+    background-color: #eeeeee; /* 호버 시 보더 스타일 정의 */
   }
-`;
-const PageBox = styled.div`
-  width: 966px;
-  height: 60px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const PageBoxContainer = styled.div`
-  margin-top: 8px;
 `;

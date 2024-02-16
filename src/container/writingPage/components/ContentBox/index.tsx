@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Editor, EditorContent } from "@tiptap/react";
 import styled, { css } from "styled-components";
 import { ToolBarDivider } from "../Toolbar/ToolbarDivider";
@@ -11,6 +11,7 @@ import { uploadImage } from "../../../../../pages/api/image";
 import { ErrorMessage } from "@hookform/error-message";
 import { useRouter } from "next/router";
 import { useIsUpdateBoard } from "@/hooks/boardHook/useBoard";
+import { FileLoadingContext } from "@/components/FileLoadingProvider";
 
 interface ContentBoxProps {
   editor: Editor | null;
@@ -34,9 +35,10 @@ const ContentBox = ({
   preRenderThumbnail,
   setPreRenderCreatedAt,
 }: ContentBoxProps) => {
+  const { setIsLoading } = useContext(FileLoadingContext);
+
   const router = useRouter();
   const boardId = Number(router.query.id);
-
   // 초기값 설정을 위한 state
   // update페이지가 아닐때는 기본값이 ""
   // update일때는 기본값이 post에 의존(아래의 useEffect 참조)
@@ -210,9 +212,12 @@ const ContentBox = ({
 
               const files = Array.from(e.target.files);
               files.forEach(async (file: any) => {
-                const url = await uploadImage({
-                  image: file,
-                });
+                const url = await uploadImage(
+                  {
+                    image: file,
+                  },
+                  setIsLoading
+                );
                 if (preRenderThumbnail) setPreRenderThumbnail(url);
                 else setThumnailUrl(url);
               });

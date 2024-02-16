@@ -1,20 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import { pathName } from "@/config/pathName";
-import { useSearchBoard } from "../../../hooks/pagenateHook/usePagenate";
-import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
-import { AdminContext } from "@/components/AdminProvider";
 import {
   getMicroContent,
   getSubMicroContent,
 } from "../../../../pages/api/subContents";
-
-interface PageButtonProps {
-  $isactive: boolean;
-}
+import PagenateBox from "@/components/PagenateBox";
 
 interface ResponseDataItem {
   totalElement: number;
@@ -39,31 +33,12 @@ interface ItemNameProps {
 }
 const MicroContents = () => {
   const router = useRouter();
-  const { isAdmin } = useContext(AdminContext);
   const { categoryName, categoryId, subCategoryName, subCategoryId } =
     router.query;
 
-  const [pageItems, setPageItems] = useState<ResponseDataItem>({
-    totalElement: 0,
-    lastPage: false,
-    totalPage: 1,
-    childList: [],
-  });
   const [hoveredItem, setHoveredItem] = useState<Number | null>();
 
   const page = Number(router.query.page) || 1;
-
-  const {
-    currentPage,
-    handlePageChange,
-    pages,
-    handleNextGroup,
-    handlePrevGroup,
-    lastPageGroup,
-    pageGroups,
-  } = useSearchBoard({
-    apiData: pageItems,
-  });
 
   const handleDetailClick = (itemId: number) => {
     Router.push({
@@ -72,6 +47,12 @@ const MicroContents = () => {
     });
   };
 
+  const [pageItems, setPageItems] = useState<ResponseDataItem>({
+    totalElement: 0,
+    lastPage: false,
+    totalPage: 1,
+    childList: [],
+  });
   useEffect(() => {
     async function fetchData() {
       if (categoryId && subCategoryId) {
@@ -133,40 +114,7 @@ const MicroContents = () => {
       {pageItems.totalElement !== 0 && (
         <PageBoxContainer>
           <PageBox>
-            <Page>
-              {pageGroups !== 0 && (
-                <div
-                  onClick={() => {
-                    handlePrevGroup(pageGroups);
-                  }}
-                >
-                  <BiSolidLeftArrow size="5" />
-                </div>
-              )}
-              {pages ? (
-                pages.map((item: number) => (
-                  <PageButton
-                    key={item}
-                    $isactive={currentPage === item}
-                    onClick={() => handlePageChange(item)}
-                    value={currentPage}
-                  >
-                    {item}
-                  </PageButton>
-                ))
-              ) : (
-                <></>
-              )}
-              {pageGroups !== lastPageGroup && (
-                <div
-                  onClick={() => {
-                    handleNextGroup(pageGroups);
-                  }}
-                >
-                  <BiSolidRightArrow size="5" />
-                </div>
-              )}
-            </Page>
+            <PagenateBox apiData={pageItems} size={22} />
           </PageBox>
         </PageBoxContainer>
       )}
@@ -248,32 +196,6 @@ const PageBox = styled.div`
 `;
 const PageBoxContainer = styled.div`
   margin-top: 8px;
-`;
-
-const Page = styled.div`
-  width: 926px;
-  height: 27px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const PageButton = styled.button<PageButtonProps>`
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  background-color: white;
-  color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
-  cursor: pointer;
-  outline: none;
-  &:hover {
-    border: 2px solid #d3d3d3;
-  }
 `;
 const NoPostsMessage = styled.div`
   margin: 50px auto;
