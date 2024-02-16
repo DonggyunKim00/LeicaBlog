@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -21,6 +21,7 @@ import { uploadImage } from "../../../../../pages/api/image";
 import { postBoard, putBoard } from "../../../../../pages/api/board";
 import Preview, { PreviewData } from "../Preview";
 import { useRouter } from "next/router";
+import { FileLoadingContext } from "@/components/FileLoadingProvider";
 
 export interface ToolBarProps {
   editor?: Editor | null;
@@ -37,6 +38,8 @@ const Toolbar = ({
   preRenderThumbnail,
   preRenderCreatedAt,
 }: ToolBarProps) => {
+  const { setIsLoading } = useContext(FileLoadingContext);
+
   const router = useRouter();
   const [onPreview, setOnPreview] = useState<boolean>(false);
   const [previewProps, setPreviewProps] = useState<PreviewData>({
@@ -318,9 +321,12 @@ const Toolbar = ({
                   const imageUrl = URL.createObjectURL(file);
                   img.src = imageUrl;
 
-                  const url = await uploadImage({
-                    image: file,
-                  });
+                  const url = await uploadImage(
+                    {
+                      image: file,
+                    },
+                    setIsLoading
+                  );
                   const width = img.width > 990 ? 990 : img.width;
                   if (url)
                     editor
@@ -351,9 +357,12 @@ const Toolbar = ({
 
                 const files = Array.from(input.files);
                 files.forEach(async (file) => {
-                  const url = await uploadImage({
-                    image: file,
-                  });
+                  const url = await uploadImage(
+                    {
+                      image: file,
+                    },
+                    setIsLoading
+                  );
                   if (url)
                     editor
                       ?.chain()
