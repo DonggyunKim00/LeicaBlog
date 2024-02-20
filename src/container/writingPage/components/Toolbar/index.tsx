@@ -302,7 +302,6 @@ const Toolbar = ({
             optionArr={[
               { value: "", label: "이미지 위치 선택" },
               { value: "left" },
-              { value: "center" },
               { value: "right" },
             ]}
             command={(value) => {
@@ -327,7 +326,8 @@ const Toolbar = ({
                     },
                     setIsLoading
                   );
-                  const width = img.width > 990 ? 990 : img.width;
+                  const width = img.width > 880 ? 880 : img.width;
+                  const height = img.height > 840 ? 840 : img.height;
                   if (url)
                     editor
                       ?.chain()
@@ -336,7 +336,7 @@ const Toolbar = ({
                         src: url.toString(),
                         id: value,
                         width: `${width}px`,
-                        height: `${img.height}px`,
+                        height: `${height}px`,
                       })
                       .run();
                 });

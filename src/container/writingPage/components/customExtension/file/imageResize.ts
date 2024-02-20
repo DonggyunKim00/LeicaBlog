@@ -70,7 +70,7 @@ export const ImageResize = Image.extend<ImageOptions>({
         },
       },
       id: {
-        default: "center",
+        default: "left",
         renderHTML: (attributes) => {
           return { id: attributes.id };
         },

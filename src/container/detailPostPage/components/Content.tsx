@@ -162,11 +162,13 @@ const Nick = styled.span`
   color: #252525;
 `;
 const HtmlCont = styled.div`
+  max-width: 880px;
   margin-top: 20px;
   font-size: 16px;
   font-weight: 400;
   line-height: 18px;
   margin-bottom: 100px;
+  overflow: hidden;
   span {
     line-height: 1.8;
   }
