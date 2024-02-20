@@ -8,7 +8,8 @@ export const Container = styled.div`
   background-color: #999999;
 
   .ProseMirror {
-    min-height: 1000px;
+    width: 1000px;
+    min-height: 3000px;
     height: auto;
     padding: 80px 60px;
     font-size: 16px;
@@ -89,7 +90,7 @@ export const Container = styled.div`
   }
   div #right {
     float: right;
-    margin-left: 36px;
+    margin-left: 20px;
     &::before {
       clear: right;
       display: block;
@@ -100,8 +101,8 @@ export const Container = styled.div`
     }
     .resize-trigger {
       position: relative;
-      top: 8px;
-      margin-left: -13px;
+      top: 15px;
+      margin-left: -5px;
     }
   }
 

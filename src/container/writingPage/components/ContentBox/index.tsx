@@ -284,7 +284,7 @@ const FormInputCss = css`
 const ImageWrapper = styled.img`
   position: absolute;
   z-index: 1;
-  width: 1100px;
+  width: 1000px;
   height: 130px;
   margin-top: 24px;
   opacity: 0.9;
@@ -323,7 +323,7 @@ const SelectBoard = styled.select`
   z-index: 2;
 `;
 const Container = styled.div`
-  width: 1100px;
+  width: 880px;
   height: 100%;
 `;
 const TitleDiv = styled.div`
