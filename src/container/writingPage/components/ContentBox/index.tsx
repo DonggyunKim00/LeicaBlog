@@ -323,7 +323,7 @@ const SelectBoard = styled.select`
   z-index: 2;
 `;
 const Container = styled.div`
-  width: 880px;
+  width: 1000px;
   height: 100%;
 `;
 const TitleDiv = styled.div`
