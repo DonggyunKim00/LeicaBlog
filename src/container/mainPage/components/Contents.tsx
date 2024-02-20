@@ -11,46 +11,64 @@ interface Item {
   content: string;
   createdAt: number;
 }
-
+interface ParentCategory {
+  parentId: number;
+  parentName: string;
+}
 
 const Contents = () => {
   const [mainItems, setMainItems] = useState<Item[]>([]);
   const [subItems, setSubItems] = useState<Item[]>([]);
+  const [parentCategories, setParentCategories] = useState<ParentCategory[]>(
+    []
+  );
+  const LASTID =
+    parentCategories.length > 0
+      ? parentCategories[parentCategories.length - 1].parentId
+      : null;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`);
-        const responseData = await response.json();
+        const mainResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/post`
+        );
+        const mainData = await mainResponse.json();
 
-        if (Array.isArray(responseData.childList)) {
-          const sortedData = responseData.childList;
-          const mainData = sortedData;
-          setMainItems(mainData);
-        } else {
+        if (Array.isArray(mainData.childList)) {
+          setMainItems(mainData.childList);
         }
       } catch (error) {
-        console.error("데이터를 가져오는 중 오류 발생:", error);
+        console.error("메인 아이템을 가져오는 중 오류 발생:", error);
+      }
+      if (LASTID !== null)
+        try {
+          const subResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/post/${LASTID}?size=6&page=0`
+          );
+          const subData = await subResponse.json();
+
+          if (Array.isArray(subData.childList)) {
+            setSubItems(subData.childList);
+          }
+        } catch (error) {
+          console.error("서브 아이템을 가져오는 중 오류 발생:", error);
+        }
+
+      try {
+        const parentCategoryResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/category/parent`
+        );
+        const parentCategoryData = await parentCategoryResponse.json();
+
+        setParentCategories(parentCategoryData);
+      } catch (error) {
+        console.error("부모 카테고리를 가져오는 중 오류 발생:", error);
       }
     };
+
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/소식 및 프로모션?size=6&page=0`;
-
-      const response = fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setSubItems(data.childList);
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error("게시물을 가져오는 중 오류 발생:", error);
-        });
-    }
-  }, []);
+  }, [LASTID]);
 
   const handleDetailClick = (itemId: number) => {
     Router.push({
@@ -63,25 +81,20 @@ const Contents = () => {
     <Wrapper>
       <MainItemWrapper>
         {mainItems.map((item) => (
-          <MainItemBox
-            onClick={() => handleDetailClick(item.id)}
-            key={item.id}
-          >
+          <MainItemBox onClick={() => handleDetailClick(item.id)} key={item.id}>
             <MainItemImg>
-              {item.thumbnail && item.thumbnail !== "none" ? (
-                <Image src={item.thumbnail} alt="" width={180} height={185} />
-              ) : (
-                <Image
-                  src={"/img/main/header.png"}
-                  alt=""
-                  width={180}
-                  height={185}
-                />
-              )}
+              <Image
+                src={
+                  item.thumbnail && item.thumbnail !== "none"
+                    ? item.thumbnail
+                    : "/img/LeicaDefaultImage.png"
+                }
+                alt=""
+                width={180}
+                height={185}
+              />
             </MainItemImg>
-            <MainItemName>
-              {item.title}
-            </MainItemName>
+            <MainItemName>{item.title}</MainItemName>
             <MainItemDate>
               {new Date(item.createdAt).toLocaleDateString()}
             </MainItemDate>
@@ -102,7 +115,7 @@ const Contents = () => {
                 <Image src={subItem.thumbnail} alt="" width={90} height={90} />
               ) : (
                 <Image
-                  src={"/img/main/header.png"}
+                  src={"/img/LeciaDefaultImage.png"}
                   alt=""
                   width={90}
                   height={90}
@@ -110,12 +123,8 @@ const Contents = () => {
               )}
             </SubItemImg>
             <SubItemSpan>
-              <SubItemName >
-                {subItem.title}
-              </SubItemName>
-              <SubItemContent >
-                {subItem.content}
-              </SubItemContent>
+              <SubItemName>{subItem.title}</SubItemName>
+              <SubItemContent>{subItem.content}</SubItemContent>
               <SubItemDate>
                 {new Date(subItem.createdAt).toLocaleDateString()}
               </SubItemDate>
@@ -156,6 +165,7 @@ const MainItemImg = styled.div`
 const MainItemName = styled.div`
   width: 180px;
   height: 16px;
+  display: flex;
   align-items: center;
   font-size: 13px;
   font-weight: 600;
@@ -163,9 +173,9 @@ const MainItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
- &:hover{
-  text-decoration: underline;
- }
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 const MainItemDate = styled.div`
   width: 180px;
@@ -238,8 +248,8 @@ const SubItemName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "Dotum";
-  &:hover{
-    text-decoration : underline;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
@@ -251,9 +261,9 @@ const SubItemContent = styled.div`
   color: rgb(37, 37, 37);
   overflow: hidden;
   text-overflow: ellipsis;
-&:hover{
-  text-decoration : underline;
-}
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const SubItemDate = styled.div`

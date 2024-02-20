@@ -29,7 +29,6 @@ const Preview = ({ ...props }: PreviewData) => {
   // yyyy.mm.dd. 형식으로 문자열을 만든다.
   const formattedDate = `${year}.${month}.${day}`;
 
-  console.log(props);
   return (
     <Wrapper>
       <Box>
@@ -89,7 +88,7 @@ const Box = styled.div`
   height: 700px;
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
-  padding: 0px 40px;
+  padding: 0px 37px;
   background-color: white;
   overflow-y: scroll;
 `;
@@ -172,11 +171,13 @@ const Nick = styled.span`
   color: #252525;
 `;
 const HtmlCont = styled.div`
+  max-width: 880px;
   margin-top: 20px;
   font-size: 16px;
   font-weight: 400;
   line-height: 18px;
   margin-bottom: 100px;
+  overflow: hidden;
   span {
     line-height: 1.8;
   }

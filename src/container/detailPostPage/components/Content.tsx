@@ -12,11 +12,12 @@ export interface Post {
   subTitle: string;
   content: string;
   thumbnail: string;
-  writer: string;
-  category: string;
-  parentCategory: string;
+  childName: string;
+  parentName: string;
   modified_at: string;
   createdAt: string;
+  parentId: number;
+  childId: number;
 }
 
 const Content = () => {
@@ -38,7 +39,7 @@ const Content = () => {
       {post ? (
         <>
           <BoardTitle>
-            <Category>{`${post.parentCategory} - ${post.category}`}</Category>
+            <Category>{`${post.parentName} - ${post.childName}`}</Category>
             <Title>{post.title}</Title>
             <InfoDiv>
               <RoundImage>
@@ -161,11 +162,13 @@ const Nick = styled.span`
   color: #252525;
 `;
 const HtmlCont = styled.div`
+  max-width: 880px;
   margin-top: 20px;
   font-size: 16px;
   font-weight: 400;
   line-height: 18px;
   margin-bottom: 100px;
+  overflow: hidden;
   span {
     line-height: 1.8;
   }
@@ -485,5 +488,15 @@ const HtmlCont = styled.div`
   ol {
     margin-left: 18px;
     list-style-position: inherit;
+  }
+
+  .iframe-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    embed {
+      width: 500px;
+      height: 300px;
+    }
   }
 `;

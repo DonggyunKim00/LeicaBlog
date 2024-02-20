@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import ToolbarBtn from "./ToolbarBtn";
 import { Editor } from "@tiptap/react";
 import styled, { css } from "styled-components";
@@ -10,6 +10,7 @@ import {
   BsArrowReturnLeft,
   BsArrowReturnRight,
   BsYoutube,
+  BsCameraVideoFill,
 } from "react-icons/bs";
 import { BiAlignLeft, BiAlignMiddle, BiAlignRight } from "react-icons/bi";
 import ToolbarSelector from "./ToolbarSelector";
@@ -20,6 +21,7 @@ import { uploadImage } from "../../../../../pages/api/image";
 import { postBoard, putBoard } from "../../../../../pages/api/board";
 import Preview, { PreviewData } from "../Preview";
 import { useRouter } from "next/router";
+import { FileLoadingContext } from "@/components/FileLoadingProvider";
 
 export interface ToolBarProps {
   editor?: Editor | null;
@@ -36,6 +38,8 @@ const Toolbar = ({
   preRenderThumbnail,
   preRenderCreatedAt,
 }: ToolBarProps) => {
+  const { setIsLoading } = useContext(FileLoadingContext);
+
   const router = useRouter();
   const [onPreview, setOnPreview] = useState<boolean>(false);
   const [previewProps, setPreviewProps] = useState<PreviewData>({
@@ -296,14 +300,54 @@ const Toolbar = ({
           <ToolBarDivider />
           <ToolbarSelector
             optionArr={[
-              { value: "", label: "이미지,동영상 삽입" },
+              { value: "", label: "이미지 위치 선택" },
               { value: "left" },
-              { value: "center" },
               { value: "right" },
             ]}
             command={(value) => {
               const input = document.createElement("input");
+              input.type = "file";
+              input.multiple = true;
+              input.onchange = (_) => {
+                if (!input.files) {
+                  return;
+                }
 
+                const files = Array.from(input.files);
+
+                files.forEach(async (file) => {
+                  const img = new Image();
+                  const imageUrl = URL.createObjectURL(file);
+                  img.src = imageUrl;
+
+                  const url = await uploadImage(
+                    {
+                      image: file,
+                    },
+                    setIsLoading
+                  );
+                  const width = img.width > 880 ? 880 : img.width;
+                  const height = img.height > 840 ? 840 : img.height;
+                  if (url)
+                    editor
+                      ?.chain()
+                      .focus()
+                      .setImage({
+                        src: url.toString(),
+                        id: value,
+                        width: `${width}px`,
+                        height: `${height}px`,
+                      })
+                      .run();
+                });
+              };
+              input.click();
+            }}
+          />
+          <ToolBarDivider />
+          <ToolbarBtn
+            onClick={() => {
+              const input = document.createElement("input");
               input.type = "file";
               input.multiple = true;
               input.onchange = (_) => {
@@ -313,20 +357,27 @@ const Toolbar = ({
 
                 const files = Array.from(input.files);
                 files.forEach(async (file) => {
-                  const url = await uploadImage({
-                    image: file,
-                  });
+                  const url = await uploadImage(
+                    {
+                      image: file,
+                    },
+                    setIsLoading
+                  );
                   if (url)
                     editor
                       ?.chain()
                       .focus()
-                      .setImage({ src: url.toString(), id: value })
+                      .setIframe({
+                        src: url.toString(),
+                      })
                       .run();
                 });
               };
               input.click();
             }}
-          />
+          >
+            <BsCameraVideoFill size="20" />
+          </ToolbarBtn>
           <ToolBarDivider />
           <ToolbarBtn onClick={addYoutubeVideo}>
             <BsYoutube size="20" />

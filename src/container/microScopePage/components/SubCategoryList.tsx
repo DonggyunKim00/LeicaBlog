@@ -3,9 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import CategoryModifyModal from "./CategoryModifyModal";
 import { AdminContext } from "@/components/AdminProvider";
-import { useSearchBoard } from "@/hooks/pagenateHook/usePagenate";
-import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
-import {MdKeyboardArrowDown,MdKeyboardArrowUp} from "react-icons/md";
+import { getSubCategory } from "../../../../pages/api/subCategory";
 
 interface ListWrapperProps {
   $expanded: boolean;
@@ -29,7 +27,7 @@ const SubCategoryList: React.FC = () => {
   const [showList, setShowList] = useState<boolean>(true);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
-  const [subCategory, setSubCategory] = useState<string | null>(null);
+  const [subCategory, setSubCategory] = useState<number | null>();
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -43,51 +41,45 @@ const SubCategoryList: React.FC = () => {
   };
 
   const router = useRouter();
-  const { category } = router.query;
+  const { categoryName, categoryId, subCategoryName } = router.query;
 
-  const handleCategoryClick = (childName: string) => {
-    setSubCategory(childName);
+  const handleCategoryClick = (
+    subCategoryName: string,
+    subCategoryId: number,
+    categoryId: any,
+    categoryName: any
+  ) => {
+    setSubCategory(subCategory);
     router.push({
-      query: { category, subCategory: childName },
+      query: {
+        subCategoryId: subCategoryId,
+        subCategoryName: subCategoryName,
+        categoryId: categoryId,
+        categoryName: categoryName,
+      },
     });
   };
 
-  const fetchData = async (category: any) => {
-    try {
-      if (category) {
-        const categoryResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/${category}`
-        );
-        if (categoryResponse.ok) {
-          const categoryData = await categoryResponse.json();
-          setCategories(categoryData);
-        } else {
-          console.error(
-            "API request for category failed with status:",
-            categoryResponse.status
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+  useEffect(() => {
+    if (categoryId) {
+      const fetchCategories = async () => {
+        const data = await getSubCategory(categoryId);
+        setCategories(data);
+      };
+      fetchCategories();
     }
-  };
+  }, [categoryId, router.query.category, subCategory]);
 
   useEffect(() => {
-    fetchData(category);
-  }, [category, router.query.category, subCategory]);
-
-  useEffect(() => {
-    if (category) {
+    if (categoryId) {
       const newTotalPages = Math.max(
         Math.ceil(categories.length / itemsPerPage),
         1
       );
       setTotalPages(newTotalPages);
-
       setCurrentPage(1);
     }
-  }, [category, categories, subCategory]);
+  }, [categoryId, categories, subCategory]);
 
   const getPaginatedData = (data: any) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -105,12 +97,12 @@ const SubCategoryList: React.FC = () => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
     }
-  }, [currentPage, totalPages, category]);
+  }, [currentPage, totalPages, categoryId]);
 
   return (
     <ListWrapper $expanded={showList}>
       <ListTitleBox>
-        <ListTitle>{category}</ListTitle>
+        <ListTitle>{categoryName}</ListTitle>
 
         <ListAmount>{categories.length}개의 카테고리</ListAmount>
 
@@ -126,10 +118,17 @@ const SubCategoryList: React.FC = () => {
           </ContentsTitleBox>
 
           {currentItems.map((category: any, index: any) => (
-            <ContentBox key={category.childName}>
+            <ContentBox key={category.childId}>
               <CategoryTitle
-                onClick={() => handleCategoryClick(category.childName)}
-                $isActive={category.childName === subCategory}
+                onClick={() =>
+                  handleCategoryClick(
+                    category.childName,
+                    category.childId,
+                    categoryId,
+                    categoryName
+                  )
+                }
+                $isActive={category.childName === subCategoryName}
               >
                 {category.childName}
               </CategoryTitle>
@@ -150,7 +149,7 @@ const SubCategoryList: React.FC = () => {
                   </DetailBtn>
                   {activeModalIndex === index && (
                     <BtnModal>
-                      <CategoryModifyModal categoryId={category.id} />
+                      <CategoryModifyModal categoryId={category.childId} />
                     </BtnModal>
                   )}
                 </ToogleBtnSet>
@@ -237,7 +236,7 @@ const ContentsTitleSpan = styled.div`
   color: rgb(146, 146, 146);
 `;
 const ContentsAmountSpan = styled.div`
-  margin-left: 785px;
+  margin-left: 800px;
   font-size: 12px;
   padding: 6px 0px 6px 0px;
   color: rgb(146, 146, 146);
@@ -255,7 +254,6 @@ const ContentBox = styled.div`
 const CategoryTitle = styled.div<CategoryTitleProp>`
   width: 800px;
   font-size: 12px;
-  font: 나눔고딕;
   cursor: pointer;
   font-weight: ${(props) => (props.$isActive ? "bold" : "normal")};
 `;
@@ -289,7 +287,6 @@ const BtnModal = styled.div`
 
 const Page = styled.div`
   width: 926px;
-  height: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,32 +294,17 @@ const Page = styled.div`
 `;
 
 const PageButton = styled.button<PageButtonProps>`
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 5px;
-  background-color: white;
   color: ${(props) => (props.$isactive ? "#ff0000" : "black")};
-  border: 2px solid ${(props) => (props.$isactive ? "#d3d3d3" : "white")};
-  font-weight: ${(props) => (props.$isactive ? "600" : "400")};
   cursor: pointer;
   outline: none;
+  border-right: 1px solid #dddddd;
+  font-size: 17px;
   &:hover {
-    border: 2px solid #d3d3d3;
+    background-color: #eeeeee; /* 호버 시 보더 스타일 정의 */
   }
-`;
-const PageBox = styled.div`
-  width: 966px;
-  height: 60px;
-  border: 3px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const PageBoxContainer = styled.div`
-  margin-top: 8px;
 `;

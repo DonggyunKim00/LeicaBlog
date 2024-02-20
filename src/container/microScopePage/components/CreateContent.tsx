@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { getChildCategory } from "../../../../pages/api/category";
+
+import { postChildCategory } from "../../../../pages/api/category";
 
 interface Category {
   name: string;
@@ -11,52 +11,30 @@ interface Category {
 
 const CreateContent: React.FC = () => {
   const router = useRouter();
-  const { category } = router.query;
+  const { categoryId, categoryName } = router.query;
   const [subcategoryName, setSubcategoryName] = useState<string>("");
-  const handleCreate = async () => {
-    if (subcategoryName) {
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/child`,
-          {
-            parentName: category,
-            childName: subcategoryName,
-          },
-          {
-            withCredentials: true,
-          }
-        );
 
-        if (response.status === 200) {
-          alert(category + "의 세부 카테고리가 성공적으로 생성되었습니다.");
-          setSubcategoryName("");
-          window.location.reload();
-        } else {
-          console.error("Failed to create subcategory");
-        }
-      } catch (error) {
-        console.error("Error creating subcategory:", error);
-      }
-    }
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!subcategoryName.trim()) return;
+    postChildCategory(categoryName, subcategoryName, categoryId);
+    setSubcategoryName("");
   };
-
   return (
     <ListWrapper>
       <ListTitleBox>
-        <ListTitle>{category}의</ListTitle>
+        <ListTitle>{categoryName}의</ListTitle>
         <ListAmount>세부 카테고리 만들기</ListAmount>
       </ListTitleBox>
       <ListContents>
-        <ContentsTitleBox>
-          <ContentInputLabel>카테고리 제목 입력</ContentInputLabel>
-        </ContentsTitleBox>
         <InputBox>
-          <CreateInput
-            value={subcategoryName}
-            onChange={(e: any) => setSubcategoryName(e.target.value)}
-            placeholder="세부 카테고리 이름 입력"
-          />
-          <InputBtn onClick={handleCreate}> 만들기 </InputBtn>
+          <form onSubmit={handleCreate}>
+            <CreateInput
+              value={subcategoryName}
+              onChange={(e: any) => setSubcategoryName(e.target.value)}
+              placeholder="세부 카테고리 이름 입력 후 엔터"
+            />
+          </form>
         </InputBox>
       </ListContents>
     </ListWrapper>
@@ -76,6 +54,7 @@ const ListWrapper = styled.div`
   align-items: stretch;
   margin-bottom: 8px;
   overflow: hidden;
+  gap: 20px;
 `;
 
 const ListTitleBox = styled.div`
@@ -119,20 +98,27 @@ const ContentInputLabel = styled.div`
 const CreateInput = styled.input`
   width: 200px;
   height: 30px;
+  border: 3px solid #dedede;
+  padding: 8px;
+  border-radius: 10px;
+  color: #000;
+  background-color: white;
 `;
 
 const InputBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 `;
 const InputBtn = styled.button`
-  width: 100px;
-  height: 20px;
+  border: 3px solid #dedede;
+  padding: 8px;
+  border-radius: 10px;
+  color: #000;
+  background-color: white;
   &:hover {
-    cursor: pointer;
+    transition: all ease-out 200ms;
+    box-shadow: 0px 0px 0px 4px #dedede;
   }
-  border: 1px solid rgb(146, 146, 146);
-  border-radius: 2px;
-  margin-left: 20px;
 `;

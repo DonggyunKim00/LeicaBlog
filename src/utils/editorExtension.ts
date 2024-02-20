@@ -38,7 +38,10 @@ import {
   CustomBulletList2,
   CustomBulletList3,
 } from "@/container/writingPage/components/customExtension/list";
-import { ImageResize } from "@/container/writingPage/components/customExtension/file";
+import {
+  ImageResize,
+  VideoEmbed,
+} from "@/container/writingPage/components/customExtension/file";
 
 export const extension = [
   StarterKit,
@@ -79,6 +82,7 @@ export const extension = [
   CustomBulletList2,
   CustomBulletList3,
   ImageResize,
+  VideoEmbed,
   Link.configure({
     autolink: false,
     linkOnPaste: false,

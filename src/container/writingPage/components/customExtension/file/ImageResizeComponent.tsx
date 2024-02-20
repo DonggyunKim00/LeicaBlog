@@ -8,14 +8,15 @@ const ImageResizeComponent = (props: any) => {
     const parent = (mouseDownEvent.target as HTMLElement).closest(
       ".image-resizer"
     );
-    const image = parent?.querySelector("embed.postimage") ?? null;
+    const image = parent?.querySelector("img.postimage") ?? null;
     if (image === null) return;
     const startSize = { x: image.clientWidth, y: image.clientHeight };
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
 
     function onMouseMove(mouseMoveEvent: MouseEvent) {
+      const width = startSize.x - startPosition.x + mouseMoveEvent.pageX;
       props.updateAttributes({
-        width: startSize.x - startPosition.x + mouseMoveEvent.pageX,
+        width: width > 990 ? 990 : width,
         height: startSize.y - startPosition.y + mouseMoveEvent.pageY,
       });
     }
@@ -26,7 +27,6 @@ const ImageResizeComponent = (props: any) => {
     document.body.addEventListener("mousemove", onMouseMove);
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
   };
-
   return (
     <NodeViewWrapper className="image-resizer" id={props.node.attrs.id}>
       <PostFile
@@ -42,6 +42,6 @@ const ImageResizeComponent = (props: any) => {
 };
 
 export default ImageResizeComponent;
-const PostFile = styled.embed`
+const PostFile = styled.img`
   display: inline-block;
 `;

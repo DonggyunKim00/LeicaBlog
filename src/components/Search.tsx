@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import search from "../../public/img/main/search.png";
 import { useSearchSubmit } from "@/hooks/searchHook/useSearchSubmit";
+import Link from "next/link";
+import { AdminContext } from "./AdminProvider";
 
 const Search = () => {
   const { inputValue, setInputValue, submit } = useSearchSubmit();
+  const { isAdmin } = useContext(AdminContext);
 
   return (
     <SearchDiv>
@@ -20,6 +23,11 @@ const Search = () => {
           <Image src={search} alt={""} width={25} height={25} />
         </SearchImg>
       </SearchBox>
+      {isAdmin && (
+        <Link href={`/writing`}>
+          <WritingBtn>글 작성하기</WritingBtn>
+        </Link>
+      )}
     </SearchDiv>
   );
 };
@@ -27,10 +35,12 @@ const Search = () => {
 export default Search;
 
 const SearchDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 966px;
-  height: 43px;
   margin: auto;
-  padding: 0px 0px 10px;
+  margin-bottom: 10px;
 `;
 const SearchBox = styled.form`
   width: 171px;
@@ -58,5 +68,16 @@ const SearchImg = styled.button`
   justify-content: center;
   &:hover {
     cursor: pointer;
+  }
+`;
+const WritingBtn = styled.button`
+  border: 3px solid #dedede;
+  padding: 8px;
+  border-radius: 10px;
+  color: #000;
+  background-color: white;
+  &:hover {
+    transition: all ease-out 200ms;
+    box-shadow: 0px 0px 0px 4px #dedede;
   }
 `;
