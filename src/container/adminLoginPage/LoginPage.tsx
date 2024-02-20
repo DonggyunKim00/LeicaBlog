@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { adminLoginApi } from "../../../pages/api/login";
@@ -14,41 +15,39 @@ const LoginPage = () => {
   return (
     <Container>
       <Title>관리자 로그인</Title>
-      <InputDiv
-        onSubmit={async (e: any) => {
-          await e.preventDefault();
-          await mutate();
-        }}
-      >
-        {isLoading ? (
-          <span>Loading...</span>
-        ) : (
-          <>
-            <Id
-              placeholder="id를 입력해주세요"
-              value={form.id}
-              onChange={(e: any) => setForm({ ...form, id: e.target.value })}
-            />
-            <Password
-              placeholder="password를 입력해주세요"
-              type="password"
-              value={form.password}
-              onChange={(e: any) =>
-                setForm({ ...form, password: e.target.value })
-              }
-            />
-            <LoginBtn
-              type="submit"
-              onClick={(e: any) => {
-                e.preventDefault();
-                adminLoginApi(form);
-              }}
-            >
-              로그인
-            </LoginBtn>
-          </>
-        )}
-      </InputDiv>
+      {isLoading ? (
+        <LoadingSpinner width={40} height={40} border={3} />
+      ) : (
+        <InputDiv
+          onSubmit={async (e: any) => {
+            await e.preventDefault();
+            await mutate();
+          }}
+        >
+          <Id
+            placeholder="id를 입력해주세요"
+            value={form.id}
+            onChange={(e: any) => setForm({ ...form, id: e.target.value })}
+          />
+          <Password
+            placeholder="password를 입력해주세요"
+            type="password"
+            value={form.password}
+            onChange={(e: any) =>
+              setForm({ ...form, password: e.target.value })
+            }
+          />
+          <LoginBtn
+            type="submit"
+            onClick={(e: any) => {
+              e.preventDefault();
+              adminLoginApi(form);
+            }}
+          >
+            로그인
+          </LoginBtn>
+        </InputDiv>
+      )}
     </Container>
   );
 };
