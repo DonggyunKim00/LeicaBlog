@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import NtsLogo from "../../public/img/main/ntsrow.png";
-import LeicaLogo from "../../public/img/main/leicalogo.png";
-import Image from "next/image";
-import topPicture from "../../public/img/main/topPicture.png";
-import Router from "next/router";
-import { pathName } from "@/config/pathName";
-import axios from "axios";
-import { getParentCategory } from "../../pages/api/category";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import NtsLogo from '../../public/img/main/ntsrow.png';
+import LeicaLogo from '../../public/img/main/leicalogo.png';
+import Image from 'next/image';
+import leicaMainImg from '../../public/img/main/leicaMainImg.webp';
+import Router from 'next/router';
+import { pathName } from '@/config/pathName';
+import { getParentCategory } from '../../pages/api/category';
 
 interface Category {
   parentId: number;
@@ -56,7 +55,7 @@ const Top: React.FC = () => {
           { length: Math.max(8 - response.data.length, 0) },
           () => ({
             id: -1,
-            name: "",
+            name: '',
           })
         ),
       ];
@@ -74,12 +73,12 @@ const Top: React.FC = () => {
             Router.push(pathName.MAIN);
           }}
         >
-          <Image width={300} height={50} alt={""} src={NtsLogo} />
+          <Image width={300} height={50} alt={''} src={NtsLogo} />
         </LeicaTypo>
       </LeicaTypoBox>
       <ContentWrapper>
-        <Image width={917} height={500} alt={""} src={topPicture} />
-        <AbsoluteImg width={160} height={80} alt={""} src={LeicaLogo} />
+        <Image width={917} height={500} alt={''} src={leicaMainImg} />
+        <AbsoluteImg width={160} height={80} alt={''} src={LeicaLogo} />
       </ContentWrapper>
       <ScopeMenuWrapper>
         {categories.map((category, index) => (
@@ -143,7 +142,7 @@ const ScopeMenuWrapper = styled.div`
   margin-bottom: 57px;
   z-index: 0;
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 80px;
     left: 0;
@@ -169,8 +168,8 @@ const ScopeMenuBox = styled.div<{ $showafter: boolean; $isEmpty?: boolean }>`
   z-index: 0;
 
   &:hover {
-    background-color: ${(props) => (props.$isEmpty ? "inherit" : "#b3babd")};
-    cursor: ${(props) => (props.$isEmpty ? "" : "pointer")};
+    background-color: ${(props) => (props.$isEmpty ? 'inherit' : '#b3babd')};
+    cursor: ${(props) => (props.$isEmpty ? '' : 'pointer')};
   }
 
   ${(props) =>
@@ -220,7 +219,7 @@ const EmptyScopeMenuBox = styled.div<{ $showafter: boolean }>`
 `;
 const EstimateBox = styled.div<{ $hovered: boolean }>`
   width: 170px;
-  height: ${(props) => (props.$hovered ? "140px" : "100px")};
+  height: ${(props) => (props.$hovered ? '140px' : '100px')};
   border: 3px solid rgb(199, 199, 199);
   border-radius: 5px;
   background-color: white;
