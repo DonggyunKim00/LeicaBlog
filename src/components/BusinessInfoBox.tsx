@@ -1,5 +1,5 @@
-import React from "react";
-import { styled } from "styled-components";
+import React from 'react';
+import { styled } from 'styled-components';
 
 const BusinessInfoBox = () => {
   return (
@@ -25,9 +25,9 @@ const BusinessInfoBox = () => {
           </InfoLiContent>
         </InfoLi>
         <InfoLi>
-          <InfoLiTitle>· 서울 :</InfoLiTitle>
+          <InfoLiTitle>· 경기 :</InfoLiTitle>
           <InfoLiContent>
-            서울특별시 금천구 남부순환로112길 27(가산동)
+            경기도 안산시 상록구 해양3로 15 그랑시티 시그니처타워 1106호
           </InfoLiContent>
         </InfoLi>
         <InfoLi>
