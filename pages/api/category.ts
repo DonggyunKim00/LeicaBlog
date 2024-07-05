@@ -1,5 +1,5 @@
-import axios from "axios";
-import axiosInstance from "./axiosInstance";
+import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 export async function getParentCategory() {
   try {
@@ -36,11 +36,11 @@ export const postChildCategory = async (
       childName: childName,
     });
     if (response.status === 200) {
-      alert(parentName + "의 세부 카테고리가 성공적으로 생성되었습니다.");
+      alert(parentName + '의 세부 카테고리가 성공적으로 생성되었습니다.');
       window.location.reload();
     }
   } catch (error) {
-    console.error("Error creating subcategory");
+    console.error('Error creating subcategory');
   }
 };
 
@@ -53,11 +53,13 @@ export const putChildCategory = async (
       categoryName: modifyValue,
     });
     if (response.status === 200) {
-      alert("카테고리가 수정되었습니다");
+      alert('카테고리가 수정되었습니다');
       window.location.reload();
+    } else if (response.status === 208) {
+      alert(response.data);
     }
   } catch (error) {
-    console.error("수정중에 오류가 발생했습니다.");
+    console.error('수정중에 오류가 발생했습니다.');
   }
 };
 
@@ -68,10 +70,10 @@ export const deleteChildCategory = async (categoryId: number | null) => {
     );
 
     if (response.status === 200) {
-      alert("카테고리가 삭제되었습니다");
+      alert('카테고리가 삭제되었습니다');
       window.location.reload();
     }
   } catch (error) {
-    console.error("오류 발생:");
+    console.error('오류 발생:');
   }
 };
